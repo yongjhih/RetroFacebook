@@ -2,7 +2,9 @@
 
 ![RetroFacebook.png](art/retrofacebook.png)
 
-Include AutoFacebook, Inspired by retrofit.
+Include AutoFacebook. Inspired by retrofit.
+
+OGM, Object GraphObject Mapping, GraphObject to POJO.
 
 ## Usage
 
