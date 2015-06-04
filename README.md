@@ -7,10 +7,10 @@ For Development:
 ```java
 interface FacebookService {
     @GET("/{postId}")
-    Post getPost(@Path String postId);
+    Observable<Post> getPost(@Path String postId);
     
     @GET("/{userId}/posts")
-    Post getPosts(@Path String userId);
+    Observable<Post> getPosts(@Path String userId);
     
 }
 // /{user-id}/links
@@ -25,5 +25,9 @@ abstract class Post {
     String caption();
     String description();
     Profile from();
+
+    public static Post create() {
+        return new AutoFacebook_Post();
+    }
 }
 ```
