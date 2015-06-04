@@ -1,6 +1,15 @@
 # RetroFacebook
 
+![RetroFacebook.png](art/retrofacebook.png)
+
 Include AutoFacebook, Inspired by retrofit.
+
+## Usage
+
+```
+Facebook facebook = RetroFacebook.create();
+Observable<Post> posts = facebook.getPosts("4");
+```
 
 ## Development
 
@@ -30,17 +39,10 @@ abstract class Post {
     String description();
     Profile from();
 
-    public static Post create() {
-        return new AutoFacebook_Post();
+    public static Post create(GraphObject graphObject) {
+        return new AutoFacebook_Post(graphObject);
     }
 }
-```
-
-## Usage
-
-```
-Facebook facebook = RetroFacebook.create();
-Observable<Post> posts = facebook.getPosts("4");
 ```
 
 ## License
