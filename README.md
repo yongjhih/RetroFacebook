@@ -9,7 +9,7 @@ OGM, Object GraphObject Mapping, GraphObject to POJO.
 ## Usage
 
 ```
-Facebook facebook = RetroFacebook.create();
+Facebook facebook = Facebook.create();
 Observable<Post> posts = facebook.getPosts("4");
 ```
 
