@@ -1,0 +1,2 @@
+include 'auto-parcel', 'auto-parcel-processor', ':sample'
+rootProject.name = 'auto-parcel-parent'
