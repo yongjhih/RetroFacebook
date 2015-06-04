@@ -1,6 +1,6 @@
-# AutoFacebook
+# RetroFacebook
 
-aka. RetroFacebook, Inspired by retrofit.
+Include AutoFacebook, Inspired by retrofit.
 
 Post
 
