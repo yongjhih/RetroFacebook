@@ -41,8 +41,14 @@ abstract class Post {
     String description();
     Profile from();
 
+    // For facebook v3
     public static Post create(GraphObject graphObject) {
         return new AutoFacebook_Post(graphObject);
+    }
+
+    // For facebook v4
+    public static Post create(GraphResponse response) {
+        return new AutoFacebook_Post(response);
     }
 }
 ```
