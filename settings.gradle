@@ -1,2 +1,2 @@
-include 'auto-parcel', 'auto-parcel-processor', ':sample'
-rootProject.name = 'auto-parcel-parent'
+include 'auto-facebook', 'auto-facebook-processor', ':auto-facebook-sample'
+rootProject.name = 'retrofacebook'
