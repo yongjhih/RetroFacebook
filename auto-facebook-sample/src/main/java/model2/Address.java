@@ -1,9 +1,9 @@
 package model2;
 
-import auto.parcel.AutoParcel;
+import auto.facebook.AutoFacebook;
 import android.os.Parcelable;
 
-@AutoParcel
+@AutoFacebook
 public abstract class Address implements Parcelable {
   public abstract double[] coordinates();
   public abstract String cityName();
@@ -13,17 +13,17 @@ public abstract class Address implements Parcelable {
   }
 
   public static Builder builder() {
-      return new AutoParcel_Address.Builder();
+      return new AutoFacebook_Address.Builder();
   }
 
-  @AutoParcel.Builder
+  @AutoFacebook.Builder
   public interface Builder {
       public Builder coordinates(double[] x);
       public Builder cityName(String x);
       public Address build();
   }
 
-  @AutoParcel.Validate
+  @AutoFacebook.Validate
   public void validate() {
       if (cityName().length() < 2) {
           throw new IllegalStateException("Not a city name");

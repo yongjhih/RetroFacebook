@@ -31,16 +31,16 @@ afterEvaluate { project ->
         }
 
         pom.project {
-          name 'Android AutoParcel'
-          groupId 'com.github.frankiesardo'
+          name 'Android AutoFacebook'
+          groupId 'com.github.yongjhih'
           description 'Port of Google AutoValue for the Android platform'
-          url 'https://github.com/frankiesardo/auto-parcel'
-          inceptionYear '2014'
+          url 'https://github.com/yongjhih/RetroFacebook'
+          inceptionYear '2015'
 
           scm {
-            url 'https://github.com/frankiesardo/auto-parcel'
-            connection 'scm:https://frankiesardo@github.com/frankiesardo/auto-parcel.git'
-            developerConnection 'scm:git@github.com:frankiesardo/auto-parcel.git'
+            url 'https://github.com/yongjhih/RetroFacebook'
+            connection 'scm:https://yongjhih@github.com/yongjhih/RetroFacebook.git'
+            developerConnection 'scm:git@github.com:yongjhih/RetroFacebook.git'
           }
 
           licenses {
@@ -53,8 +53,8 @@ afterEvaluate { project ->
 
           developers {
             developer {
-              id 'frankiesardo'
-              name 'Frankie Sardo'
+              id 'yongjhih'
+              name 'Andrew Chen'
             }
           }
         }
