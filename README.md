@@ -4,7 +4,7 @@
 
 Include AutoFacebook. Inspired by retrofit.
 
-OGM, Object GraphObject Mapping, GraphObject to POJO.
+OGM, Object Graph Mapping, Graph to POJO.
 
 ## Usage
 
