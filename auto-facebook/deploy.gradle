@@ -33,7 +33,7 @@ afterEvaluate { project ->
         pom.project {
           name 'Android AutoFacebook'
           groupId 'com.github.yongjhih'
-          description 'Port of Google AutoValue for the Android platform'
+          description 'OGM, Object Graph Mapping, Graph to POJO'
           url 'https://github.com/yongjhih/RetroFacebook'
           inceptionYear '2015'
 
