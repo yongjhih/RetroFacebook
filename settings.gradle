@@ -1,2 +1,3 @@
 include 'auto-facebook', 'auto-facebook-processor', ':auto-facebook-sample'
+include 'retrofacebook', 'retrofacebook-processor'
 rootProject.name = 'retrofacebook'
