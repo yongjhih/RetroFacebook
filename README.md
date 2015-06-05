@@ -36,10 +36,10 @@ abstract class Facebook {
 ```java
 @AutoFacebook
 public abstract class Post {
-    abstract String id();
-    abstract String caption();
-    abstract String description();
-    abstract Profile from();
+    public abstract String id();
+    public abstract String caption();
+    public abstract String description();
+    public abstract Profile from();
 
     // For facebook v3
     public static Post create(GraphObject graphObject) {
