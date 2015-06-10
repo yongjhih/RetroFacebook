@@ -16,6 +16,8 @@ dependencies {
   testCompile 'com.google.testing.compile:compile-testing:0.6'
   testCompile 'com.google.android:android:4.1.1.4'
   testCompile 'com.google.truth:truth:0.25'
+
+  compile 'com.bluelinelabs:logansquare:1.1.0'
 }
 
 tasks.withType(Test) {

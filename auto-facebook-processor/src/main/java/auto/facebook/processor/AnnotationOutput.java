@@ -156,9 +156,25 @@ class AnnotationOutput {
   }
 
   private class AnnotationSourceFormVisitor extends SourceFormVisitor {
+
+    String type;
+
+    public AnnotationSourceFormVisitor() {
+        super();
+    }
+
+    public AnnotationSourceFormVisitor(String type) {
+        this();
+        this.type = type;
+    }
+
     @Override
     public Void visitAnnotation(AnnotationMirror a, StringBuilder sb) {
-      sb.append('@').append(typeSimplifier.simplify(a.getAnnotationType()));
+      if (type != null) {
+        sb.append('@').append(type);
+      } else {
+        sb.append('@').append(typeSimplifier.simplify(a.getAnnotationType()));
+      }
       Map<ExecutableElement, AnnotationValue> map = ImmutableMap.copyOf(a.getElementValues());
       if (!map.isEmpty()) {
         sb.append('(');
@@ -197,6 +213,12 @@ class AnnotationOutput {
   String sourceFormForAnnotation(AnnotationMirror annotationMirror) {
     StringBuilder sb = new StringBuilder();
     new AnnotationSourceFormVisitor().visitAnnotation(annotationMirror, sb);
+    return sb.toString();
+  }
+
+  String sourceFormForAnnotation(AnnotationMirror annotationMirror, String type) {
+    StringBuilder sb = new StringBuilder();
+    new AnnotationSourceFormVisitor(type).visitAnnotation(annotationMirror, sb);
     return sb.toString();
   }
 

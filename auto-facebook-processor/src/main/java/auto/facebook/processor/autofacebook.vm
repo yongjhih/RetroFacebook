@@ -17,16 +17,30 @@ package $pkg;
 import $i;
 #end
 
+import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.LoganSquare;
+
 ${gwtCompatibleAnnotation}
+@JsonObject
 final class $subclass$formalTypes extends $origClass$actualTypes {
 
 ## Fields
 
 #foreach ($p in $props)
-  private final $p.type $p;
+  #foreach ($a in ${p.annotations})
+
+  ${a}##
+  #end
+
+  $p.type $p;
 #end
 
 ## Constructor
+
+  public $subclass() {
+    super();
+  }
 
 #if ($builderTypeName != "")
   private ##
@@ -52,11 +66,6 @@ final class $subclass$formalTypes extends $origClass$actualTypes {
 ## Property getters
 
 #foreach ($p in $props)
-
-  #foreach ($a in ${p.annotations})
-
-  ${a}##
-  #end
 
   @Override
   ${p.access}${p.type} ${p.getter}() {
@@ -320,7 +329,6 @@ final class $subclass$formalTypes extends $origClass$actualTypes {
       result.${v}();
 
     #end
-
       return result;
     }
   }

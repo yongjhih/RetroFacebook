@@ -64,6 +64,8 @@ import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
+import com.bluelinelabs.logansquare.annotation.JsonField;
+import javax.lang.model.element.AnnotationValue;
 
 /**
  * Javac annotation processor (compiler plugin) for value types; user code never references this
@@ -200,9 +202,18 @@ public class AutoFacebookProcessor extends AbstractProcessor {
           // implementation.
           continue;
         }
-        // TODO(user): we should import this type if it is not already imported
-        AnnotationOutput annotationOutput = new AnnotationOutput(typeSimplifier);
-        builder.add(annotationOutput.sourceFormForAnnotation(annotationMirror));
+
+        // annoatioan: Auto.Field -> JsonField
+        if (annotationElement.getQualifiedName().toString().endsWith("auto.facebook.AutoFacebook.Field")) {
+        //if (annotationElement.getQualifiedName().toString().endsWith(AutoFacebook.Field.class.getName())) {
+          //TypeMirror jsonField = getTypeMirror(JsonField.class);
+          AnnotationOutput annotationOutput = new AnnotationOutput(typeSimplifier);
+          builder.add(annotationOutput.sourceFormForAnnotation(annotationMirror, "com.bluelinelabs.logansquare.annotation.JsonField"));
+        } else {
+          // TODO(user): we should import this type if it is not already imported
+          AnnotationOutput annotationOutput = new AnnotationOutput(typeSimplifier);
+          builder.add(annotationOutput.sourceFormForAnnotation(annotationMirror));
+        }
       }
 
       return builder.build();

@@ -2,10 +2,21 @@ package model2;
 
 import auto.facebook.AutoFacebook;
 import android.os.Parcelable;
+import org.json.JSONObject;
+//import javax.annotation.Nullable;
+import android.support.annotation.Nullable;
+import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.LoganSquare;
 
 @AutoFacebook
 public abstract class Address implements Parcelable {
+  @Nullable
+  @AutoFacebook.Field
   public abstract double[] coordinates();
+
+  @Nullable
+  @AutoFacebook.Field(name = "is_hidden")
   public abstract String cityName();
 
   public static Address create(double[] coordinates, String cityName) {
