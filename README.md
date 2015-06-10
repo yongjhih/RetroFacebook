@@ -15,11 +15,13 @@ Observable<Post> posts = facebook.getPosts("4");
 
 ## Development
 
+[retrofacebook/src/main/java/retrofacebook/Facebook.java](retrofacebook/src/main/java/retrofacebook/Facebook.java):
+
 ```java
 @RetroFacebook
 abstract class Facebook {
-    @GET("/{postId}")
-    Observable<Post> getPost(@Path String postId);
+    @RetroFacebook.GET("/{postId}")
+    Observable<Post> getPost(@RetroFacebook.Path String postId);
 
     public static Facebook create() {
         return new RetroFacebook_Facebook();
@@ -31,6 +33,7 @@ abstract class Facebook {
 // /{user-id}/tagged
 ```
 
+[retrofacebook/src/main/java/retrofacebook/Post.java](retrofacebook/src/main/java/retrofacebook/Post.java):
 ```java
 @AutoJson
 public abstract class Post {
