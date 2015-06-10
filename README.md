@@ -6,11 +6,29 @@ Inspired by retrofit.
 
 OGM, Object Graph Mapping, Graph to POJO.
 
+
+
 ## Usage
 
 ```
 Facebook facebook = Facebook.create();
 Observable<Post> posts = facebook.getPosts("4");
+```
+
+## Installation
+
+via jitpack.io:
+
+```
+repositories {
+    maven {
+        url "https://jitpack.io"
+    }
+}
+
+dependencies {
+    compile 'com.github.yongjhih:RetroFacebook:1.0.0'
+}
 ```
 
 ## Development
