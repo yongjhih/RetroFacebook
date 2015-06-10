@@ -2,7 +2,7 @@
 
 ![RetroFacebook.png](art/retrofacebook.png)
 
-Include AutoFacebook. Inspired by retrofit.
+Include AutoJson. Inspired by retrofit.
 
 OGM, Object Graph Mapping, Graph to POJO.
 
@@ -34,22 +34,12 @@ abstract class Facebook {
 ```
 
 ```java
-@AutoFacebook
+@AutoJson
 public abstract class Post {
     public abstract String id();
     public abstract String caption();
     public abstract String description();
     public abstract Profile from();
-
-    // For facebook v3
-    public static Post create(GraphObject graphObject) {
-        return new AutoFacebook_Post(graphObject);
-    }
-
-    // For facebook v4
-    public static Post create(GraphResponse response) {
-        return new AutoFacebook_Post(response);
-    }
 }
 ```
 
