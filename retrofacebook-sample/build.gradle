@@ -1,4 +1,4 @@
-apply plugin: 'com.android.library'
+apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
 
 android {
@@ -16,18 +16,9 @@ android {
 }
 
 dependencies {
-  compile project(':retrofacebook-annotation')
+  compile project(':retrofacebook')
   apt project(':retrofacebook-processor')
-
-  compile project(':auto-json')
-  apt project(':auto-json-processor')
-
   apt 'com.bluelinelabs:logansquare-compiler:1.1.0'
   compile 'com.bluelinelabs:logansquare:1.1.0'
-
   compile 'com.android.support:support-annotations:21.0.0'
-
-  compile 'io.reactivex:rxjava:1.0.12'
-
-  compile 'com.facebook.android:facebook-android-sdk:4.2.0'
 }

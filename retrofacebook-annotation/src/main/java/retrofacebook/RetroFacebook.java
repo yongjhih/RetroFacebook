@@ -37,4 +37,15 @@ public @interface RetroFacebook {
   @Target(ElementType.METHOD)
   public @interface Validate {
   }
+
+  @Retention(RetentionPolicy.SOURCE)
+  @Target(ElementType.METHOD)
+  public @interface GET {
+    String value();
+  }
+
+  @Retention(RetentionPolicy.SOURCE)
+  @Target(ElementType.PARAMETER)
+  public @interface Path {
+  }
 }

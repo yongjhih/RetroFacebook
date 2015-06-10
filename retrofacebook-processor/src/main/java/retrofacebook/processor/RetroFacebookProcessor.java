@@ -18,6 +18,7 @@ package retrofacebook.processor;
 import retrofacebook.RetroFacebook;
 import com.google.auto.service.AutoService;
 import com.google.common.base.Functions;
+import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
 import com.google.common.base.Throwables;
@@ -41,6 +42,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 import javax.annotation.Generated;
 import javax.annotation.processing.AbstractProcessor;
@@ -174,7 +177,10 @@ public class RetroFacebookProcessor extends AbstractProcessor {
     private final String identifier;
     private final ExecutableElement method;
     private final String type;
+    private final String typeArgs;
     private final ImmutableList<String> annotations;
+    private final String args;
+    private final String catArgs;
 
     Property(
         String name,
@@ -187,6 +193,16 @@ public class RetroFacebookProcessor extends AbstractProcessor {
       this.method = method;
       this.type = type;
       this.annotations = buildAnnotations(typeSimplifier);
+      this.args = formalTypeArgsString(method);
+      this.catArgs = catArgsString(method);
+      this.typeArgs = buildTypeArguments(type);
+    }
+
+    private String buildTypeArguments(String type) {
+      Pattern pattern = Pattern.compile( "<(.*?)>" );
+      Matcher m = pattern.matcher(type);
+      if (m.find()) return m.group(1);
+      return null;
     }
 
     private ImmutableList<String> buildAnnotations(TypeSimplifier typeSimplifier) {
@@ -249,6 +265,10 @@ public class RetroFacebookProcessor extends AbstractProcessor {
       return type;
     }
 
+    public String getTypeArgs() {
+      return typeArgs;
+    }
+
     public TypeKind getKind() {
       return method.getReturnType().getKind();
     }
@@ -286,6 +306,14 @@ public class RetroFacebookProcessor extends AbstractProcessor {
 
     public List<String> getAnnotations() {
       return annotations;
+    }
+
+    public String getArgs() {
+      return args;
+    }
+
+    public String getCatArgs() {
+      return catArgs;
     }
 
     public boolean isNullable() {
@@ -461,6 +489,7 @@ public class RetroFacebookProcessor extends AbstractProcessor {
       String propertyType = typeSimplifier.simplify(method.getReturnType());
       String propertyName = methodToPropertyName.get(method);
       String identifier = methodToIdentifier.get(method);
+      List<String> args = new ArrayList<String>();
       props.add(new Property(propertyName, identifier, method, propertyType, typeSimplifier));
     }
     // If we are running from Eclipse, undo the work of its compiler which sorts methods.
@@ -497,6 +526,7 @@ public class RetroFacebookProcessor extends AbstractProcessor {
   }
 
   private static boolean allGetters(Iterable<ExecutableElement> methods) {
+    if (true) return true;
     for (ExecutableElement method : methods) {
       String name = method.getSimpleName().toString();
       // TODO(user): decide whether getfoo() (without a capital) is a getter. Currently it is.
@@ -611,12 +641,7 @@ public class RetroFacebookProcessor extends AbstractProcessor {
           }
           toImplement.add(method);
         } else {
-          // This could reasonably be an error, were it not for an Eclipse bug in
-          // ElementUtils.override that sometimes fails to recognize that one method overrides
-          // another, and therefore leaves us with both an abstract method and the subclass method
-          // that overrides it. This shows up in RetroFacebookTest.LukesBase for example.
-          errorReporter.reportWarning("@RetroFacebook classes cannot have abstract methods other than"
-              + " property getters and Builder converters", method);
+          toImplement.add(method);
         }
       }
     }
@@ -708,6 +733,57 @@ public class RetroFacebookProcessor extends AbstractProcessor {
           + Joiner.on(", ").join(
           FluentIterable.from(typeParameters).transform(Functions.constant("?")))
           + ">";
+    }
+  }
+
+  private static String catArgsString(ExecutableElement method) {
+    List<? extends VariableElement> parameters = method.getParameters();
+    if (parameters.isEmpty()) {
+      return "";
+    } else {
+      return ""
+        + Joiner.on(" + ").join(
+        FluentIterable.from(parameters).transform(new Function<VariableElement, String>() {
+          @Override
+          public String apply(VariableElement element) {
+            return "" + element.getSimpleName();
+          }
+        }))
+        + "";
+    }
+  }
+
+  private static String formalArgsString(ExecutableElement method) {
+    List<? extends VariableElement> parameters = method.getParameters();
+    if (parameters.isEmpty()) {
+      return "";
+    } else {
+      return ""
+        + Joiner.on(", ").join(
+        FluentIterable.from(parameters).transform(new Function<VariableElement, String>() {
+          @Override
+          public String apply(VariableElement element) {
+            return "" + element.getSimpleName();
+          }
+        }))
+        + "";
+    }
+  }
+
+  private static String formalTypeArgsString(ExecutableElement method) {
+    List<? extends VariableElement> parameters = method.getParameters();
+    if (parameters.isEmpty()) {
+      return "";
+    } else {
+      return ""
+        + Joiner.on(", ").join(
+        FluentIterable.from(parameters).transform(new Function<VariableElement, String>() {
+          @Override
+          public String apply(VariableElement element) {
+            return element.asType() + " " + element.getSimpleName();
+          }
+        }))
+        + "";
     }
   }
 

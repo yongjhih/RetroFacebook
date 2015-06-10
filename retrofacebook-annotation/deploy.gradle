@@ -31,9 +31,9 @@ afterEvaluate { project ->
         }
 
         pom.project {
-          name 'Android RetroFacebook'
+          name 'AutoJson'
           groupId 'com.github.yongjhih'
-          description 'Retrofit Facebook Android SDK'
+          description 'OGM, Object Graph Mapping, Graph to POJO'
           url 'https://github.com/yongjhih/RetroFacebook'
           inceptionYear '2015'
 
