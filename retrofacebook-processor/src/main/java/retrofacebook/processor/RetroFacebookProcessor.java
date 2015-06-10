@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2015 8tory, Inc.
  * Copyright (C) 2012 Google, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
