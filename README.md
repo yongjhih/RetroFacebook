@@ -196,6 +196,11 @@ final class AutoJson_Post extends Post {
 }
 ```
 
+## Credit
+
+* frankiesardo/auto-parcel
+* bluelinelabs/LoganSquare
+
 ## License
 
 ```
