@@ -144,56 +144,7 @@ final class AutoJson_Post extends Post {
     return false;
   }
 
-  @Override
-  public int hashCode() {
-    int h = 1;
-    h *= 1000003;
-    h ^= (id == null) ? 0 : id.hashCode();
-    h *= 1000003;
-    h ^= (isHidden == null) ? 0 : isHidden.hashCode();
-    return h;
-  }
-
-  static final class Builder extends Post.Builder {
-    private final BitSet set$ = new BitSet();
-    private String id;
-    private Boolean isHidden;
-    Builder() {
-    }
-    Builder(Post source) {
-      id(source.id());
-      isHidden(source.isHidden());
-    }
-    @Override
-    public Post.Builder id(String id) {
-      this.id = id;
-            return this;
-    }
-    @Override
-    public Post.Builder isHidden(Boolean isHidden) {
-      this.isHidden = isHidden;
-            return this;
-    }
-    @Override
-    public Post build() {
-      if (set$.cardinality() < 0) {
-        String[] propertyNames = {
-        };
-        StringBuilder missing = new StringBuilder();
-        for (int i = 0; i < 0; i++) {
-          if (!set$.get(i)) {
-            missing.append(' ').append(propertyNames[i]);
-          }
-        }
-        throw new IllegalStateException("Missing required properties:" + missing);
-      }
-      Post result = new AutoJson_Post(
-          this.id,
-          this.isHidden);
-          return result;
-    }
-  }
-}
+// ...
 ```
 
 ## Credit
