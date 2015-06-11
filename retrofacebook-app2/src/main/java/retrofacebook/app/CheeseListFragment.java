@@ -91,7 +91,7 @@ public class CheeseListFragment extends Fragment {
             public ViewHolder(View view) {
                 super(view);
                 mView = view;
-                mImageView = (ImageView) view.findViewById(R.id.avatar);
+                mImageView = (ImageView) view.findViewById(R.id.icon);
                 mTextView = (TextView) view.findViewById(android.R.id.text1);
             }
 
