@@ -80,8 +80,8 @@ public class ListFragment extends Fragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         if (isVisibleToUser) {
-            items.toList().subscribe(list -> {
-                listAdapter.getList().clear();
+            if (listAdapter != null) listAdapter.getList().clear();
+            items.buffer(3, java.util.concurrent.TimeUnit.SECONDS).subscribe(list -> {
                 listAdapter.getList().addAll(list);
                 listAdapter.notifyDataSetChanged();
             });

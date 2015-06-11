@@ -81,10 +81,10 @@ public class CardsFragment extends Fragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         if (isVisibleToUser) {
-            AppObservable.bindFragment(CardsFragment.this, items).toList().subscribe(list -> {
+            if (listAdapter != null) listAdapter.getList().clear();
+            AppObservable.bindFragment(CardsFragment.this, items).buffer(3, java.util.concurrent.TimeUnit.SECONDS).subscribe(list -> {
                 android.util.Log.d("RetroFacebook", "list: " + list);
                 android.util.Log.d("RetroFacebook", "list.size(): " + list.size());
-                listAdapter.getList().clear();
                 listAdapter.getList().addAll(list);
                 listAdapter.notifyDataSetChanged();
             });
