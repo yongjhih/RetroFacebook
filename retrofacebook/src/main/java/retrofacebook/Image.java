@@ -19,23 +19,27 @@ import auto.json.AutoJson;
 import android.support.annotation.Nullable;
 
 @AutoJson
-public abstract class Post {
+public abstract class Image {
     @Nullable
-    public abstract String id();
-
+    @AutoJson.Field
+    public abstract Integer width();
     @Nullable
-    @AutoJson.Field(name = "is_hidden")
-    public abstract Boolean isHidden();
+    @AutoJson.Field
+    public abstract Integer height();
+    @Nullable
+    @AutoJson.Field
+    public abstract String source();
 
     @AutoJson.Builder
     public abstract static class Builder {
-        public abstract Builder id(String id);
-        public abstract Builder isHidden(Boolean isHidden);
+        public abstract Builder width(Integer width);
+        public abstract Builder height(Integer height);
+        public abstract Builder source(String source);
 
-        public abstract Post build();
+        public abstract Image build();
     }
 
     public static Builder builder() {
-        return new AutoJson_Post.Builder();
+        return new AutoJson_Image.Builder();
     }
 }

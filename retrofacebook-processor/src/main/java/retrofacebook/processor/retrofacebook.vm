@@ -24,6 +24,7 @@ import rx.Subscriber;
 import rx.functions.*;
 
 import com.bluelinelabs.logansquare.LoganSquare;
+import android.util.Log;
 
 ${gwtCompatibleAnnotation}
 final class $subclass$formalTypes extends $origClass$actualTypes {
@@ -32,8 +33,8 @@ final class $subclass$formalTypes extends $origClass$actualTypes {
 
 #foreach ($p in $props)
 
-  @Override
-  ${p.access}${p.type} ${p.getter}(${p.args}) {
+    @Override
+    ${p.access}${p.type} ${p.getter}(${p.args}) {
         return Observable.create(new OnSubscribeGraphResponse(
                 GraphRequest.newGraphPathRequest(
                     AccessToken.getCurrentAccessToken(),
@@ -50,7 +51,7 @@ final class $subclass$formalTypes extends $origClass$actualTypes {
                 }
             }
         });
-  }
+    }
 
 #end
 

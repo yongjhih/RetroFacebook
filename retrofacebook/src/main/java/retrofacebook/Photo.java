@@ -17,25 +17,38 @@ package retrofacebook;
 
 import auto.json.AutoJson;
 import android.support.annotation.Nullable;
+import java.util.List;
 
 @AutoJson
-public abstract class Post {
+public abstract class Photo {
     @Nullable
+    @AutoJson.Field
     public abstract String id();
-
     @Nullable
-    @AutoJson.Field(name = "is_hidden")
-    public abstract Boolean isHidden();
+    @AutoJson.Field
+    public abstract String caption();
+    @Nullable
+    @AutoJson.Field
+    public abstract String place();
+    @Nullable
+    @AutoJson.Field
+    public abstract String url();
+    @Nullable
+    @AutoJson.Field
+    public abstract List<AutoJson_Image> images();
 
     @AutoJson.Builder
     public abstract static class Builder {
         public abstract Builder id(String id);
-        public abstract Builder isHidden(Boolean isHidden);
+        public abstract Builder caption(String caption);
+        public abstract Builder place(String place);
+        public abstract Builder url(String url);
+        public abstract Builder images(List<AutoJson_Image> images);
 
-        public abstract Post build();
+        public abstract Photo build();
     }
 
     public static Builder builder() {
-        return new AutoJson_Post.Builder();
+        return new AutoJson_Photo.Builder();
     }
 }

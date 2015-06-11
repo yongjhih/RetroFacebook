@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <!--<item name="windowActionBar">false</item>-->
+        <!--<item name="windowNoTitle">true</item>-->
+
+        <item name="actionBarStyle">@style/AppTheme.ActionBar</item>
+    </style>
+
+    <style name="AppTheme.ActionBar" parent="Base.Widget.AppCompat.Light.ActionBar.Solid">
+        <item name="elevation">0dp</item> <!-- disable drop shadow -->
+    </style>
+
+    <color name="colorPrimary">@color/colorMaterialDesignBlue</color>
+    <color name="colorPrimaryDark">@color/colorMaterialDesignBlue</color>
+    <color name="colorAccent">@color/colorMaterialDesignBlue</color>
+
+    <color name="colorMaterialDesignTeal500">#26A69A</color>
+    <color name="colorMaterialDesignCyan">#00BCD4</color>
+    <color name="colorMaterialDesignBlue">#1976D2</color>
+    <color name="colorMaterialDesignIndigo">#303F9F</color>
+</resources>
