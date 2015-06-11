@@ -18,12 +18,17 @@ package retrofacebook.app;
 
 import auto.parcel.AutoParcel;
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
 
 @AutoParcel
 public abstract class Card implements Parcelable {
+    @Nullable
     public abstract String icon();
+    @Nullable
     public abstract String text1();
+    @Nullable
     public abstract String message();
+    @Nullable
     public abstract String image();
 
     @AutoParcel.Builder

@@ -18,22 +18,25 @@ package retrofacebook.app;
 
 import auto.parcel.AutoParcel;
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
 
 @AutoParcel
 public abstract class Item implements Parcelable {
-  public abstract String icon();
-  public abstract String text1();
+    @Nullable
+    public abstract String icon();
+    @Nullable
+    public abstract String text1();
 
-  @AutoParcel.Builder
-  public abstract static class Builder {
-      public abstract Builder icon(String s);
-      public abstract Builder text1(String s);
-      public abstract Item build();
-  }
+    @AutoParcel.Builder
+    public abstract static class Builder {
+        public abstract Builder icon(String s);
+        public abstract Builder text1(String s);
+        public abstract Item build();
+    }
 
-  public static Builder builder() {
-      return new AutoParcel_Item.Builder();
-  }
+    public static Builder builder() {
+        return new AutoParcel_Item.Builder();
+    }
 
-  public abstract Builder toBuilder();
+    public abstract Builder toBuilder();
 }
