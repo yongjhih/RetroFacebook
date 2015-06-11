@@ -12,6 +12,9 @@ buildscript {
 
 repositories {
     jcenter()
+    maven {
+        url "https://jitpack.io"
+    }
 }
 
 apply plugin: 'android-sdk-manager'
@@ -75,4 +78,5 @@ dependencies {
 
     compile 'com.ogaclejapan.smarttablayout:library:1.1.3@aar'
     compile 'com.ogaclejapan.smarttablayout:utils-v4:1.1.3@aar'
+    compile 'com.github.yongjhih:android-simple-facebook:8b9b62086c'
 }
