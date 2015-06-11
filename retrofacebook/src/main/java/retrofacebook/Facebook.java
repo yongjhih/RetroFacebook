@@ -23,9 +23,27 @@ public abstract class Facebook {
   @RetroFacebook.GET("/{postId}")
   public abstract Observable<Post> getPost(@RetroFacebook.Path String postId);
 
-  //@RetroFacebook.GET("/{userId}/photos?type=uploaded")
+  // TODO @RetroFacebook.GET("/{userId}/photos?type=uploaded")
   @RetroFacebook.GET("/{userId}/photos")
   public abstract Observable<Photo> getPhotos(@RetroFacebook.Path String userId);
+
+  public Observable<Photo> getPhotos() {
+      return getPhotos("me");
+  }
+
+  @RetroFacebook.GET("/{userId}/feed")
+  public abstract Observable<Post> getPosts(@RetroFacebook.Path String userId);
+
+  public Observable<Post> getPosts() {
+      return getPosts("me");
+  }
+
+  @RetroFacebook.GET("/{userId}/friends")
+  public abstract Observable<User> getFriends(@RetroFacebook.Path String userId);
+
+  public Observable<User> getFriends() {
+      return getFriends("me");
+  }
 
   public static Facebook create() {
       return new RetroFacebook_Facebook();

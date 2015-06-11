@@ -26,4 +26,7 @@
   <string name="checkin">Checkin</string>
   <string name="menu_settings">Settings</string>
 
+    <!-- sromku -->
+    <!-- string name="facebook_app_id">728615400528729</string -->
+    <string name="facebook_app_id">875877299126816</string>
 </resources>

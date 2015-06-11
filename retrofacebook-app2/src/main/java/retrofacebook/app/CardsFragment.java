@@ -48,7 +48,7 @@ import rx.android.app.*;
 import rx.facebook.RxFacebook;
 import retrofacebook.*;
 
-public class ListFragment extends Fragment {
+public class CardsFragment extends Fragment {
     RecyclerView listView;
 
     @Nullable
@@ -57,61 +57,72 @@ public class ListFragment extends Fragment {
         listView = (RecyclerView) inflater.inflate(R.layout.fragment_list, container, false);
 
         listAdapter = ListRecyclerAdapter.create();
-        listAdapter.createViewHolder(new Func2<ViewGroup, Integer, ItemViewHolder>() {
+        listAdapter.createViewHolder(new Func2<ViewGroup, Integer, CardViewHolder>() {
             @Override
-            public ItemViewHolder call(ViewGroup parent, Integer position) {
-                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, parent, false);
+            public CardViewHolder call(ViewGroup parent, Integer position) {
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_card, parent, false);
 
                 TypedValue typedValue = new TypedValue();
                 parent.getContext().getTheme().resolveAttribute(R.attr.selectableItemBackground, typedValue, true);
                 view.setBackgroundResource(typedValue.resourceId);
 
-                return new ItemViewHolder(view);
+                return new CardViewHolder(view);
             }
         });
-        listView.setLayoutManager(new LinearLayoutManager(listView.getContext()));
-        listView.setAdapter(listAdapter);
-
         items.toList().subscribe(list -> {
             listAdapter.getList().clear();
             listAdapter.getList().addAll(list);
             listAdapter.notifyDataSetChanged();
         });
 
+        listView.setLayoutManager(new LinearLayoutManager(listView.getContext()));
+        listView.setAdapter(listAdapter);
+
         return listView;
     }
 
-    private ListRecyclerAdapter<Item, ItemViewHolder> listAdapter;
-    Observable<Item> items;
+    private ListRecyclerAdapter<Card, CardViewHolder> listAdapter;
+    Observable<Card> items;
 
-    public ListFragment items(Observable<Item> items) {
+    public CardsFragment items(Observable<Card> items) {
         this.items = items;
+
         return this;
     }
 
-    public static ListFragment create() {
-        return new ListFragment();
+    public static CardsFragment create() {
+        return new CardsFragment();
     }
 
-    public static class ItemViewHolder extends BindViewHolder<Item> {
+    public static class CardViewHolder extends BindViewHolder<Card> {
         @InjectView(R.id.icon)
         ImageView icon;
         @InjectView(R.id.text1)
         TextView text1;
+        @InjectView(R.id.message)
+        TextView message;
+        @InjectView(R.id.image)
+        ImageView image;
 
-        public ItemViewHolder(View itemView) {
+        public CardViewHolder(View itemView) {
             super(itemView);
             ButterKnife.inject(this, itemView);
         };
 
         @Override
-        public void onBind(int position, Item item) {
+        public void onBind(int position, Card item) {
             text1.setText(item.text1());
+            message.setText(item.message());
 
             Glide.with(itemView.getContext())
                     .load(item.icon())
                     .fitCenter()
                     .into(icon);
+
+            Glide.with(itemView.getContext())
+                    .load(item.image())
+                    .fitCenter()
+                    .into(image);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

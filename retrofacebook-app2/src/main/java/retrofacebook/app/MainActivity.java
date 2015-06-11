@@ -36,6 +36,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
+import android.content.Intent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,6 +65,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
         mRxFacebook = RxFacebook.create(this);
+
+        mRxFacebook.logIn().doOnNext(login -> {
+            android.util.Log.d("RetroFacebook", "token: " + login.getAccessToken());
+            android.util.Log.d("RetroFacebook", "token: " + login.getAccessToken().getToken());
+        }).subscribe(login -> {
+        }, e -> {
+            android.util.Log.e("RetroFacebook", "error: " + e);
+            e.printStackTrace();
+        });
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -115,9 +125,38 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupViewPager(ViewPager viewPager) {
         Adapter adapter = new Adapter(getSupportFragmentManager());
-        adapter.fragments.add(FragmentPage.create().fragment(() -> new CheeseListFragment()).title("Photos"));
-        adapter.fragments.add(FragmentPage.create().fragment(() -> new CheeseListFragment()).title("Posts"));
-        adapter.fragments.add(FragmentPage.create().fragment(() -> new CheeseListFragment()).title("Friends"));
+        adapter.fragments.add(FragmentPage.create().fragment(() -> {
+            return CardsFragment.create()
+                .items(Facebook.create().getPhotos().map(photo -> {
+                    User user = photo.from();
+                    return Card.builder()
+                        .icon("http://graph.facebook.com/" + user.id() + "/picture?width=400&height=400")
+                        .text1(user.name())
+                        .message(photo.caption())
+                        .image(photo.picture())
+                        .build();
+                }));
+        }).title("Photos"));
+        adapter.fragments.add(FragmentPage.create().fragment(() -> {
+            return ListFragment.create()
+                .items(Facebook.create().getFriends().map(user -> {
+                    return Item.builder()
+                        .icon("http://graph.facebook.com/" + user.id() + "/picture?width=400&height=400")
+                        .text1(user.name())
+                        .build();
+                }));
+        }).title("Friends"));
+        adapter.fragments.add(FragmentPage.create().fragment(() -> {
+            return CardsFragment.create()
+                .items(Facebook.create().getPosts().map(post -> {
+                    User user = post.from();
+                    return Card.builder()
+                        .icon("http://graph.facebook.com/" + user.id() + "/picture?width=400&height=400")
+                        .text1(user.name())
+                        .message(post.message())
+                        .build();
+                }));
+        }).title("Posts"));
         adapter.fragments.add(FragmentPage.create().fragment(() -> new CheeseListFragment()).title("Category 4"));
         adapter.fragments.add(FragmentPage.create().fragment(() -> new CheeseListFragment()).title("Category 5"));
         adapter.fragments.add(FragmentPage.create().fragment(() -> new CheeseListFragment()).title("Category 6"));
@@ -191,5 +230,11 @@ public class MainActivity extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             return fragments.get(position).title();
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        mRxFacebook.onActivityResult(requestCode, resultCode, data);
     }
 }

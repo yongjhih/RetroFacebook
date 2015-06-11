@@ -21,16 +21,40 @@ import android.support.annotation.Nullable;
 @AutoJson
 public abstract class Post {
     @Nullable
+    @AutoJson.Field
     public abstract String id();
-
     @Nullable
-    @AutoJson.Field(name = "is_hidden")
-    public abstract Boolean isHidden();
+    @AutoJson.Field
+    public abstract String caption();
+    @Nullable
+    @AutoJson.Field
+    public abstract String place();
+    @Nullable
+    @AutoJson.Field
+    public abstract String url();
+    @Nullable
+    @AutoJson.Field
+    public abstract String source();
+    @Nullable
+    @AutoJson.Field
+    public abstract String picture();
+    @Nullable
+    @AutoJson.Field
+    public abstract AutoJson_User from();
+    @Nullable
+    @AutoJson.Field
+    public abstract String message();
 
     @AutoJson.Builder
     public abstract static class Builder {
         public abstract Builder id(String id);
-        public abstract Builder isHidden(Boolean isHidden);
+        public abstract Builder caption(String caption);
+        public abstract Builder place(String place);
+        public abstract Builder url(String url);
+        public abstract Builder source(String source);
+        public abstract Builder picture(String picture);
+        public abstract Builder from(AutoJson_User from);
+        public abstract Builder message(String message);
 
         public abstract Post build();
     }
