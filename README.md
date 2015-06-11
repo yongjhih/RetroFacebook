@@ -67,11 +67,11 @@ Generated:
 final class RetroFacebook_Facebook extends Facebook {
 
   @Override
-  public Observable<Post> getPost(java.lang.String postId, java.lang.String type) {
+  public Observable<Post> getPost(java.lang.String postId) {
         return Observable.create(new OnSubscribeGraphResponse(
                 GraphRequest.newGraphPathRequest(
                     AccessToken.getCurrentAccessToken(),
-                    "/" + postId + type, null
+                    "/" + postId + "", null
                 )
             )
         ).map(new Func1<GraphResponse, Post>() {
