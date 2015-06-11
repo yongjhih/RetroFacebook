@@ -38,6 +38,7 @@ public class RxFacebook {
                 @Override
                 public void onSuccess(LoginResult loginResult) {
                     sub.onNext(loginResult);
+                    sub.onCompleted();
                 }
 
                 @Override

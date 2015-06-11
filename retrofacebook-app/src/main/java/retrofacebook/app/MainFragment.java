@@ -98,7 +98,6 @@ public class MainFragment extends Fragment {
                                 //android.util.Log.d("RetroFacebook", "image: " + "null");
                             }
                         })
-                        .take(10)
                         .toList()
                         .subscribe(new Action1<List<Photo>>() {
                             @Override
