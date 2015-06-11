@@ -62,9 +62,11 @@ public class CardsFragment extends Fragment {
             public CardViewHolder call(ViewGroup parent, Integer position) {
                 View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_card, parent, false);
 
+                /*
                 TypedValue typedValue = new TypedValue();
                 parent.getContext().getTheme().resolveAttribute(R.attr.selectableItemBackground, typedValue, true);
                 view.setBackgroundResource(typedValue.resourceId);
+                */
 
                 return new CardViewHolder(view);
             }
@@ -79,7 +81,9 @@ public class CardsFragment extends Fragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         if (isVisibleToUser) {
-            items.toList().subscribe(list -> {
+            AppObservable.bindFragment(CardsFragment.this, items).toList().subscribe(list -> {
+                android.util.Log.d("RetroFacebook", "list: " + list);
+                android.util.Log.d("RetroFacebook", "list.size(): " + list.size());
                 listAdapter.getList().clear();
                 listAdapter.getList().addAll(list);
                 listAdapter.notifyDataSetChanged();
@@ -117,25 +121,29 @@ public class CardsFragment extends Fragment {
 
         @Override
         public void onBind(int position, Card item) {
-            text1.setText(item.text1());
-            message.setText(item.message());
+            if (!android.text.TextUtils.isEmpty(item.text1())) text1.setText(item.text1());
+            if (!android.text.TextUtils.isEmpty(item.message())) message.setText(item.message());
 
-            Glide.with(itemView.getContext())
+            if (!android.text.TextUtils.isEmpty(item.icon())) {
+                Glide.with(itemView.getContext())
                     .load(item.icon())
                     .fitCenter()
                     .into(icon);
+            }
 
-            Glide.with(itemView.getContext())
+            if (!android.text.TextUtils.isEmpty(item.image())) {
+                Glide.with(itemView.getContext())
                     .load(item.image())
                     .fitCenter()
                     .into(image);
+            }
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Context context = v.getContext();
                     Intent intent = new Intent(context, CheeseDetailActivity.class);
-                    intent.putExtra(CheeseDetailActivity.EXTRA_NAME, item.text1());
+                    if (!android.text.TextUtils.isEmpty(item.text1())) intent.putExtra(CheeseDetailActivity.EXTRA_NAME, item.text1());
 
                     context.startActivity(intent);
                 }

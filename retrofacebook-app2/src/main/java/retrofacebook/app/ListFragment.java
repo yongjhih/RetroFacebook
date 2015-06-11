@@ -62,9 +62,11 @@ public class ListFragment extends Fragment {
             public ItemViewHolder call(ViewGroup parent, Integer position) {
                 View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, parent, false);
 
+                /*
                 TypedValue typedValue = new TypedValue();
                 parent.getContext().getTheme().resolveAttribute(R.attr.selectableItemBackground, typedValue, true);
                 view.setBackgroundResource(typedValue.resourceId);
+                */
 
                 return new ItemViewHolder(view);
             }
@@ -111,19 +113,21 @@ public class ListFragment extends Fragment {
 
         @Override
         public void onBind(int position, Item item) {
-            text1.setText(item.text1());
+            if (!android.text.TextUtils.isEmpty(item.text1())) text1.setText(item.text1());
 
-            Glide.with(itemView.getContext())
+            if (!android.text.TextUtils.isEmpty(item.icon())) {
+                Glide.with(itemView.getContext())
                     .load(item.icon())
                     .fitCenter()
                     .into(icon);
+            }
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Context context = v.getContext();
                     Intent intent = new Intent(context, CheeseDetailActivity.class);
-                    intent.putExtra(CheeseDetailActivity.EXTRA_NAME, item.text1());
+                    if (!android.text.TextUtils.isEmpty(item.text1())) intent.putExtra(CheeseDetailActivity.EXTRA_NAME, item.text1());
 
                     context.startActivity(intent);
                 }

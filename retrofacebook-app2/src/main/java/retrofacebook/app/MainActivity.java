@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.inject(this);
         mRxFacebook = RxFacebook.create(this);
 
+        /*
         mRxFacebook.logIn().doOnNext(login -> {
             android.util.Log.d("RetroFacebook", "token: " + login.getAccessToken());
             android.util.Log.d("RetroFacebook", "token: " + login.getAccessToken().getToken());
@@ -74,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
             android.util.Log.e("RetroFacebook", "error: " + e);
             e.printStackTrace();
         });
+        */
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -127,15 +129,27 @@ public class MainActivity extends AppCompatActivity {
         Adapter adapter = new Adapter(getSupportFragmentManager());
         adapter.fragments.add(FragmentPage.create().fragment(() -> {
             return CardsFragment.create()
-                .items(Facebook.create().getPhotos().map(photo -> {
-                    User user = photo.from();
-                    return Card.builder()
-                        .icon("http://graph.facebook.com/" + user.id() + "/picture?width=400&height=400")
-                        .text1(user.name())
-                        .message(photo.caption())
-                        .image(photo.picture())
-                        .build();
-                }));
+                .items(
+                    mRxFacebook.logIn().doOnNext(login -> {
+                        android.util.Log.d("RetroFacebook", "token: " + login.getAccessToken());
+                        android.util.Log.d("RetroFacebook", "token: " + login.getAccessToken().getToken());
+                    }).flatMap(login -> Facebook.create().getPhotos())
+                    .doOnNext(photo -> {
+                        User user = photo.from();
+                        android.util.Log.d("RetroFacebook", "user: " + user);
+                        android.util.Log.d("RetroFacebook", "photo.caption: " + photo.caption());
+                    })
+                    .map(photo -> {
+                        User user = photo.from();
+                        Image image = photo.images().get(0);
+
+                        return Card.builder()
+                            .icon("http://graph.facebook.com/" + user.id() + "/picture?width=400&height=400")
+                            .text1(user.name())
+                            .message(photo.caption())
+                            .image(image.source())
+                            .build();
+                    }));
         }).title("Photos"));
         adapter.fragments.add(FragmentPage.create().fragment(() -> {
             return ListFragment.create()
