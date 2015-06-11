@@ -44,7 +44,7 @@ final class $subclass$formalTypes extends $origClass$actualTypes {
         ).map(new Func1<GraphResponse, $p.typeArgs>() {
             @Override public ${p.typeArgs} call(GraphResponse response) {
                 try {
-                return LoganSquare.parse(response.getJSONObject().toString(), AutoJson_${p.typeArgs}.class);
+                    return LoganSquare.parse(response.getJSONObject().toString(), AutoJson_${p.typeArgs}.class);
                 } catch (java.io.IOException e) {
                     e.printStackTrace();
                     return null;
