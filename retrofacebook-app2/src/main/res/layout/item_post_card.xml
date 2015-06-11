@@ -31,12 +31,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Info"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            android:id="@+id/text1"
+            />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/cheese_ipsum" />
+            android:text="@string/cheese_ipsum"
+            android:id="@+id/text2"
+            />
 
     </LinearLayout>
 

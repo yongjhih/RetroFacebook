@@ -115,9 +115,16 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupViewPager(ViewPager viewPager) {
         Adapter adapter = new Adapter(getSupportFragmentManager());
-        adapter.fragments.add(FragmentPage.create().fragment(() -> new CheeseListFragment()).title("Category 1"));
-        adapter.fragments.add(FragmentPage.create().fragment(() -> new CheeseListFragment()).title("Category 2"));
-        adapter.fragments.add(FragmentPage.create().fragment(() -> new CheeseListFragment()).title("Category 3"));
+        adapter.fragments.add(FragmentPage.create().fragment(() -> new CheeseListFragment()).title("Photos"));
+        adapter.fragments.add(FragmentPage.create().fragment(() -> new CheeseListFragment()).title("Posts"));
+        adapter.fragments.add(FragmentPage.create().fragment(() -> new CheeseListFragment()).title("Friends"));
+        adapter.fragments.add(FragmentPage.create().fragment(() -> new CheeseListFragment()).title("Category 4"));
+        adapter.fragments.add(FragmentPage.create().fragment(() -> new CheeseListFragment()).title("Category 5"));
+        adapter.fragments.add(FragmentPage.create().fragment(() -> new CheeseListFragment()).title("Category 6"));
+        adapter.fragments.add(FragmentPage.create().fragment(() -> new CheeseListFragment()).title("Category 7"));
+        adapter.fragments.add(FragmentPage.create().fragment(() -> new CheeseListFragment()).title("Category 8"));
+        adapter.fragments.add(FragmentPage.create().fragment(() -> new CheeseListFragment()).title("Category 9"));
+        adapter.fragments.add(FragmentPage.create().fragment(() -> new CheeseListFragment()).title("Category 10"));
         viewPager.setAdapter(adapter);
     }
 

@@ -29,14 +29,93 @@ import com.bumptech.glide.Glide;
 
 import java.util.Random;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+
+import rx.Observable;
+import rx.functions.*;
+
+import rx.android.app.*;
+
+import rx.facebook.RxFacebook;
+import retrofacebook.*;
+
+import java.util.Arrays;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
+
 public class CheeseDetailActivity extends AppCompatActivity {
 
     public static final String EXTRA_NAME = "cheese_name";
+
+    @InjectView(R.id.list)
+    RecyclerView listView;
+
+    private ListRecyclerAdapter<SimplePost, SimplePostViewHolder> listAdapter;
+
+    public static class SimplePost {
+        String title;
+        String content;
+        public String title() {
+            return title;
+        }
+        public String content() {
+            return content;
+        }
+        public SimplePost title(String title) {
+            this.title = title;
+            return this;
+        }
+        public SimplePost content(String content) {
+            this.content = content;
+            return this;
+        }
+        public static SimplePost create() {
+            return new SimplePost();
+        }
+    }
+
+    public static class SimplePostViewHolder extends BindViewHolder<SimplePost> {
+        @InjectView(R.id.text1)
+        TextView text1;
+        @InjectView(R.id.text2)
+        TextView text2;
+
+        public SimplePostViewHolder(View itemView) {
+            super(itemView);
+            ButterKnife.inject(this, itemView);
+        };
+
+        @Override
+        public void onBind(int position, SimplePost item) {
+            if (!android.text.TextUtils.isEmpty(item.title())) text1.setText(item.title());
+            if (!android.text.TextUtils.isEmpty(item.content())) text2.setText(item.content());
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+        ButterKnife.inject(this);
+
+        listAdapter = ListRecyclerAdapter.create();
+
+        listAdapter.createViewHolder(new Func2<ViewGroup, Integer, SimplePostViewHolder>() {
+            @Override
+            public SimplePostViewHolder call(@Nullable ViewGroup viewGroup, Integer position) {
+                return new SimplePostViewHolder(LayoutInflater.from(CheeseDetailActivity.this).inflate(R.layout.item_post_card, viewGroup, false));
+            }
+        });
+
+        listAdapter.getList().addAll(Arrays.asList(SimplePost.create(), SimplePost.create(), SimplePost.create()));
+
+        listView.setLayoutManager(new android.support.v7.widget.LinearLayoutManager(this));
+        listView.setAdapter(listAdapter);
 
         Intent intent = getIntent();
         final String cheeseName = intent.getStringExtra(EXTRA_NAME);

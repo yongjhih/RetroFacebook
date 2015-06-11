@@ -48,15 +48,14 @@ import rx.android.app.*;
 import rx.facebook.RxFacebook;
 import retrofacebook.*;
 
-public class CheeseListFragment extends Fragment {
+public class ListFragment extends Fragment {
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        RecyclerView rv = (RecyclerView) inflater.inflate(
-                R.layout.fragment_cheese_list, container, false);
-        setupRecyclerView(rv);
-        return rv;
+        RecyclerView listView = (RecyclerView) inflater.inflate(R.layout.fragment_list, container, false);
+        setupRecyclerView(listView);
+        return listView;
     }
 
     private void setupRecyclerView(RecyclerView recyclerView) {
@@ -147,3 +146,4 @@ public class CheeseListFragment extends Fragment {
         }
     }
 }
+

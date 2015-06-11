@@ -17,15 +17,25 @@
 
 <resources>
 
-    <style name="Theme.DesignDemo" parent="Base.Theme.DesignDemo">
+    <style name="Theme.App" parent="Base.Theme.App">
     </style>
 
-    <style name="Base.Theme.DesignDemo" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">#673AB7</item>
-        <item name="colorPrimaryDark">#512DA8</item>
-        <item name="colorAccent">#FF4081</item>
+    <style name="Base.Theme.App" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowBackground">@color/window_background</item>
     </style>
+
+    <color name="colorPrimary">@color/colorMaterialDesignBlue</color>
+    <color name="colorPrimaryDark">@color/colorMaterialDesignBlue</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="colorMaterialDesignTeal500">#26A69A</color>
+    <color name="colorMaterialDesignCyan">#00BCD4</color>
+    <color name="colorMaterialDesignBlue">#1976D2</color>
+    <color name="colorMaterialDesignIndigo">#303F9F</color>
+
 
     <style name="Widget.CardContent" parent="android:Widget">
         <item name="android:paddingLeft">16dp</item>
