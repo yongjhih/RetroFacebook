@@ -171,13 +171,13 @@ public class MainActivity extends AppCompatActivity {
                         .build();
                 }));
         }).title("Posts"));
-        adapter.fragments.add(FragmentPage.create().fragment(() -> new CheeseListFragment()).title("Category 4"));
-        adapter.fragments.add(FragmentPage.create().fragment(() -> new CheeseListFragment()).title("Category 5"));
-        adapter.fragments.add(FragmentPage.create().fragment(() -> new CheeseListFragment()).title("Category 6"));
-        adapter.fragments.add(FragmentPage.create().fragment(() -> new CheeseListFragment()).title("Category 7"));
-        adapter.fragments.add(FragmentPage.create().fragment(() -> new CheeseListFragment()).title("Category 8"));
-        adapter.fragments.add(FragmentPage.create().fragment(() -> new CheeseListFragment()).title("Category 9"));
-        adapter.fragments.add(FragmentPage.create().fragment(() -> new CheeseListFragment()).title("Category 10"));
+        //adapter.fragments.add(FragmentPage.create().fragment(() -> new CheeseListFragment()).title("Category 4"));
+        //adapter.fragments.add(FragmentPage.create().fragment(() -> new CheeseListFragment()).title("Category 5"));
+        //adapter.fragments.add(FragmentPage.create().fragment(() -> new CheeseListFragment()).title("Category 6"));
+        //adapter.fragments.add(FragmentPage.create().fragment(() -> new CheeseListFragment()).title("Category 7"));
+        //adapter.fragments.add(FragmentPage.create().fragment(() -> new CheeseListFragment()).title("Category 8"));
+        //adapter.fragments.add(FragmentPage.create().fragment(() -> new CheeseListFragment()).title("Category 9"));
+        //adapter.fragments.add(FragmentPage.create().fragment(() -> new CheeseListFragment()).title("Category 10"));
         viewPager.setAdapter(adapter);
     }
 
