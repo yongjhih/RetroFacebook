@@ -40,6 +40,15 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import rx.Observable;
+import rx.functions.*;
+
+import retrofacebook.*;
+import rx.facebook.*;
+
+import butterknife.InjectView;
+import butterknife.ButterKnife;
+
 /**
  * TODO
  */
@@ -47,10 +56,14 @@ public class MainActivity extends AppCompatActivity {
 
     private DrawerLayout mDrawerLayout;
 
+    private RxFacebook mRxFacebook;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.inject(this);
+        mRxFacebook = RxFacebook.create(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -102,9 +115,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupViewPager(ViewPager viewPager) {
         Adapter adapter = new Adapter(getSupportFragmentManager());
-        adapter.addFragment(new CheeseListFragment(), "Category 1");
-        adapter.addFragment(new CheeseListFragment(), "Category 2");
-        adapter.addFragment(new CheeseListFragment(), "Category 3");
+        adapter.fragments.add(FragmentPage.create().fragment(() -> new CheeseListFragment()).title("Category 1"));
+        adapter.fragments.add(FragmentPage.create().fragment(() -> new CheeseListFragment()).title("Category 2"));
+        adapter.fragments.add(FragmentPage.create().fragment(() -> new CheeseListFragment()).title("Category 3"));
         viewPager.setAdapter(adapter);
     }
 
@@ -120,32 +133,56 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    static class FragmentPage {
+        Func0<Fragment> onFragment;
+        Fragment fragment;
+        String title;
+
+        public Fragment fragment() {
+            if (fragment == null) fragment = onFragment.call();
+            return fragment;
+        }
+
+        public String title() {
+            return title;
+        }
+
+        public FragmentPage fragment(Func0<Fragment> onFragment) {
+            this.onFragment = onFragment;
+            return this;
+        }
+
+        public FragmentPage title(String title) {
+            this.title = title;
+            return this;
+        }
+
+        public static FragmentPage create() {
+            return new FragmentPage();
+        }
+
+    }
+
     static class Adapter extends FragmentPagerAdapter {
-        private final List<Fragment> mFragments = new ArrayList<>();
-        private final List<String> mFragmentTitles = new ArrayList<>();
+        public List<FragmentPage> fragments = new ArrayList<>(); // NOTICE: memleak
 
         public Adapter(FragmentManager fm) {
             super(fm);
         }
 
-        public void addFragment(Fragment fragment, String title) {
-            mFragments.add(fragment);
-            mFragmentTitles.add(title);
-        }
-
         @Override
         public Fragment getItem(int position) {
-            return mFragments.get(position);
+            return fragments.get(position).fragment();
         }
 
         @Override
         public int getCount() {
-            return mFragments.size();
+            return fragments.size();
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return mFragmentTitles.get(position);
+            return fragments.get(position).title();
         }
     }
 }
