@@ -6,13 +6,16 @@ Inspired by retrofit.
 
 OGM, Object Graph Mapping, Graph to POJO.
 
-
+![photos.png](art/screenshot-photos.png)
+![posts.png](art/screenshot-posts.png)
 
 ## Usage
 
 ```
 Facebook facebook = Facebook.create();
 Observable<Post> posts = facebook.getPosts("4");
+Observable<Post> myPosts = facebook.getPosts();
+Observable<Photo> photos = facebook.getPhotos();
 ```
 
 ## Installation
