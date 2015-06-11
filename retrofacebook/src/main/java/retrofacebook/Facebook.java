@@ -23,6 +23,9 @@ public abstract class Facebook {
   @RetroFacebook.GET("/{postId}")
   public abstract Observable<Post> getPost(@RetroFacebook.Path String postId);
 
+  @RetroFacebook.GET("/{userId}/photos?type=uploaded")
+  public abstract Observable<Photo> getPhotos(@RetroFacebook.Path String userId);
+
   public static Facebook create() {
       return new RetroFacebook_Facebook();
   }

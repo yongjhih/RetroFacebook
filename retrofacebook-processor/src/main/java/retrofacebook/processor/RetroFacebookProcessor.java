@@ -166,6 +166,20 @@ public class RetroFacebookProcessor extends AbstractProcessor {
     return generatedClassName(type, "RetroFacebook_");
   }
 
+  public interface Action1<T> {
+      void call(T t);
+  }
+
+  private void onAnnotationForProperty(AnnotationMirror annotation) {
+      onAnnotationForProperty.call(annotation);
+  }
+
+  private Action1<? super AnnotationMirror> onAnnotationForProperty;
+
+  private void annotationForProperty(Action1<? super AnnotationMirror> onAnnotationForProperty) {
+      this.onAnnotationForProperty = onAnnotationForProperty;
+  }
+
   /**
    * A property of an {@code @RetroFacebook} class, defined by one of its abstract methods.
    * An instance of this class is made available to the Velocity template engine for
@@ -181,7 +195,7 @@ public class RetroFacebookProcessor extends AbstractProcessor {
     private final String typeArgs;
     private final ImmutableList<String> annotations;
     private final String args;
-    private final String catArgs;
+    private final String path;
 
     Property(
         String name,
@@ -195,7 +209,7 @@ public class RetroFacebookProcessor extends AbstractProcessor {
       this.type = type;
       this.annotations = buildAnnotations(typeSimplifier);
       this.args = formalTypeArgsString(method);
-      this.catArgs = catArgsString(method);
+      this.path = buildPath(method);
       this.typeArgs = buildTypeArguments(type);
     }
 
@@ -204,6 +218,29 @@ public class RetroFacebookProcessor extends AbstractProcessor {
       Matcher m = pattern.matcher(type);
       if (m.find()) return m.group(1);
       return null;
+    }
+
+    // /{postId}
+    // /{userIdA}/friends/{userIdB}
+    // "/" + userIdA + "/friends/" + "userIdB"
+    // "/" + userIdA + "/friends/" + "userIdB" + ""
+    public String buildPath(ExecutableElement method) {
+      StringBuilder sb = new StringBuilder();
+
+      sb.append("\"");
+
+      retrofacebook.RetroFacebook.GET api = method.getAnnotation(retrofacebook.RetroFacebook.GET.class);
+
+      String value = api.value();
+
+      value = value.replace("{", "\" + ");
+      value = value.replace("}", " + \"");
+
+      sb.append(value);
+
+      sb.append("\"");
+
+      return sb.toString();
     }
 
     private ImmutableList<String> buildAnnotations(TypeSimplifier typeSimplifier) {
@@ -313,8 +350,8 @@ public class RetroFacebookProcessor extends AbstractProcessor {
       return args;
     }
 
-    public String getCatArgs() {
-      return catArgs;
+    public String getPath() {
+      return path;
     }
 
     public boolean isNullable() {
@@ -406,6 +443,13 @@ public class RetroFacebookProcessor extends AbstractProcessor {
           }
         }
         if (!alreadySeen) {
+          /*
+          retrofacebook.RetroFacebook.GET action = method.getAnnotation(retrofacebook.RetroFacebook.GET.class);
+          System.out.printf(
+              "%s Action value = %s\n",
+              method.getSimpleName(),
+              action == null ? null : action.value() );
+          */
           methods.add(method);
         }
       }

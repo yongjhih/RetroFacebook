@@ -37,11 +37,11 @@ final class $subclass$formalTypes extends $origClass$actualTypes {
         return Observable.create(new OnSubscribeGraphResponse(
                 GraphRequest.newGraphPathRequest(
                     AccessToken.getCurrentAccessToken(),
-                    "/" + ${p.catArgs}, null
+                    ${p.path}, null
                 )
             )
         ).map(new Func1<GraphResponse, $p.typeArgs>() {
-            @Override public Post call(GraphResponse response) {
+            @Override public ${p.typeArgs} call(GraphResponse response) {
                 try {
                 return LoganSquare.parse(response.getJSONObject().toString(), AutoJson_${p.typeArgs}.class);
                 } catch (java.io.IOException e) {

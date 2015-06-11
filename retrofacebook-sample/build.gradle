@@ -17,8 +17,8 @@ android {
 
 dependencies {
   compile project(':retrofacebook')
-  apt project(':retrofacebook-processor')
-  apt 'com.bluelinelabs:logansquare-compiler:1.1.0'
-  compile 'com.bluelinelabs:logansquare:1.1.0'
+
   compile 'com.android.support:support-annotations:21.0.0'
+
+  compile 'com.facebook.android:facebook-android-sdk:4.2.0'
 }
