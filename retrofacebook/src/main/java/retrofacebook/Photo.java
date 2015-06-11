@@ -35,6 +35,15 @@ public abstract class Photo {
     public abstract String url();
     @Nullable
     @AutoJson.Field
+    public abstract String source();
+    @Nullable
+    @AutoJson.Field
+    public abstract String picture();
+    @Nullable
+    @AutoJson.Field
+    public abstract AutoJson_User from();
+    @Nullable
+    @AutoJson.Field
     public abstract List<AutoJson_Image> images();
 
     @AutoJson.Builder
@@ -43,6 +52,9 @@ public abstract class Photo {
         public abstract Builder caption(String caption);
         public abstract Builder place(String place);
         public abstract Builder url(String url);
+        public abstract Builder source(String source);
+        public abstract Builder picture(String picture);
+        public abstract Builder from(AutoJson_User from);
         public abstract Builder images(List<AutoJson_Image> images);
 
         public abstract Photo build();

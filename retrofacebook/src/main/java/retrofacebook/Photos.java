@@ -15,19 +15,25 @@
  */
 package retrofacebook;
 
-import rx.Observable;
-import rx.functions.*;
+import auto.json.AutoJson;
+import android.support.annotation.Nullable;
 
-@RetroFacebook
-public abstract class Facebook {
-  @RetroFacebook.GET("/{postId}")
-  public abstract Observable<Post> getPost(@RetroFacebook.Path String postId);
+import java.util.List;
 
-  //@RetroFacebook.GET("/{userId}/photos?type=uploaded")
-  @RetroFacebook.GET("/{userId}/photos")
-  public abstract Observable<Photo> getPhotos(@RetroFacebook.Path String userId);
+@AutoJson
+public abstract class Photos {
+    @Nullable
+    @AutoJson.Field
+    public abstract List<AutoJson_Photo> data();
 
-  public static Facebook create() {
-      return new RetroFacebook_Facebook();
-  }
+    @AutoJson.Builder
+    public abstract static class Builder {
+        public abstract Builder data(List<AutoJson_Photo> data);
+
+        public abstract Photos build();
+    }
+
+    public static Builder builder() {
+        return new AutoJson_Photos.Builder();
+    }
 }

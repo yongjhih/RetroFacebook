@@ -27,7 +27,7 @@ import com.bluelinelabs.logansquare.LoganSquare;
 import android.util.Log;
 
 ${gwtCompatibleAnnotation}
-final class $subclass$formalTypes extends $origClass$actualTypes {
+public final class $subclass$formalTypes extends $origClass$actualTypes {
 
 ## Property getters
 
@@ -41,19 +41,37 @@ final class $subclass$formalTypes extends $origClass$actualTypes {
                     ${p.path}, null
                 )
             )
-        ).map(new Func1<GraphResponse, $p.typeArgs>() {
-            @Override public ${p.typeArgs} call(GraphResponse response) {
+        ).map(new Func1<GraphResponse, ${p.typeArgs}s>() {
+            @Override public ${p.typeArgs}s call(GraphResponse response) {
                 try {
-                    return LoganSquare.parse(response.getJSONObject().toString(), AutoJson_${p.typeArgs}.class);
+                    Log.d("RetroFacebook", "${p.typeArgs}s: " + response.getJSONObject().toString());
+                    return LoganSquare.parse(response.getJSONObject().toString(), AutoJson_${p.typeArgs}s.class);
                 } catch (java.io.IOException e) {
                     e.printStackTrace();
                     return null;
                 }
             }
+        }).filter(new Func1<${p.typeArgs}s, Boolean>() {
+            @Override public Boolean call(${p.typeArgs}s data) {
+                return data != null;
+            }
+        }).flatMap(new Func1<${p.typeArgs}s, Observable<$p.typeArgs>>() {
+            @Override public Observable<${p.typeArgs}> call(${p.typeArgs}s data) {
+                return Observable.from(data.data())
+                        .map(new Func1<AutoJson_${p.typeArgs}, $p.typeArgs>() {
+                            @Override public ${p.typeArgs} call(AutoJson_${p.typeArgs} o) {
+                                return cast(o);
+                            }
+                        });
+            }
         });
     }
 
 #end
+
+    public static <T> T cast(Object o) {
+        return (T) o;
+    }
 
     public class OnSubscribeGraphResponse implements Observable.OnSubscribe<GraphResponse> {
         public GraphRequest request;
@@ -64,6 +82,7 @@ final class $subclass$formalTypes extends $origClass$actualTypes {
 
         @Override
         public void call(final Subscriber<? super GraphResponse> sub) {
+            Log.d("RetroFacebook", "onSubscribe");
             if (request != null) {
                 request.setCallback(new GraphRequest.Callback() {
                     @Override
@@ -85,8 +104,10 @@ final class $subclass$formalTypes extends $origClass$actualTypes {
                                 request = response.getRequestForPagedResults(GraphResponse.PagingDirection.NEXT);
 
                                 if (request != null) {
+                                    Log.d("RetroFacebook", "hasNext");
                                     call(sub);
                                 } else {
+                                    Log.d("RetroFacebook", "end");
                                     sub.onCompleted();
                                 }
                             }

@@ -88,26 +88,38 @@ public class MainFragment extends Fragment {
                             android.util.Log.d("RetroFacebook", "token: " + login.getAccessToken().getToken());
                         }).flatMap(login -> Facebook.create().getPhotos("me")))
                         .doOnNext(p -> {
-                            android.util.Log.d("RetroFacebook", "caption: " + p.caption());
-                            android.util.Log.d("RetroFacebook", "url: " + p.url());
+                            android.util.Log.d("RetroFacebook", "caption: " + p.caption() + " :caption");
+                            android.util.Log.d("RetroFacebook", "from: " + p.from() + " :from");
+                            android.util.Log.d("RetroFacebook", "from.name: " + ((User) p.from()).name() + " :from.name");
+                            android.util.Log.d("RetroFacebook", "picture: " + p.picture() + " :picture");
+                            try {
+                                //android.util.Log.d("RetroFacebook", "image: " + p.images() == null ? null : ((Image) p.images().get(0)).source());
+                            } catch (NullPointerException e) {
+                                //android.util.Log.d("RetroFacebook", "image: " + "null");
+                            }
                         })
+                        .take(10)
                         .toList()
                         .subscribe(new Action1<List<Photo>>() {
                             @Override
-                            public void call(final List<Photo> users) {
+                            public void call(final List<Photo> list) {
+                                android.util.Log.d("RetroFacebook", "onNext list");
+                                loading.setRefreshing(false);
                                 handler.post(new Runnable() {
                                     @Override
                                     public void run() {
                                         listAdapter.getList().clear();
-                                        listAdapter.getList().addAll(users);
+                                        listAdapter.getList().addAll(list);
                                         listAdapter.notifyDataSetChanged();
                                     }
                                 });
                             }
                         }, e -> {
                             loading.setRefreshing(false);
+                            android.util.Log.e("RetroFacebook", "" + e);
                             e.printStackTrace();
                         }, () -> {
+                            android.util.Log.e("RetroFacebook", "onCompleted");
                             loading.setRefreshing(false);
                         });
             }
@@ -136,7 +148,13 @@ public class MainFragment extends Fragment {
 
         @Override
         public void onBind(int position, Photo item) {
-            icon.setImageURI(Uri.parse(((Image) item.images().get(0)).source()));
+            try {
+                //android.util.Log.d("RetroFacebook", "image: " + item.images() == null ? null : ((Image) item.images().get(0)).source());
+                //icon.setImageURI(Uri.parse(((Image) item.images().get(0)).source()));
+                icon.setImageURI(Uri.parse(item.source()));
+            } catch (NullPointerException e) {
+                //android.util.Log.d("RetroFacebook", "image: " + "null");
+            }
             text1.setText(item.caption());
         }
     }
