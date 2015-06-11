@@ -69,16 +69,22 @@ public class CardsFragment extends Fragment {
                 return new CardViewHolder(view);
             }
         });
-        items.toList().subscribe(list -> {
-            listAdapter.getList().clear();
-            listAdapter.getList().addAll(list);
-            listAdapter.notifyDataSetChanged();
-        });
 
         listView.setLayoutManager(new LinearLayoutManager(listView.getContext()));
         listView.setAdapter(listAdapter);
 
         return listView;
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        if (isVisibleToUser) {
+            items.toList().subscribe(list -> {
+                listAdapter.getList().clear();
+                listAdapter.getList().addAll(list);
+                listAdapter.notifyDataSetChanged();
+            });
+        }
     }
 
     private ListRecyclerAdapter<Card, CardViewHolder> listAdapter;

@@ -72,13 +72,18 @@ public class ListFragment extends Fragment {
         listView.setLayoutManager(new LinearLayoutManager(listView.getContext()));
         listView.setAdapter(listAdapter);
 
-        items.toList().subscribe(list -> {
-            listAdapter.getList().clear();
-            listAdapter.getList().addAll(list);
-            listAdapter.notifyDataSetChanged();
-        });
-
         return listView;
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        if (isVisibleToUser) {
+            items.toList().subscribe(list -> {
+                listAdapter.getList().clear();
+                listAdapter.getList().addAll(list);
+                listAdapter.notifyDataSetChanged();
+            });
+        }
     }
 
     private ListRecyclerAdapter<Item, ItemViewHolder> listAdapter;
