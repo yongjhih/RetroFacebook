@@ -11,11 +11,34 @@ OGM, Object Graph Mapping, Graph to POJO.
 
 ## Usage
 
-```
+```java
 Facebook facebook = Facebook.create();
 Observable<Post> posts = facebook.getPosts("4");
+posts.subscribe(post -> /* ... */);
 Observable<Post> myPosts = facebook.getPosts();
-Observable<Photo> photos = facebook.getPhotos();
+myPosts.subscribe(post -> /* ... */);
+Observable<Photo> myPhotos = facebook.getPhotos();
+myPhotos.subscribe(photo -> /* ... */);
+```
+
+or
+
+```java
+facebook.getPosts("4", new FacebookCallback<Post>() {
+    @Override public void onCompleted(List<Post> posts, FacebookException error) {
+        // ...
+    }
+});
+facebook.getPosts(new FacebookCallback<Post>() {
+    @Override public void onCompleted(List<Post> posts, FacebookException error) {
+        // ...
+    }
+});
+facebook.getPhotos(new FacebookCallback<Post>() {
+    @Override public void onCompleted(List<Post> posts, FacebookException error) {
+        // ...
+    }
+});
 ```
 
 ## Installation
