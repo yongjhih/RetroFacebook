@@ -32,81 +32,81 @@ import java.util.Arrays;
 
 @RetroFacebook
 public abstract class Facebook {
-  @RetroFacebook.GET("/{postId}")
-  public abstract Observable<Post> getPost(@RetroFacebook.Path String postId);
+    @RetroFacebook.GET("/{postId}")
+    public abstract Observable<Post> getPost(@RetroFacebook.Path String postId);
 
-  // TODO @RetroFacebook.GET("/{userId}/photos?type=uploaded")
-  @RetroFacebook.GET("/{userId}/photos")
-  public abstract Observable<Photo> getPhotos(@RetroFacebook.Path String userId);
+    // TODO @RetroFacebook.GET("/{userId}/photos?type=uploaded")
+    @RetroFacebook.GET("/{userId}/photos")
+    public abstract Observable<Photo> getPhotos(@RetroFacebook.Path String userId);
 
-  public Observable<Photo> getPhotos() {
-      return getPhotos("me");
-  }
+    public Observable<Photo> getPhotos() {
+        return getPhotos("me");
+    }
 
-  @RetroFacebook.GET("/{userId}/feed")
-  public abstract Observable<Post> getPosts(@RetroFacebook.Path String userId);
+    @RetroFacebook.GET("/{userId}/feed")
+    public abstract Observable<Post> getPosts(@RetroFacebook.Path String userId);
 
-  public Observable<Post> getPosts() {
-      return getPosts("me");
-  }
+    public Observable<Post> getPosts() {
+        return getPosts("me");
+    }
 
-  @RetroFacebook.GET("/{userId}/friends")
-  public abstract Observable<User> getFriends(@RetroFacebook.Path String userId);
+    @RetroFacebook.GET("/{userId}/friends")
+    public abstract Observable<User> getFriends(@RetroFacebook.Path String userId);
 
-  public Observable<User> getFriends() {
-      return getFriends("me");
-  }
+    public Observable<User> getFriends() {
+        return getFriends("me");
+    }
 
-  public static Facebook create() {
-      return new RetroFacebook_Facebook();
-  }
+    public static Facebook create() {
+        return new RetroFacebook_Facebook();
+    }
 
-  CallbackManager callbackManager;
-  Activity activity;
+    CallbackManager callbackManager;
+    Activity activity;
 
-  public Facebook initialize(Activity activity) {
-      this.activity = activity;
+    public Facebook initialize(Activity activity) {
+        this.activity = activity;
 
-      FacebookSdk.sdkInitialize(activity.getApplicationContext());
-      callbackManager = CallbackManager.Factory.create();
+        FacebookSdk.sdkInitialize(activity.getApplicationContext());
+        callbackManager = CallbackManager.Factory.create();
 
-      return this;
-  }
+        return this;
+    }
 
-  public static Facebook create(Activity activity) {
-      return create().initialize(activity);
-  }
+    public static Facebook create(Activity activity) {
+        return create().initialize(activity);
+    }
 
-  public Observable<LoginResult> logIn() {
-      return logInWithReadPermissions(Arrays.asList("public_profile", "user_friends", "user_photos", "user_posts"));
-  }
+    public Observable<LoginResult> logIn() {
+        return logInWithReadPermissions(Arrays.asList("public_profile", "user_friends", "user_photos", "user_posts"));
+    }
 
-  public Observable<LoginResult> logInWithReadPermissions(final Collection<String> permissions) {
-      return Observable.create(new Observable.OnSubscribe<LoginResult>() {
-          @Override public void call(final Subscriber<? super LoginResult> sub) {
-              LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-                  @Override
-                  public void onSuccess(LoginResult loginResult) {
-                      sub.onNext(loginResult);
-                      sub.onCompleted();
-                  }
+    public Observable<LoginResult> logInWithReadPermissions(final Collection<String> permissions) {
+        return Observable.create(new Observable.OnSubscribe<LoginResult>() {
+            @Override public void call(final Subscriber<? super LoginResult> sub) {
+                LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+                    @Override
+                    public void onSuccess(LoginResult loginResult) {
+                        sub.onNext(loginResult);
+                        sub.onCompleted();
+                    }
 
-                  @Override
-                  public void onCancel() {
-                      sub.onCompleted();
-                  }
+                    @Override
+                    public void onCancel() {
+                        sub.onCompleted();
+                    }
 
-                  @Override
-                  public void onError(FacebookException error) {
-                      sub.onError(error);
-                  }
-              });
-              LoginManager.getInstance().logInWithReadPermissions(activity, permissions);
-          }
-      });
-  }
+                    @Override
+                    public void onError(FacebookException error) {
+                        sub.onError(error);
+                    }
+                });
+                LoginManager.getInstance().logInWithReadPermissions(activity, permissions);
+            }
+        });
+    }
 
-  public void onActivityResult(int requestCode, int resultCode, Intent data) {
-      callbackManager.onActivityResult(requestCode, resultCode, data);
-  }
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+    }
 }
