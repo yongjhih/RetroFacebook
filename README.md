@@ -81,7 +81,11 @@ abstract class Facebook {
 ```java
 @AutoJson
 public abstract class Post {
+    @Nullable
+    @AutoJson.Field
     public abstract String id();
+    
+    @Nullable
     @AutoJson.Field(name = "is_hidden")
     public abstract Boolean isHidden();
 }
@@ -122,6 +126,7 @@ final class RetroFacebook_Facebook extends Facebook {
 final class AutoJson_Post extends Post {
 
   @android.support.annotation.Nullable
+  @com.bluelinelabs.logansquare.annotation.JsonField
   String id;
 
   @android.support.annotation.Nullable
@@ -175,8 +180,8 @@ final class AutoJson_Post extends Post {
 
 ## Credit
 
-* frankiesardo/auto-parcel
-* bluelinelabs/LoganSquare
+* https://github.com/frankiesardo/auto-parcel
+* https://github.com/bluelinelabs/LoganSquare
 
 ## License
 
