@@ -34,8 +34,8 @@ facebook.getPosts(new FacebookCallback<Post>() {
         // ...
     }
 });
-facebook.getPhotos(new FacebookCallback<Post>() {
-    @Override public void onCompleted(List<Post> posts, FacebookException error) {
+facebook.getPhotos(new FacebookCallback<Photo>() {
+    @Override public void onCompleted(List<Photo> posts, FacebookException error) {
         // ...
     }
 });
