@@ -41,10 +41,10 @@ public abstract class Photo {
     public abstract String picture();
     @Nullable
     @AutoJson.Field
-    public abstract AutoJson_User from();
+    public abstract User from();
     @Nullable
     @AutoJson.Field
-    public abstract List<AutoJson_Image> images();
+    public abstract List<Image> images();
 
     @AutoJson.Builder
     public abstract static class Builder {
@@ -54,8 +54,8 @@ public abstract class Photo {
         public abstract Builder url(String url);
         public abstract Builder source(String source);
         public abstract Builder picture(String picture);
-        public abstract Builder from(AutoJson_User from);
-        public abstract Builder images(List<AutoJson_Image> images);
+        public abstract Builder from(User from);
+        public abstract Builder images(List<Image> images);
 
         public abstract Photo build();
     }

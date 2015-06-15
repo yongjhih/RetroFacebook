@@ -62,6 +62,7 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
+import javax.lang.model.type.DeclaredType;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 import com.bluelinelabs.logansquare.annotation.JsonField;
@@ -95,7 +96,10 @@ public class AutoJsonProcessor extends AbstractProcessor {
    * Qualified names of {@code @AutoJson} classes that we attempted to process but had to abandon
    * because we needed other types that they referenced and those other types were missing.
    */
-  private final List<String> deferredTypeNames = new ArrayList<String>();
+  private final List<String> deferredTypeNames = new ArrayList<>();
+  private final List<TypeElement> deferredTypes = new ArrayList<>();
+  private final List<Element> annotatedElements = new ArrayList<>();
+  private List<String> annotatedNames;
 
   @Override
   public synchronized void init(ProcessingEnvironment processingEnv) {
@@ -105,7 +109,7 @@ public class AutoJsonProcessor extends AbstractProcessor {
 
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-    List<TypeElement> deferredTypes = new ArrayList<TypeElement>();
+    deferredTypes.clear();
     for (String deferred : deferredTypeNames) {
       deferredTypes.add(processingEnv.getElementUtils().getTypeElement(deferred));
     }
@@ -119,13 +123,23 @@ public class AutoJsonProcessor extends AbstractProcessor {
       }
       return false;
     }
-    Collection<? extends Element> annotatedElements =
-        roundEnv.getElementsAnnotatedWith(AutoJson.class);
+    annotatedElements.clear();
+    annotatedElements.addAll(roundEnv.getElementsAnnotatedWith(AutoJson.class));
     List<TypeElement> types = new ImmutableList.Builder<TypeElement>()
         .addAll(deferredTypes)
         .addAll(ElementFilter.typesIn(annotatedElements))
         .build();
     deferredTypeNames.clear();
+
+    if (annotatedNames == null) {
+        annotatedNames = new ArrayList<>();
+        for (TypeElement type : ElementFilter.typesIn(annotatedElements)) {
+            annotatedNames.add(type.getQualifiedName().toString());
+
+        //errorReporter.reportError("@AutoJson processor threw an annotatedNames: " + type.getQualifiedName().toString(), type);
+        }
+    }
+
     for (TypeElement type : types) {
       try {
         processType(type);
@@ -177,17 +191,21 @@ public class AutoJsonProcessor extends AbstractProcessor {
     private final ExecutableElement method;
     private final String type;
     private final ImmutableList<String> annotations;
+    private final String autoType;
 
     Property(
         String name,
         String identifier,
         ExecutableElement method,
         String type,
-        TypeSimplifier typeSimplifier) {
+        TypeSimplifier typeSimplifier,
+        String autoType
+        ) {
       this.name = name;
       this.identifier = identifier;
       this.method = method;
       this.type = type;
+      this.autoType = autoType;
       this.annotations = buildAnnotations(typeSimplifier);
     }
 
@@ -258,6 +276,10 @@ public class AutoJsonProcessor extends AbstractProcessor {
 
     public String getType() {
       return type;
+    }
+
+    public String getAutoType() {
+      return autoType;
     }
 
     public TypeKind getKind() {
@@ -469,10 +491,19 @@ public class AutoJsonProcessor extends AbstractProcessor {
     fixReservedIdentifiers(methodToIdentifier);
     List<Property> props = new ArrayList<Property>();
     for (ExecutableElement method : propertyMethods) {
+      TypeElement typeElement = (TypeElement) typeUtils.asElement(method.getReturnType());
       String propertyType = typeSimplifier.simplify(method.getReturnType());
+      String autoType = propertyType;
+      String args[] = propertyType.split(",");
+      if (args.length > 0) {
+          String arg = args[0].replaceAll("[^<]*<", "").replace(" ", "").replace("<", "").replace(">", "");
+          if (annotatedNames.contains("retrofacebook." + arg)) {
+              autoType = autoType.replace(arg, "AutoJson_" + arg);
+          }
+      }
       String propertyName = methodToPropertyName.get(method);
       String identifier = methodToIdentifier.get(method);
-      props.add(new Property(propertyName, identifier, method, propertyType, typeSimplifier));
+      props.add(new Property(propertyName, identifier, method, propertyType, typeSimplifier, autoType));
     }
     // If we are running from Eclipse, undo the work of its compiler which sorts methods.
     eclipseHack().reorderProperties(props);
@@ -489,6 +520,27 @@ public class AutoJsonProcessor extends AbstractProcessor {
     if (builder.isPresent()) {
       builder.get().defineVars(vars, typeSimplifier, methodToPropertyName);
     }
+  }
+
+  public String toTypeArguments(TypeElement type) {
+      return toTypeArguments((DeclaredType) type);
+  }
+
+  public String toTypeArguments(DeclaredType type) {
+      StringBuilder sb = new StringBuilder();
+
+      List<? extends TypeMirror> arguments = type.getTypeArguments();
+      if (!arguments.isEmpty()) {
+          sb.append("<");
+          String sep = "";
+          for (TypeMirror argument : arguments) {
+              sb.append(sep);
+              sep = ", ";
+              //visit(argument, sb);
+          }
+          sb.append(">");
+      }
+      return sb.toString();
   }
 
   private ImmutableMap<ExecutableElement, String> methodToPropertyNameMap(

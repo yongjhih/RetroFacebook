@@ -33,7 +33,7 @@ final class $subclass$formalTypes extends $origClass$actualTypes {
   ${a}##
   #end
 
-  $p.type $p;
+  $p.autoType $p;
 #end
 
 ## Constructor

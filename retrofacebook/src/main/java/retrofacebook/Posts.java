@@ -24,11 +24,11 @@ import java.util.List;
 public abstract class Posts {
     @Nullable
     @AutoJson.Field
-    public abstract List<AutoJson_Post> data();
+    public abstract List<Post> data();
 
     @AutoJson.Builder
     public abstract static class Builder {
-        public abstract Builder data(List<AutoJson_Post> data);
+        public abstract Builder data(List<Post> data);
 
         public abstract Posts build();
     }

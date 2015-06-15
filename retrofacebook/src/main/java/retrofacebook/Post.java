@@ -40,7 +40,7 @@ public abstract class Post {
     public abstract String picture();
     @Nullable
     @AutoJson.Field
-    public abstract AutoJson_User from();
+    public abstract User from();
     @Nullable
     @AutoJson.Field
     public abstract String message();
@@ -53,7 +53,7 @@ public abstract class Post {
         public abstract Builder url(String url);
         public abstract Builder source(String source);
         public abstract Builder picture(String picture);
-        public abstract Builder from(AutoJson_User from);
+        public abstract Builder from(User from);
         public abstract Builder message(String message);
 
         public abstract Post build();
