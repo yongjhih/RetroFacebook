@@ -35,17 +35,19 @@ public final class $subclass$formalTypes extends $origClass$actualTypes {
 
     @Override
     ${p.access}${p.type} ${p.getter}(${p.args}) {
-        return Observable.create(new OnSubscribeGraphResponse(
-                GraphRequest.newGraphPathRequest(
-                    AccessToken.getCurrentAccessToken(),
-                    ${p.path}, null
+        return Observable.create(new OnSubscribeResponse(
+                new Request(
+                    Session.getActiveSession(),
+                    ${p.path},
+                    null,
+                    HttpMethod.GET
                 )
             )
-        ).map(new Func1<GraphResponse, ${p.typeArgs}s>() {
-            @Override public ${p.typeArgs}s call(GraphResponse response) {
+        ).map(new Func1<Response, ${p.typeArgs}s>() {
+            @Override public ${p.typeArgs}s call(Response response) {
                 try {
-                    Log.d("RetroFacebook", "${p.typeArgs}s: " + response.getJSONObject().toString());
-                    return LoganSquare.parse(response.getJSONObject().toString(), ${p.typeArgs}s.class);
+                    Log.d("RetroFacebook", "${p.typeArgs}s: " + response.getGraphObject().getInnerJSONObject().toString());
+                    return LoganSquare.parse(response.getGraphObject().getInnerJSONObject().toString(), ${p.typeArgs}s.class);
                 } catch (java.io.IOException e) {
                     e.printStackTrace();
                     return null;
@@ -68,35 +70,27 @@ public final class $subclass$formalTypes extends $origClass$actualTypes {
         return (T) o;
     }
 
-    public class OnSubscribeGraphResponse implements Observable.OnSubscribe<GraphResponse> {
-        public GraphRequest request;
+    public class OnSubscribeResponse implements Observable.OnSubscribe<Response> {
+        public Request request;
 
-        public OnSubscribeGraphResponse(GraphRequest request) {
+        public OnSubscribeResponse(Request request) {
             this.request = request;
         }
 
         @Override
-        public void call(final Subscriber<? super GraphResponse> sub) {
+        public void call(final Subscriber<? super Response> sub) {
             Log.d("RetroFacebook", "onSubscribe");
             if (request != null) {
-                request.setCallback(new GraphRequest.Callback() {
+                request.setCallback(new Request.Callback() {
                     @Override
-                    public void onCompleted(GraphResponse response) {
+                    public void onCompleted(Response response) {
                         try {
-                            FacebookRequestError requestError = response.getError();
-                            FacebookException exception = (requestError == null) ? null : requestError.getException();
-
-                            /* move into Observable.map()
-                            if (response.getJSONObject() == null && exception == null) {
-                                exception = new FacebookException("GraphObjectPagingLoader received neither a result nor an error.");
-                            }
-                            */
-
-                            if (exception != null) {
-                                sub.onError(exception);
+                            FacebookRequestError error = response.getError();
+                            if (error != null) {
+                                sub.onError(error.getException());
                             } else {
                                 sub.onNext(response);
-                                request = response.getRequestForPagedResults(GraphResponse.PagingDirection.NEXT);
+                                request = response.getRequestForPagedResults(Response.PagingDirection.NEXT);
 
                                 if (request != null) {
                                     Log.d("RetroFacebook", "hasNext");
@@ -112,7 +106,8 @@ public final class $subclass$formalTypes extends $origClass$actualTypes {
                     }
                 });
 
-                GraphRequest.executeBatchAsync(new GraphRequestBatch(request));
+                RequestAsyncTask task = new RequestAsyncTask(request);
+                task.execute();
             } else {
                 sub.onCompleted();
             }
