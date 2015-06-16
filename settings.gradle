@@ -1,4 +1,4 @@
 include 'auto-json', 'auto-json-processor', ':auto-json-sample'
-include 'retrofacebook-annotation', 'retrofacebook-processor-v3', 'retrofacebook-processor', 'retrofacebook-v3', 'retrofacebook', 'retrofacebook-sample'
+include 'retrofacebook-annotation', 'retrofacebook-processor-v3', 'retrofacebook-processor', 'retrofacebook-v3', 'retrofacebook-v4', 'retrofacebook', 'retrofacebook-sample'
 include 'retrofacebook-app'
 rootProject.name = 'retrofacebook'

@@ -231,7 +231,7 @@ public class RetroFacebookProcessor extends AbstractProcessor {
 
       retrofacebook.RetroFacebook.GET api = method.getAnnotation(retrofacebook.RetroFacebook.GET.class);
 
-      String value = api.value();
+      String value = api == null ? "" : api.value();
 
       value = value.replace("{", "\" + ");
       value = value.replace("}", " + \"");

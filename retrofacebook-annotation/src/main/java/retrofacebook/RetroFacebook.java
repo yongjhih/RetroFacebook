@@ -23,7 +23,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface RetroFacebook {
 
-  @Retention(RetentionPolicy.SOURCE)
+  @Retention(RetentionPolicy.RUNTIME) // RUNTIME, keep annotation for anothor processor
   @Target(ElementType.TYPE)
   public @interface Builder {
   }
@@ -34,18 +34,18 @@ public @interface RetroFacebook {
    * the {@link Builder @RetroFacebook.Builder} implementation, immediately after constructing the new
    * object. It can throw an exception if the new object fails validation checks.
    */
-  @Retention(RetentionPolicy.SOURCE)
+  @Retention(RetentionPolicy.RUNTIME) // RUNTIME, keep annotation for anothor processor
   @Target(ElementType.METHOD)
   public @interface Validate {
   }
 
-  @Retention(RetentionPolicy.SOURCE)
+  @Retention(RetentionPolicy.RUNTIME) // RUNTIME, keep annotation for anothor processor
   @Target(ElementType.METHOD)
   public @interface GET {
     String value();
   }
 
-  @Retention(RetentionPolicy.SOURCE)
+  @Retention(RetentionPolicy.RUNTIME) // RUNTIME, keep annotation for anothor processor
   @Target(ElementType.PARAMETER)
   public @interface Path {
   }

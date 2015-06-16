@@ -30,34 +30,9 @@ import java.util.List;
 import java.util.Arrays;
 
 @RetroFacebook
-public abstract class Facebook {
-    @RetroFacebook.GET("/{postId}")
-    public abstract Observable<Post> getPost(@RetroFacebook.Path String postId);
-
-    // TODO @RetroFacebook.GET("/{userId}/photos?type=uploaded")
-    @RetroFacebook.GET("/{userId}/photos")
-    public abstract Observable<Photo> getPhotos(@RetroFacebook.Path String userId);
-
-    public Observable<Photo> getPhotos() {
-        return getPhotos("me");
-    }
-
-    @RetroFacebook.GET("/{userId}/feed")
-    public abstract Observable<Post> getPosts(@RetroFacebook.Path String userId);
-
-    public Observable<Post> getPosts() {
-        return getPosts("me");
-    }
-
-    @RetroFacebook.GET("/{userId}/friends")
-    public abstract Observable<User> getFriends(@RetroFacebook.Path String userId);
-
-    public Observable<User> getFriends() {
-        return getFriends("me");
-    }
-
-    public static Facebook create() {
-        return new RetroFacebook_Facebook();
+public abstract class Facebook3 extends Facebook {
+    public static Facebook3 create() {
+        return new RetroFacebook_Facebook3();
     }
 
     Activity activity;
