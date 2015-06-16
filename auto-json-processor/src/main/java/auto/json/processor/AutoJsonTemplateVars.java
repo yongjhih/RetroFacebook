@@ -33,6 +33,7 @@ class AutoJsonTemplateVars extends TemplateVars {
 
   /** The properties defined by the parent class's abstract methods. */
   List<AutoJsonProcessor.Property> props;
+  List<AutoJsonProcessor.Property> jprops;
 
   /** Whether to generate an equals(Object) method. */
   Boolean equals;

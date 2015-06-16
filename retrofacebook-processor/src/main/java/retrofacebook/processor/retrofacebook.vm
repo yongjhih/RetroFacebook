@@ -45,7 +45,7 @@ public final class $subclass$formalTypes extends $origClass$actualTypes {
             @Override public ${p.typeArgs}s call(GraphResponse response) {
                 try {
                     Log.d("RetroFacebook", "${p.typeArgs}s: " + response.getJSONObject().toString());
-                    return LoganSquare.parse(response.getJSONObject().toString(), AutoJson_${p.typeArgs}s.class);
+                    return LoganSquare.parse(response.getJSONObject().toString(), ${p.typeArgs}s.class);
                 } catch (java.io.IOException e) {
                     e.printStackTrace();
                     return null;
@@ -57,12 +57,7 @@ public final class $subclass$formalTypes extends $origClass$actualTypes {
             }
         }).flatMap(new Func1<${p.typeArgs}s, Observable<$p.typeArgs>>() {
             @Override public Observable<${p.typeArgs}> call(${p.typeArgs}s data) {
-                return Observable.from(data.data())
-                        .map(new Func1<AutoJson_${p.typeArgs}, $p.typeArgs>() {
-                            @Override public ${p.typeArgs} call(AutoJson_${p.typeArgs} o) {
-                                return cast(o);
-                            }
-                        });
+                return Observable.from(data.data());
             }
         });
     }

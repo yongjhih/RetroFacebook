@@ -20,6 +20,9 @@ import $i;
 import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.LoganSquare;
+import com.bluelinelabs.logansquare.typeconverters.*;
+import java.io.IOException;
+import com.fasterxml.jackson.core.*;
 
 ${gwtCompatibleAnnotation}
 @JsonObject
@@ -33,7 +36,7 @@ final class $subclass$formalTypes extends $origClass$actualTypes {
   ${a}##
   #end
 
-  $p.autoType $p;
+  $p.type $p;
 #end
 
 ## Constructor
@@ -332,5 +335,20 @@ final class $subclass$formalTypes extends $origClass$actualTypes {
       return result;
     }
   }
+#end
+
+#set( $D = '$' )
+#foreach ($j in $jprops)
+public static class ${j.type}Converter implements TypeConverter<${j.type}> {
+    @Override
+    public ${j.type} parse(JsonParser jsonParser) throws IOException {
+        return AutoJson_${j.type}${D}${D}JsonObjectMapper._parse(jsonParser);
+    }
+
+    @Override
+    public void serialize(${j.type} object, String fieldName, boolean writeFieldNameForObject, JsonGenerator jsonGenerator) throws IOException {
+        //AutoJson_${j.type}${D}${D}JsonObjectMapper._serialize((AutoJson_${j.type}) object, fieldName, writeFieldNameForObject, jsonGenerator);
+    }
+}
 #end
 }

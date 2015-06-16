@@ -191,21 +191,18 @@ public class AutoJsonProcessor extends AbstractProcessor {
     private final ExecutableElement method;
     private final String type;
     private final ImmutableList<String> annotations;
-    private final String autoType;
 
     Property(
         String name,
         String identifier,
         ExecutableElement method,
         String type,
-        TypeSimplifier typeSimplifier,
-        String autoType
+        TypeSimplifier typeSimplifier
         ) {
       this.name = name;
       this.identifier = identifier;
       this.method = method;
       this.type = type;
-      this.autoType = autoType;
       this.annotations = buildAnnotations(typeSimplifier);
     }
 
@@ -276,10 +273,6 @@ public class AutoJsonProcessor extends AbstractProcessor {
 
     public String getType() {
       return type;
-    }
-
-    public String getAutoType() {
-      return autoType;
     }
 
     public TypeKind getKind() {
@@ -490,24 +483,30 @@ public class AutoJsonProcessor extends AbstractProcessor {
         Maps.newLinkedHashMap(methodToPropertyName);
     fixReservedIdentifiers(methodToIdentifier);
     List<Property> props = new ArrayList<Property>();
+    List<Property> jprops = new ArrayList<Property>();
     for (ExecutableElement method : propertyMethods) {
       TypeElement typeElement = (TypeElement) typeUtils.asElement(method.getReturnType());
       String propertyType = typeSimplifier.simplify(method.getReturnType());
+      String propertyName = methodToPropertyName.get(method);
+      String identifier = methodToIdentifier.get(method);
+
       String autoType = propertyType;
       String args[] = propertyType.split(",");
       if (args.length > 0) {
+          // List<Post> -> Post
           String arg = args[0].replaceAll("[^<]*<", "").replace(" ", "").replace("<", "").replace(">", "");
           if (annotatedNames.contains("retrofacebook." + arg)) {
-              autoType = autoType.replace(arg, "AutoJson_" + arg);
+              //autoType = autoType.replace(arg, "AutoJson_" + arg); // List<Post> -> List<AutoJson_Post>
+              jprops.add(new Property(propertyName, identifier, method, arg, typeSimplifier));
           }
       }
-      String propertyName = methodToPropertyName.get(method);
-      String identifier = methodToIdentifier.get(method);
-      props.add(new Property(propertyName, identifier, method, propertyType, typeSimplifier, autoType));
+
+      props.add(new Property(propertyName, identifier, method, propertyType, typeSimplifier));
     }
     // If we are running from Eclipse, undo the work of its compiler which sorts methods.
     eclipseHack().reorderProperties(props);
     vars.props = props;
+    vars.jprops = jprops;
     vars.serialVersionUID = getSerialVersionUID(type);
     vars.formalTypes = typeSimplifier.formalTypeParametersString(type);
     vars.actualTypes = TypeSimplifier.actualTypeParametersString(type);
