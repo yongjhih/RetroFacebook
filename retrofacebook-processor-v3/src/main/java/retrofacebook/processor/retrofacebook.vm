@@ -1,0 +1,121 @@
+## Template for each generated RetroFacebook_Foo class.
+## This template uses the Apache Velocity Template Language (VTL).
+## The variables ($pkg, $props, and so on) are defined by the fields of MutableRetroFacebookTemplateVars.
+##
+## Comments, like this one, begin with ##. The comment text extends up to and including the newline
+## character at the end of the line. So comments also serve to join a line to the next one.
+## Velocity deletes a newline after a directive (#if, #foreach, #end etc) so ## is not needed there.
+## That does mean that we sometimes need an extra blank line after such a directive.
+##
+## A post-processing step will remove unwanted spaces and blank lines, but will not join two lines.
+
+#if (!$pkg.empty)
+package $pkg;
+#end
+
+#foreach ($i in $imports)
+import $i;
+#end
+
+import org.json.JSONObject;
+import com.facebook.*;
+import rx.Observable;
+import rx.Subscriber;
+import rx.functions.*;
+
+import com.bluelinelabs.logansquare.LoganSquare;
+import android.util.Log;
+
+${gwtCompatibleAnnotation}
+public final class $subclass$formalTypes extends $origClass$actualTypes {
+
+## Property getters
+
+#foreach ($p in $props)
+
+    @Override
+    ${p.access}${p.type} ${p.getter}(${p.args}) {
+        return Observable.create(new OnSubscribeGraphResponse(
+                GraphRequest.newGraphPathRequest(
+                    AccessToken.getCurrentAccessToken(),
+                    ${p.path}, null
+                )
+            )
+        ).map(new Func1<GraphResponse, ${p.typeArgs}s>() {
+            @Override public ${p.typeArgs}s call(GraphResponse response) {
+                try {
+                    Log.d("RetroFacebook", "${p.typeArgs}s: " + response.getJSONObject().toString());
+                    return LoganSquare.parse(response.getJSONObject().toString(), ${p.typeArgs}s.class);
+                } catch (java.io.IOException e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+        }).filter(new Func1<${p.typeArgs}s, Boolean>() {
+            @Override public Boolean call(${p.typeArgs}s data) {
+                return data != null;
+            }
+        }).flatMap(new Func1<${p.typeArgs}s, Observable<$p.typeArgs>>() {
+            @Override public Observable<${p.typeArgs}> call(${p.typeArgs}s data) {
+                return Observable.from(data.data());
+            }
+        });
+    }
+
+#end
+
+    public static <T> T cast(Object o) {
+        return (T) o;
+    }
+
+    public class OnSubscribeGraphResponse implements Observable.OnSubscribe<GraphResponse> {
+        public GraphRequest request;
+
+        public OnSubscribeGraphResponse(GraphRequest request) {
+            this.request = request;
+        }
+
+        @Override
+        public void call(final Subscriber<? super GraphResponse> sub) {
+            Log.d("RetroFacebook", "onSubscribe");
+            if (request != null) {
+                request.setCallback(new GraphRequest.Callback() {
+                    @Override
+                    public void onCompleted(GraphResponse response) {
+                        try {
+                            FacebookRequestError requestError = response.getError();
+                            FacebookException exception = (requestError == null) ? null : requestError.getException();
+
+                            /* move into Observable.map()
+                            if (response.getJSONObject() == null && exception == null) {
+                                exception = new FacebookException("GraphObjectPagingLoader received neither a result nor an error.");
+                            }
+                            */
+
+                            if (exception != null) {
+                                sub.onError(exception);
+                            } else {
+                                sub.onNext(response);
+                                request = response.getRequestForPagedResults(GraphResponse.PagingDirection.NEXT);
+
+                                if (request != null) {
+                                    Log.d("RetroFacebook", "hasNext");
+                                    call(sub);
+                                } else {
+                                    Log.d("RetroFacebook", "end");
+                                    sub.onCompleted();
+                                }
+                            }
+                        } catch (Throwable e) {
+                            sub.onError(e);
+                        }
+                    }
+                });
+
+                GraphRequest.executeBatchAsync(new GraphRequestBatch(request));
+            } else {
+                sub.onCompleted();
+            }
+        }
+    }
+}
