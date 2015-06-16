@@ -15,6 +15,12 @@ android {
     }
 }
 
+repositories {
+    maven {
+        url "https://jitpack.io"
+    }
+}
+
 dependencies {
   compile project(':retrofacebook-annotation')
   apt project(':retrofacebook-processor-v3')
@@ -24,8 +30,10 @@ dependencies {
 
   //apt 'com.bluelinelabs:logansquare-compiler:1.1.0'
   //compile 'com.bluelinelabs:logansquare:1.1.0'
-  compile project(':logansquare')
-  compile project(':logansquare:processor')
+  //compile project(':logansquare')
+  //compile project(':logansquare:processor')
+  compile 'com.github.yongjhih:LoganSquare:c54c76312a'
+  apt 'com.github.yongjhih:LoganSquare:c54c76312a'
 
   compile 'com.android.support:support-annotations:21.0.0'
 
