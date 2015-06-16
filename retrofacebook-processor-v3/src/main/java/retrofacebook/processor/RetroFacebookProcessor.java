@@ -222,25 +222,24 @@ public class RetroFacebookProcessor extends AbstractProcessor {
 
     // /{postId}
     // /{userIdA}/friends/{userIdB}
-    // "/" + userIdA + "/friends/" + "userIdB"
-    // "/" + userIdA + "/friends/" + "userIdB" + ""
+    // "/" + userIdA + "/friends/" + userIdB
+    // "/" + userIdA + "/friends/" + userIdB + ""
     public String buildPath(ExecutableElement method) {
-      StringBuilder sb = new StringBuilder();
+      retrofacebook.RetroFacebook.GET get = method.getAnnotation(retrofacebook.RetroFacebook.GET.class);
+      String fullPath = "\"" + get.value() + "\"";
 
-      sb.append("\"");
+      List<? extends VariableElement> parameters = method.getParameters();
+      for (VariableElement parameter : parameters) {
+        retrofacebook.RetroFacebook.Path path = parameter
+                .getAnnotation(retrofacebook.RetroFacebook.Path.class);
+        if ((path != null) && (!path.value().equals("null"))) {
+          fullPath = fullPath.replace("{" + path.value() + "}", parameter.getSimpleName().toString());
+        } else {
+          fullPath = fullPath.replace("{" + parameter.getSimpleName().toString() + "}", parameter.getSimpleName().toString());
+        }
+      }
 
-      retrofacebook.RetroFacebook.GET api = method.getAnnotation(retrofacebook.RetroFacebook.GET.class);
-
-      String value = api.value();
-
-      value = value.replace("{", "\" + ");
-      value = value.replace("}", " + \"");
-
-      sb.append(value);
-
-      sb.append("\"");
-
-      return sb.toString();
+      return fullPath;
     }
 
     private ImmutableList<String> buildAnnotations(TypeSimplifier typeSimplifier) {
