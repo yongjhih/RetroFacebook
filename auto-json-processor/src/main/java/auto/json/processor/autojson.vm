@@ -43,6 +43,9 @@ final class $subclass$formalTypes extends $origClass$actualTypes {
 
   public $subclass() {
     super();
+#foreach ($j in $jprops)
+    LoganSquare.registerTypeConverter(${j.type}.class, new ${j.type}Converter());
+#end
   }
 
 #if ($builderTypeName != "")
@@ -339,16 +342,16 @@ final class $subclass$formalTypes extends $origClass$actualTypes {
 
 #set( $D = '$' )
 #foreach ($j in $jprops)
-public static class ${j.type}Converter implements TypeConverter<${j.type}> {
-    @Override
-    public ${j.type} parse(JsonParser jsonParser) throws IOException {
-        return AutoJson_${j.type}${D}${D}JsonObjectMapper._parse(jsonParser);
-    }
+    public static class ${j.type}Converter implements TypeConverter<${j.type}> {
+        @Override
+        public ${j.type} parse(JsonParser jsonParser) throws IOException {
+            return AutoJson_${j.type}${D}${D}JsonObjectMapper._parse(jsonParser);
+        }
 
-    @Override
-    public void serialize(${j.type} object, String fieldName, boolean writeFieldNameForObject, JsonGenerator jsonGenerator) throws IOException {
-        //AutoJson_${j.type}${D}${D}JsonObjectMapper._serialize((AutoJson_${j.type}) object, fieldName, writeFieldNameForObject, jsonGenerator);
+        @Override
+        public void serialize(${j.type} object, String fieldName, boolean writeFieldNameForObject, JsonGenerator jsonGenerator) throws IOException {
+            //AutoJson_${j.type}${D}${D}JsonObjectMapper._serialize((AutoJson_${j.type}) object, fieldName, writeFieldNameForObject, jsonGenerator);
+        }
     }
-}
 #end
 }

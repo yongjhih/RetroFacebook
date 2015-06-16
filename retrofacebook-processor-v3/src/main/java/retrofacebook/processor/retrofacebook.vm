@@ -47,7 +47,7 @@ public final class $subclass$formalTypes extends $origClass$actualTypes {
             @Override public ${p.typeArgs}s call(Response response) {
                 try {
                     Log.d("RetroFacebook", "${p.typeArgs}s: " + response.getGraphObject().getInnerJSONObject().toString());
-                    return LoganSquare.parse(response.getGraphObject().getInnerJSONObject().toString(), ${p.typeArgs}s.class);
+                    return LoganSquare.parse(response.getGraphObject().getInnerJSONObject().toString(), AutoJson_${p.typeArgs}s.class);
                 } catch (java.io.IOException e) {
                     e.printStackTrace();
                     return null;
