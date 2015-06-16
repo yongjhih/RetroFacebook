@@ -191,18 +191,21 @@ public class AutoJsonProcessor extends AbstractProcessor {
     private final ExecutableElement method;
     private final String type;
     private final ImmutableList<String> annotations;
+    private final List<String> annotatedNames;
 
     Property(
         String name,
         String identifier,
         ExecutableElement method,
         String type,
-        TypeSimplifier typeSimplifier
+        TypeSimplifier typeSimplifier,
+        List<String> annotatedNames
         ) {
       this.name = name;
       this.identifier = identifier;
       this.method = method;
       this.type = type;
+      this.annotatedNames = annotatedNames;
       this.annotations = buildAnnotations(typeSimplifier);
     }
 
@@ -223,7 +226,17 @@ public class AutoJsonProcessor extends AbstractProcessor {
         //if (annotationElement.getQualifiedName().toString().endsWith(AutoJson.Field.class.getName())) {
           //TypeMirror jsonField = getTypeMirror(JsonField.class);
           AnnotationOutput annotationOutput = new AnnotationOutput(typeSimplifier);
-          builder.add(annotationOutput.sourceFormForAnnotation(annotationMirror, "com.bluelinelabs.logansquare.annotation.JsonField"));
+          String annotation = annotationOutput.sourceFormForAnnotation(annotationMirror, "com.bluelinelabs.logansquare.annotation.JsonField");
+          String args[] = type.split(",");
+          if (args.length > 0) {
+              // List<Post> -> Post
+              String arg = args[0].replaceAll("[^<]*<", "").replace(" ", "").replace("<", "").replace(">", "");
+              if (annotatedNames.contains("retrofacebook." + arg)) {
+                  //autoType = autoType.replace(arg, "AutoJson_" + arg); // List<Post> -> List<AutoJson_Post>
+                  annotation = annotation + "(" + "typeConverter" + " = " + arg + "Converter.class" + ")";
+              }
+          }
+          builder.add(annotation);
         } else {
           // TODO(user): we should import this type if it is not already imported
           AnnotationOutput annotationOutput = new AnnotationOutput(typeSimplifier);
@@ -497,11 +510,11 @@ public class AutoJsonProcessor extends AbstractProcessor {
           String arg = args[0].replaceAll("[^<]*<", "").replace(" ", "").replace("<", "").replace(">", "");
           if (annotatedNames.contains("retrofacebook." + arg)) {
               //autoType = autoType.replace(arg, "AutoJson_" + arg); // List<Post> -> List<AutoJson_Post>
-              jprops.add(new Property(propertyName, identifier, method, arg, typeSimplifier));
+              jprops.add(new Property(propertyName, identifier, method, arg, typeSimplifier, annotatedNames));
           }
       }
 
-      props.add(new Property(propertyName, identifier, method, propertyType, typeSimplifier));
+      props.add(new Property(propertyName, identifier, method, propertyType, typeSimplifier, annotatedNames));
     }
     // If we are running from Eclipse, undo the work of its compiler which sorts methods.
     eclipseHack().reorderProperties(props);
