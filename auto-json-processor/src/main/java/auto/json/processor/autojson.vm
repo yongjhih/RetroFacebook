@@ -43,9 +43,6 @@ final class $subclass$formalTypes extends $origClass$actualTypes {
 
   public $subclass() {
     super();
-#foreach ($j in $jprops)
-    LoganSquare.registerTypeConverter(${j.type}.class, new ${j.type}Converter());
-#end
   }
 
 #if ($builderTypeName != "")
