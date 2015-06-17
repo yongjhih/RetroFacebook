@@ -2,9 +2,10 @@
 
 ![RetroFacebook.png](art/retrofacebook.png)
 
+OGM, Object Graph Mapping, Graph to POJO. Support V3 and V4.
+
 Inspired by retrofit.
 
-OGM, Object Graph Mapping, Graph to POJO.
 
 ![photos.png](art/screenshot-photos.png)
 ![posts.png](art/screenshot-posts.png)
@@ -13,12 +14,47 @@ OGM, Object Graph Mapping, Graph to POJO.
 
 ```java
 Facebook facebook = Facebook.create(activity);
+
 Observable<Post> posts = facebook.getPosts("4");
-posts.subscribe(post -> /* ... */);
+posts.subscribe(post -> System.out.println(post.id()));
+
 Observable<Post> myPosts = facebook.getPosts();
-myPosts.subscribe(post -> /* ... */);
+myPosts.subscribe(post -> System.out.println(post.id()));
+
 Observable<Photo> myPhotos = facebook.getPhotos();
-myPhotos.subscribe(photo -> /* ... */);
+myPhotos.subscribe(photo -> System.out.println(photo.id()));
+```
+
+[retrofacebook/src/main/java/retrofacebook/Facebook.java](retrofacebook/src/main/java/retrofacebook/Facebook.java):
+
+```java
+@RetroFacebook
+abstract class Facebook {
+    @RetroFacebook.GET("/{user-id}")
+    Observable<Post> getPosts(@RetroFacebook.Path("user-id") String userId);
+
+    @RetroFacebook.GET("/{user-id}")
+    Observable<Photo> getPhotos(@RetroFacebook.Path("user-id") String userId);
+
+    // ...
+}
+```
+
+[retrofacebook/src/main/java/retrofacebook/Post.java](retrofacebook/src/main/java/retrofacebook/Post.java):
+
+```java
+@AutoJson
+public abstract class Post {
+    @Nullable
+    @AutoJson.Field
+    public abstract String id();
+
+    @Nullable
+    @AutoJson.Field(name = "is_hidden")
+    public abstract Boolean isHidden();
+
+    // ...
+}
 ```
 
 ## Installation
@@ -40,33 +76,9 @@ dependencies {
 ## Development
 
 [retrofacebook/src/main/java/retrofacebook/Facebook.java](retrofacebook/src/main/java/retrofacebook/Facebook.java):
-
-```java
-@RetroFacebook
-abstract class Facebook {
-    @RetroFacebook.GET("/{post-id}")
-    Observable<Post> getPost(@RetroFacebook.Path("post-id") String postId);
-
-    // ...
-}
-```
-
 [retrofacebook/src/main/java/retrofacebook/Post.java](retrofacebook/src/main/java/retrofacebook/Post.java):
 
-```java
-@AutoJson
-public abstract class Post {
-    @Nullable
-    @AutoJson.Field
-    public abstract String id();
-
-    @Nullable
-    @AutoJson.Field(name = "is_hidden")
-    public abstract Boolean isHidden();
-}
-```
-
-Generated, v4:
+Generated(v4):
 
 ```java
 final class RetroFacebook_Facebook extends Facebook {
@@ -91,7 +103,7 @@ final class RetroFacebook_Facebook extends Facebook {
         });
   }
 
-//...
+  //...
 
 }
 ```
@@ -150,7 +162,7 @@ final class AutoJson_Post extends Post {
     return false;
   }
 
-// ...
+  // ...
 ```
 
 ## Credit
