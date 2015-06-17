@@ -21,16 +21,6 @@ repositories {
     }
 }
 
-configurations {
-    provided
-}
-
-sourceSets {
-    main.compileClasspath += configurations.provided
-    test.compileClasspath += configurations.provided
-    test.runtimeClasspath += configurations.provided
-}
-
 dependencies {
   compile project(':retrofacebook-annotation')
   apt project(':retrofacebook-processor')
@@ -45,8 +35,8 @@ dependencies {
   //apt project(':logansquare:processor')
   //compile 'com.github.yongjhih:LoganSquare:c54c76312a'
   //apt 'com.github.yongjhih:LoganSquare:c54c76312a'
-  compile 'com.github.yongjhih.LoganSquare:logansquare-compiler:c54c76312a'
-  provided 'com.github.yongjhih.LoganSquare:logansquare:c54c76312a'
+  compile 'com.github.yongjhih.LoganSquare:logansquare:c54c76312a'
+  apt 'com.github.yongjhih.LoganSquare:logansquare-compiler:c54c76312a'
 
   compile 'com.android.support:support-annotations:21.0.0'
 
