@@ -24,6 +24,7 @@ import rx.functions.*;
 
 import com.facebook.*;
 
+import android.content.Context;
 import android.content.Intent;
 import android.app.Activity;
 
@@ -31,6 +32,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 
 @RetroFacebook
 public abstract class Facebook {
@@ -102,6 +106,23 @@ public abstract class Facebook {
         return logInWithReadPermissions(Arrays.asList("public_profile", "user_friends", "user_photos", "user_posts"));
     }
 
+    public static String getFacebookAppId(Context context) {
+        return getApplicationMetaData(context, com.facebook.Settings.APPLICATION_ID_PROPERTY);
+    }
+
+    private static String getApplicationMetaData(Context context, String key) {
+        try {
+            ApplicationInfo ai = context.getPackageManager().getApplicationInfo(
+                    context.getPackageName(), PackageManager.GET_META_DATA);
+            if (ai.metaData != null) {
+                return ai.metaData.getString(key);
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            // if we can't find it in the manifest, just return null
+        }
+        return null;
+    }
+
     public Observable<Session> logInWithReadPermissions(final Collection<String> permissions) {
         return Observable.create(new Observable.OnSubscribe<Session>() {
             @Override
@@ -123,11 +144,11 @@ public abstract class Facebook {
                             //mSessionStatusCallback.setAskPublishPermissions(true);
                         //}
 
-                        //if (getActiveSession() == null || getActiveSession().isClosed()) {
-                            //Session session = new Session.Builder(activity.getApplicationContext()).setApplicationId(configuration.getAppId()).build();
-                            //Session.setActiveSession(session);
-                        //}
                         Session activeSession = Session.getActiveSession();
+                        if (activeSession == null || activeSession.isClosed()) {
+                            activeSession = new Session.Builder(activity.getApplicationContext()).setApplicationId(getFacebookAppId(activity)).build();
+                            Session.setActiveSession(activeSession);
+                        }
                         activeSession.addCallback(sessionStatusCallback);
                         sessionSubject.asObservable() // FIXME unsubscribe
                             .take(1)

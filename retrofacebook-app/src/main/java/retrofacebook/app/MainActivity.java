@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
                         //android.util.Log.d("RetroFacebook", "token: " + login.getAccessToken());
                         //android.util.Log.d("RetroFacebook", "token: " + login.getAccessToken().getToken());
                         android.util.Log.d("RetroFacebook", "login: " + login);
-                    }).flatMap(login -> Facebook.create().getPhotos())
+                    }).flatMap(login -> facebook.getPhotos())
                     .doOnNext(photo -> {
                         User user = photo.from();
                         android.util.Log.d("RetroFacebook", "user: " + user);
@@ -142,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
         }).title("Photos"));
         adapter.fragments.add(FragmentPage.create().fragment(() -> {
             return ListFragment.create()
-                .items(Facebook.create().getFriends().map(user -> {
+                .items(facebook.getFriends().map(user -> {
                     return Item.builder()
                         .icon("http://graph.facebook.com/" + user.id() + "/picture?width=400&height=400")
                         .text1(user.name())
@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
         }).title("Friends"));
         adapter.fragments.add(FragmentPage.create().fragment(() -> {
             return CardsFragment.create()
-                .items(Facebook.create().getPosts().map(post -> {
+                .items(facebook.getPosts().map(post -> {
                     User user = post.from();
                     return Card.builder()
                         .icon("http://graph.facebook.com/" + user.id() + "/picture?width=400&height=400")
