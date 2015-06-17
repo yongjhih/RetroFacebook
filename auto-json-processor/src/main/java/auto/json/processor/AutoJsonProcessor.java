@@ -226,7 +226,8 @@ public class AutoJsonProcessor extends AbstractProcessor {
         //if (annotationElement.getQualifiedName().toString().endsWith(AutoJson.Field.class.getName())) {
           //TypeMirror jsonField = getTypeMirror(JsonField.class);
           AnnotationOutput annotationOutput = new AnnotationOutput(typeSimplifier);
-          String annotation = annotationOutput.sourceFormForAnnotation(annotationMirror, "com.bluelinelabs.logansquare.annotation.JsonField");
+          //String annotation = annotationOutput.sourceFormForAnnotation(annotationMirror, "com.bluelinelabs.logansquare.annotation.JsonField");
+          String annotation = annotationOutput.sourceFormForAnnotation(annotationMirror);
           String args[] = type.split(",");
           if (args.length > 0) {
               // List<Post> -> Post
@@ -236,6 +237,8 @@ public class AutoJsonProcessor extends AbstractProcessor {
                   annotation = annotation + "(" + "typeConverter" + " = " + arg + "Converter.class" + ")";
               }
           }
+          annotation = annotation.replace("auto.json.AutoJson.Field", "com.bluelinelabs.logansquare.annotation.JsonField");
+          annotation = annotation.replace(")(", ", ");
           builder.add(annotation);
         } else {
           // TODO(user): we should import this type if it is not already imported
