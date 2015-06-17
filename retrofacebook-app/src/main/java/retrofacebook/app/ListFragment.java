@@ -45,7 +45,6 @@ import rx.functions.*;
 
 import rx.android.app.*;
 
-import rx.facebook.RxFacebook;
 import retrofacebook.*;
 
 public class ListFragment extends Fragment {

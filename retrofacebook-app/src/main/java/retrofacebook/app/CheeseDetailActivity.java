@@ -37,7 +37,6 @@ import rx.functions.*;
 
 import rx.android.app.*;
 
-import rx.facebook.RxFacebook;
 import retrofacebook.*;
 
 import java.util.Arrays;

@@ -45,7 +45,6 @@ import rx.Observable;
 import rx.functions.*;
 
 import retrofacebook.*;
-import rx.facebook.*;
 
 import butterknife.InjectView;
 import butterknife.ButterKnife;
@@ -57,25 +56,14 @@ public class MainActivity extends AppCompatActivity {
 
     private DrawerLayout mDrawerLayout;
 
-    private RxFacebook mRxFacebook;
+    private Facebook facebook;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
-        mRxFacebook = RxFacebook.create(this);
-
-        /*
-        mRxFacebook.logIn().doOnNext(login -> {
-            android.util.Log.d("RetroFacebook", "token: " + login.getAccessToken());
-            android.util.Log.d("RetroFacebook", "token: " + login.getAccessToken().getToken());
-        }).subscribe(login -> {
-        }, e -> {
-            android.util.Log.e("RetroFacebook", "error: " + e);
-            e.printStackTrace();
-        });
-        */
+        facebook = Facebook.create(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -130,9 +118,10 @@ public class MainActivity extends AppCompatActivity {
         adapter.fragments.add(FragmentPage.create().fragment(() -> {
             return CardsFragment.create()
                 .items(
-                    mRxFacebook.logIn().doOnNext(login -> {
-                        android.util.Log.d("RetroFacebook", "token: " + login.getAccessToken());
-                        android.util.Log.d("RetroFacebook", "token: " + login.getAccessToken().getToken());
+                    facebook.logIn().doOnNext(login -> {
+                        //android.util.Log.d("RetroFacebook", "token: " + login.getAccessToken());
+                        //android.util.Log.d("RetroFacebook", "token: " + login.getAccessToken().getToken());
+                        android.util.Log.d("RetroFacebook", "login: " + login);
                     }).flatMap(login -> Facebook.create().getPhotos())
                     .doOnNext(photo -> {
                         User user = photo.from();
@@ -249,6 +238,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        mRxFacebook.onActivityResult(requestCode, resultCode, data);
+        facebook.onActivityResult(requestCode, resultCode, data);
     }
 }

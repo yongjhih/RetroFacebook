@@ -17,6 +17,8 @@ package retrofacebook;
 
 import rx.Observable;
 import rx.Subscriber;
+import rx.subjects.*;
+//import rx.PublishSubject;
 
 import rx.functions.*;
 
@@ -27,6 +29,7 @@ import android.app.Activity;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 @RetroFacebook
@@ -61,9 +64,24 @@ public abstract class Facebook {
     }
 
     Activity activity;
+    Session.StatusCallback sessionStatusCallback;
+    UiLifecycleHelper uiLifecycleHelper;
+    Subject<Session, Session> sessionSubject;
 
     public Facebook initialize(Activity activity) {
         this.activity = activity;
+        sessionSubject = PublishSubject.create();
+        sessionStatusCallback = new Session.StatusCallback() {
+            @Override
+            public void call(Session session, SessionState state, Exception exception) {
+                if (exception != null) {
+                    sessionSubject.onError(exception);
+                } else {
+                    sessionSubject.onNext(session);
+                }
+            }
+        };
+        uiLifecycleHelper = new UiLifecycleHelper(activity, sessionStatusCallback);
 
         return this;
     }
@@ -73,5 +91,59 @@ public abstract class Facebook {
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        uiLifecycleHelper.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public void onResume() {
+        uiLifecycleHelper.onResume();
+    }
+
+    public Observable<Session> logIn() {
+        return logInWithReadPermissions(Arrays.asList("public_profile", "user_friends", "user_photos", "user_posts"));
+    }
+
+    public Observable<Session> logInWithReadPermissions(final Collection<String> permissions) {
+        return Observable.create(new Observable.OnSubscribe<Session>() {
+            @Override
+            public void call(final Subscriber<? super Session> sub) {
+                Session.OpenRequest request = new Session.OpenRequest(activity);
+                if (request != null) {
+                    //request.setDefaultAudience(configuration.getSessionDefaultAudience());
+                    //request.setLoginBehavior(configuration.getSessionLoginBehavior());
+
+                    //if (isRead) {
+                        request.setPermissions(new ArrayList(permissions));
+
+                        /*
+                         * In case there are also PUBLISH permissions, then we would ask
+                         * for these permissions second time (after, user accepted the
+                         * read permissions)
+                         */
+                        //if (configuration.hasPublishPermissions() && configuration.isAllPermissionsAtOnce()) {
+                            //mSessionStatusCallback.setAskPublishPermissions(true);
+                        //}
+
+                        //if (getActiveSession() == null || getActiveSession().isClosed()) {
+                            //Session session = new Session.Builder(activity.getApplicationContext()).setApplicationId(configuration.getAppId()).build();
+                            //Session.setActiveSession(session);
+                        //}
+                        Session activeSession = Session.getActiveSession();
+                        activeSession.addCallback(sessionStatusCallback);
+                        sessionSubject.asObservable() // FIXME unsubscribe
+                            .take(1)
+                            .doOnNext(new Action1<Session>() {
+                                @Override public void call(Session session) {
+                                    if (session.getState().equals(SessionState.OPENED)) {
+                                        sub.onNext(session);
+                                    }
+                                    sub.onCompleted();
+                                }
+                            })
+                            .subscribe();
+                        activeSession.openForRead(request);
+                    //}
+                }
+            }
+        });
     }
 }
