@@ -18,43 +18,138 @@ package retrofacebook;
 import auto.json.AutoJson;
 import android.support.annotation.Nullable;
 
+import java.util.List;
+
 @AutoJson
 public abstract class Post {
     @Nullable
     @AutoJson.Field
-    public abstract String id();
+    public abstract String url();
+
+    @Nullable
+    @AutoJson.Field
+    public abstract List<Action> actions();
+    @Nullable
+    @AutoJson.Field
+    public abstract Application application();
+    @Nullable
+    @AutoJson.Field
+    public abstract Attachment attachment();
     @Nullable
     @AutoJson.Field
     public abstract String caption();
     @Nullable
     @AutoJson.Field
-    public abstract String place();
+    public abstract List<Comment> comments();
     @Nullable
     @AutoJson.Field
-    public abstract String url();
+    public abstract List<Like> likes();
+    @Nullable
+    @AutoJson.Field(name = "created_time")
+    public abstract Long createdTime();
     @Nullable
     @AutoJson.Field
-    public abstract String source();
-    @Nullable
-    @AutoJson.Field
-    public abstract String picture();
+    public abstract String description();
     @Nullable
     @AutoJson.Field
     public abstract User from();
     @Nullable
     @AutoJson.Field
+    public abstract String icon();
+    @Nullable
+    @AutoJson.Field
+    public abstract String id();
+    @Nullable
+    @AutoJson.Field(name = "is_hidden")
+    public abstract Boolean isHidden();
+    @Nullable
+    @AutoJson.Field
+    public abstract String link();
+    @Nullable
+    @AutoJson.Field
     public abstract String message();
+    @Nullable
+    @AutoJson.Field(name = "message_tags")
+    public abstract List<InlineTag> messageTags();
+    @Nullable
+    @AutoJson.Field
+    public abstract String name();
+    @Nullable
+    @AutoJson.Field(name = "object_id")
+    public abstract String objectId();
+    @Nullable
+    @AutoJson.Field
+    public abstract String picture();
+    @Nullable
+    @AutoJson.Field
+    public abstract Place place();
+    @Nullable
+    @AutoJson.Field
+    public abstract Privacy privacy();
+    //@Nullable
+    //@AutoJson.Field
+    //public abstract List<Property> properties();
+    @Nullable
+    @AutoJson.Field
+    public abstract Integer shares();
+    @Nullable
+    @AutoJson.Field
+    public abstract String source();
+    @Nullable
+    @AutoJson.Field(name = "status_type")
+    public abstract String statusType();
+    @Nullable
+    @AutoJson.Field
+    public abstract String story();
+    @Nullable
+    @AutoJson.Field(name = "story_tags")
+    public abstract List<InlineTag> storyTags();
+    @Nullable
+    @AutoJson.Field
+    public abstract List<User> to();
+    @Nullable
+    @AutoJson.Field
+    public abstract String type();
+    @Nullable
+    @AutoJson.Field(name = "updated_time")
+    public abstract Long updatedTime();
+    @Nullable
+    @AutoJson.Field(name = "with_tags")
+    public abstract List<User> withTags();
 
     @AutoJson.Builder
     public abstract static class Builder {
-        public abstract Builder id(String id);
-        public abstract Builder caption(String caption);
-        public abstract Builder place(String place);
-        public abstract Builder url(String url);
-        public abstract Builder source(String source);
-        public abstract Builder picture(String picture);
-        public abstract Builder from(User from);
-        public abstract Builder message(String message);
+        public abstract Builder url(String x);
+
+        public abstract Builder actions(List<Action> x);
+        public abstract Builder application(Application x);
+        public abstract Builder attachment(Attachment x);
+        public abstract Builder caption(String x);
+        public abstract Builder comments(List<Comment> x);
+        public abstract Builder likes(List<Like> x);
+        public abstract Builder createdTime(Long x);
+        public abstract Builder description(String x);
+        public abstract Builder from(User x);
+        public abstract Builder icon(String x);
+        public abstract Builder id(String x);
+        public abstract Builder isHidden(Boolean x);
+        public abstract Builder link(String x);
+        public abstract Builder message(String x);
+        public abstract Builder messageTags(List<InlineTag> x);
+        public abstract Builder name(String x);
+        public abstract Builder objectId(String x);
+        public abstract Builder picture(String x);
+        public abstract Builder place(Place x);
+        public abstract Builder privacy(Privacy x);
+        public abstract Builder shares(Integer x);
+        public abstract Builder source(String x);
+        public abstract Builder statusType(String x);
+        public abstract Builder story(String x);
+        public abstract Builder storyTags(List<InlineTag> x);
+        public abstract Builder to(List<User> x);
+        public abstract Builder type(String x);
+        public abstract Builder updatedTime(Long x);
+        public abstract Builder withTags(List<User> x);
 
         public abstract Post build();
     }

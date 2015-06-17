@@ -40,6 +40,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 import java.util.Set;
 
 import javax.annotation.Generated;
@@ -499,7 +500,7 @@ public class AutoJsonProcessor extends AbstractProcessor {
         Maps.newLinkedHashMap(methodToPropertyName);
     fixReservedIdentifiers(methodToIdentifier);
     List<Property> props = new ArrayList<Property>();
-    List<Property> jprops = new ArrayList<Property>();
+    Map<String, Property> jprops = new HashMap<>();
     for (ExecutableElement method : propertyMethods) {
       TypeElement typeElement = (TypeElement) typeUtils.asElement(method.getReturnType());
       String propertyType = typeSimplifier.simplify(method.getReturnType());
@@ -513,7 +514,7 @@ public class AutoJsonProcessor extends AbstractProcessor {
           String arg = args[0].replaceAll("[^<]*<", "").replace(" ", "").replace("<", "").replace(">", "");
           if (annotatedNames.contains("retrofacebook." + arg)) {
               //autoType = autoType.replace(arg, "AutoJson_" + arg); // List<Post> -> List<AutoJson_Post>
-              jprops.add(new Property(propertyName, identifier, method, arg, typeSimplifier, annotatedNames));
+              jprops.put(arg, new Property(propertyName, identifier, method, arg, typeSimplifier, annotatedNames));
           }
       }
 
@@ -522,7 +523,7 @@ public class AutoJsonProcessor extends AbstractProcessor {
     // If we are running from Eclipse, undo the work of its compiler which sorts methods.
     eclipseHack().reorderProperties(props);
     vars.props = props;
-    vars.jprops = jprops;
+    vars.jprops = new ArrayList<>(jprops.values());
     vars.serialVersionUID = getSerialVersionUID(type);
     vars.formalTypes = typeSimplifier.formalTypeParametersString(type);
     vars.actualTypes = TypeSimplifier.actualTypeParametersString(type);
