@@ -12,33 +12,13 @@ OGM, Object Graph Mapping, Graph to POJO.
 ## Usage
 
 ```java
-Facebook facebook = Facebook.create();
+Facebook facebook = Facebook.create(activity);
 Observable<Post> posts = facebook.getPosts("4");
 posts.subscribe(post -> /* ... */);
 Observable<Post> myPosts = facebook.getPosts();
 myPosts.subscribe(post -> /* ... */);
 Observable<Photo> myPhotos = facebook.getPhotos();
 myPhotos.subscribe(photo -> /* ... */);
-```
-
-or
-
-```java
-facebook.getPosts("4", new FacebookCallback<Post>() {
-    @Override public void onCompleted(List<Post> posts, FacebookException error) {
-        // ...
-    }
-});
-facebook.getPosts(new FacebookCallback<Post>() {
-    @Override public void onCompleted(List<Post> posts, FacebookException error) {
-        // ...
-    }
-});
-facebook.getPhotos(new FacebookCallback<Photo>() {
-    @Override public void onCompleted(List<Photo> photos, FacebookException error) {
-        // ...
-    }
-});
 ```
 
 ## Installation
@@ -53,7 +33,7 @@ repositories {
 }
 
 dependencies {
-    compile 'com.github.yongjhih:RetroFacebook:1.0.0'
+    compile 'com.github.yongjhih:RetroFacebook:1.0.1'
 }
 ```
 
@@ -64,34 +44,29 @@ dependencies {
 ```java
 @RetroFacebook
 abstract class Facebook {
-    @RetroFacebook.GET("/{postId}")
-    Observable<Post> getPost(@RetroFacebook.Path String postId);
+    @RetroFacebook.GET("/{post-id}")
+    Observable<Post> getPost(@RetroFacebook.Path("post-id") String postId);
 
-    public static Facebook create() {
-        return new RetroFacebook_Facebook();
-    }
+    // ...
 }
-// /{userId}/posts
-// /{user-id}/links
-// /{user-id}/statuses
-// /{user-id}/tagged
 ```
 
 [retrofacebook/src/main/java/retrofacebook/Post.java](retrofacebook/src/main/java/retrofacebook/Post.java):
+
 ```java
 @AutoJson
 public abstract class Post {
     @Nullable
     @AutoJson.Field
     public abstract String id();
-    
+
     @Nullable
     @AutoJson.Field(name = "is_hidden")
     public abstract Boolean isHidden();
 }
 ```
 
-Generated:
+Generated, v4:
 
 ```java
 final class RetroFacebook_Facebook extends Facebook {
@@ -107,7 +82,7 @@ final class RetroFacebook_Facebook extends Facebook {
         ).map(new Func1<GraphResponse, Post>() {
             @Override public Post call(GraphResponse response) {
                 try {
-                return LoganSquare.parse(response.getJSONObject().toString(), AutoJson_Post.class);
+                    return LoganSquare.parse(response.getJSONObject().toString(), AutoJson_Post.class);
                 } catch (java.io.IOException e) {
                     e.printStackTrace();
                     return null;
