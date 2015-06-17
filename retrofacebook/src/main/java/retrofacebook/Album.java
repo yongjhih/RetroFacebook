@@ -19,27 +19,20 @@ import auto.json.AutoJson;
 import android.support.annotation.Nullable;
 
 @AutoJson
-public abstract class Application {
+public abstract class Album {
     @Nullable
     @AutoJson.Field
     public abstract String id();
-    @Nullable
-    @AutoJson.Field
-    public abstract String name();
-    @Nullable
-    @AutoJson.Field
-    public abstract String namespace();
 
     @AutoJson.Builder
     public abstract static class Builder {
         public abstract Builder id(String x);
-        public abstract Builder name(String x);
-        public abstract Builder namespace(String x);
-
-        public abstract Application build();
+        public abstract Album build();
     }
 
     public static Builder builder() {
-        return new AutoJson_Application.Builder();
+        return new AutoJson_Album.Builder();
     }
 }
+
+
