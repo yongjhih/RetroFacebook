@@ -23,10 +23,27 @@ public abstract class InlineTag {
     @Nullable
     @AutoJson.Field
     public abstract String id();
+    @Nullable
+    @AutoJson.Field
+    public abstract String name();
+    @Nullable
+    @AutoJson.Field
+    public abstract Integer offset();
+    @Nullable
+    @AutoJson.Field
+    public abstract Integer length();
+    @Nullable
+    @AutoJson.Field
+    public abstract String type();
 
     @AutoJson.Builder
     public abstract static class Builder {
         public abstract Builder id(String x);
+        public abstract Builder name(String x);
+        public abstract Builder offset(Integer x);
+        public abstract Builder length(Integer x);
+        public abstract Builder type(String x);
+
         public abstract InlineTag build();
     }
 

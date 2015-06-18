@@ -22,11 +22,16 @@ import android.support.annotation.Nullable;
 public abstract class Action {
     @Nullable
     @AutoJson.Field
-    public abstract String id();
+    public abstract String name();
+    @Nullable
+    @AutoJson.Field
+    public abstract String link();
 
     @AutoJson.Builder
     public abstract static class Builder {
-        public abstract Builder id(String x);
+        public abstract Builder name(String x);
+        public abstract Builder link(String x);
+
         public abstract Action build();
     }
 

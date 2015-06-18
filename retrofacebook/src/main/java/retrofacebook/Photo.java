@@ -19,6 +19,7 @@ import auto.json.AutoJson;
 import android.support.annotation.Nullable;
 import java.util.List;
 import java.util.Date;
+import com.bluelinelabs.logansquare.typeconverters.*;
 
 @AutoJson
 public abstract class Photo {
@@ -39,7 +40,7 @@ public abstract class Photo {
     @AutoJson.Field(name = "backdated_time")
     public abstract Date backDateTime();
     @Nullable
-    @AutoJson.Field(name = "backdate_time_granularity")
+    @AutoJson.Field(name = "backdate_time_granularity", typeConverter = BackDatetimeGranularityConverter.class)
     public abstract BackDatetimeGranularity backDatetimeGranularity();
     @Nullable
     @AutoJson.Field(name = "created_time")
@@ -112,5 +113,44 @@ public abstract class Photo {
 
     public static Builder builder() {
         return new AutoJson_Photo.Builder();
+    }
+
+    public static enum BackDatetimeGranularity {
+        YEAR("year"),
+        MONTH("month"),
+        DAY("day"),
+        HOUR("hour"),
+        MIN("min"),
+        NONE("none");
+
+        private String mValue;
+
+        private BackDatetimeGranularity(String value) {
+            mValue = value;
+        }
+
+        public String getValue() {
+            return mValue;
+        }
+
+        public static BackDatetimeGranularity fromValue(String value) {
+            for (BackDatetimeGranularity granularityEnum : values()) {
+                if (granularityEnum.mValue.equals(value)) {
+                    return granularityEnum;
+                }
+            }
+            return BackDatetimeGranularity.NONE;
+        }
+    }
+
+    public static class BackDatetimeGranularityConverter extends StringBasedTypeConverter<BackDatetimeGranularity> {
+        @Override
+        public BackDatetimeGranularity getFromString(String s) {
+            return BackDatetimeGranularity.fromValue(s);
+        }
+
+        public String convertToString(BackDatetimeGranularity object) {
+            return object.getValue();
+        }
     }
 }
