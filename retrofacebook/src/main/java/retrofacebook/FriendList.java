@@ -43,13 +43,13 @@ public abstract class FriendList {
 
     @AutoJson.Builder
     public abstract static class Builder {
-    public abstract Builder id(String x);
-    public abstract Builder name(String x);
-    public abstract Builder listType(String x);
-    public abstract Builder owner(String x);
+        public abstract Builder id(String x);
+        public abstract Builder name(String x);
+        public abstract Builder listType(String x);
+        public abstract Builder owner(String x);
 
-    public abstract Builder members(List<Profile> x);
-    public abstract Builder picture(String x);
+        public abstract Builder members(List<Profile> x);
+        public abstract Builder picture(String x);
 
         public abstract FriendList build();
     }
