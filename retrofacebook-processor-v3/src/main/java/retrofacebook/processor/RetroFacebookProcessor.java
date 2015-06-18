@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -196,6 +197,9 @@ public class RetroFacebookProcessor extends AbstractProcessor {
     private final ImmutableList<String> annotations;
     private final String args;
     private final String path;
+    private final Map<String, String> queries;
+    private final List<String> queryMaps;
+    private final List<String> queryBundles;
 
     Property(
         String name,
@@ -211,6 +215,9 @@ public class RetroFacebookProcessor extends AbstractProcessor {
       this.args = formalTypeArgsString(method);
       this.path = buildPath(method);
       this.typeArgs = buildTypeArguments(type);
+      this.queries = buildQueries(method);
+      this.queryMaps = buildQueryMaps(method);
+      this.queryBundles = buildQueryBundles(method);
     }
 
     private String buildTypeArguments(String type) {
@@ -226,12 +233,12 @@ public class RetroFacebookProcessor extends AbstractProcessor {
     // "/" + userIdA + "/friends/" + userIdB + ""
     public String buildPath(ExecutableElement method) {
       retrofacebook.RetroFacebook.GET get = method.getAnnotation(retrofacebook.RetroFacebook.GET.class);
-      String fullPath = "\"" + get.value() + "\"";
+      String fullPath = get.value();
 
       List<? extends VariableElement> parameters = method.getParameters();
       for (VariableElement parameter : parameters) {
         retrofacebook.RetroFacebook.Path path = parameter
-                .getAnnotation(retrofacebook.RetroFacebook.Path.class);
+            .getAnnotation(retrofacebook.RetroFacebook.Path.class);
         if ((path != null) && (!path.value().equals("null"))) {
           fullPath = fullPath.replace("{" + path.value() + "}", "\" + " +
               parameter.getSimpleName().toString() + " + \"");
@@ -241,7 +248,70 @@ public class RetroFacebookProcessor extends AbstractProcessor {
         }
       }
 
-      return fullPath;
+      return "\"" + fullPath.replaceAll("\\?.+", "") + "\"";
+    }
+
+    public Map<String, String> buildQueries(ExecutableElement method) {
+      Map<String, String> map = new HashMap<String, String>();
+
+      retrofacebook.RetroFacebook.GET get = method.getAnnotation(retrofacebook.RetroFacebook.GET.class);
+      String fullPath = get.value();
+      if (fullPath.indexOf("?") != -1) {
+        fullPath = fullPath.replaceAll("^.*\\?", "");
+        String[] queries = fullPath.split("&");
+        for (String query : queries) {
+          String[] keyValue = query.split("=");
+          map.put("\"" + keyValue[0] + "\"", "\"" + keyValue[1] + "\"");
+        }
+      }
+
+      List<? extends VariableElement> parameters = method.getParameters();
+      for (VariableElement parameter : parameters) {
+        retrofacebook.RetroFacebook.Query query = parameter
+            .getAnnotation(retrofacebook.RetroFacebook.Query.class);
+        if (query == null) {
+          continue;
+        }
+
+        if (!query.value().equals("null")) {
+          map.put("\"" + query.value() + "\"", parameter.getSimpleName().toString());
+        } else {
+          map.put("\"" + parameter.getSimpleName().toString() + "\"",
+              parameter.getSimpleName().toString());
+        }
+      }
+
+      return map;
+    }
+
+    public List<String> buildQueryMaps(ExecutableElement method) {
+      List<String> queryMaps = new ArrayList<String>();
+      List<? extends VariableElement> parameters = method.getParameters();
+      for (VariableElement parameter : parameters) {
+        retrofacebook.RetroFacebook.QueryMap queryMap = parameter
+            .getAnnotation(retrofacebook.RetroFacebook.QueryMap.class);
+        if (queryMap == null) {
+          continue;
+        }
+
+        queryMaps.add(parameter.getSimpleName().toString());
+      }
+      return queryMaps;
+    }
+
+    public List<String> buildQueryBundles(ExecutableElement method) {
+      List<String> queryBundles = new ArrayList<String>();
+      List<? extends VariableElement> parameters = method.getParameters();
+      for (VariableElement parameter : parameters) {
+        retrofacebook.RetroFacebook.QueryBundle queryBundle = parameter
+            .getAnnotation(retrofacebook.RetroFacebook.QueryBundle.class);
+        if (queryBundle == null) {
+          continue;
+        }
+
+        queryBundles.add(parameter.getSimpleName().toString());
+      }
+      return queryBundles;
     }
 
     private ImmutableList<String> buildAnnotations(TypeSimplifier typeSimplifier) {
@@ -353,6 +423,18 @@ public class RetroFacebookProcessor extends AbstractProcessor {
 
     public String getPath() {
       return path;
+    }
+
+    public Map<String, String> getQueries() {
+      return queries;
+    }
+
+    public List<String> getQueryMaps() {
+      return queryMaps;
+    }
+
+    public List<String> getQueryBundles() {
+      return queryBundles;
     }
 
     public boolean isNullable() {
@@ -826,7 +908,7 @@ public class RetroFacebookProcessor extends AbstractProcessor {
         FluentIterable.from(parameters).transform(new Function<VariableElement, String>() {
           @Override
           public String apply(VariableElement element) {
-            return element.asType() + " " + element.getSimpleName();
+            return "final " + element.asType() + " " + element.getSimpleName();
           }
         }))
         + "";

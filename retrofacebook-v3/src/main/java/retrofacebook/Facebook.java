@@ -27,11 +27,13 @@ import com.facebook.*;
 import android.content.Context;
 import android.content.Intent;
 import android.app.Activity;
+import android.os.Bundle;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Map;
 
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -41,9 +43,20 @@ public abstract class Facebook {
     @RetroFacebook.GET("/{post-id}")
     public abstract Observable<Post> getPost(@RetroFacebook.Path("post-id") String postId);
 
-    // TODO @RetroFacebook.GET("/{userId}/photos?type=uploaded")
     @RetroFacebook.GET("/{user-id}/photos")
     public abstract Observable<Photo> getPhotos(@RetroFacebook.Path("user-id") String userId);
+
+    //@RetroFacebook.GET("/{user-id}/photos")
+    //public abstract Observable<Photo> getPhotos(@RetroFacebook.Path("user-id") String userId, @RetroFacebook.Query String type);
+
+    //@RetroFacebook.GET("/{user-id}/photos")
+    //public abstract Observable<Photo> getPhotos(@RetroFacebook.Path("user-id") String userId, @RetroFacebook.QueryMap Map<String, String> queries);
+
+    //@RetroFacebook.GET("/{user-id}/photos")
+    //public abstract Observable<Photo> getPhotos(@RetroFacebook.Path("user-id") String userId, @RetroFacebook.QueryBundle Bundle queries);
+
+    @RetroFacebook.GET("/{user-id}/photos?type=uploaded")
+    public abstract Observable<Photo> getUploadedPhotos(@RetroFacebook.Path("user-id") String userId);
 
     public Observable<Photo> getPhotos() {
         return getPhotos("me");

@@ -51,4 +51,20 @@ public @interface RetroFacebook {
   public @interface Path {
     String value() default "null";
   }
+
+  @Retention(RetentionPolicy.RUNTIME) // RUNTIME, keep annotation for anothor processor
+  @Target(ElementType.PARAMETER)
+  public @interface Query {
+    String value() default "null";
+  }
+
+  @Retention(RetentionPolicy.RUNTIME) // RUNTIME, keep annotation for anothor processor
+  @Target(ElementType.PARAMETER)
+  public @interface QueryMap {
+  }
+
+  @Retention(RetentionPolicy.RUNTIME) // RUNTIME, keep annotation for anothor processor
+  @Target(ElementType.PARAMETER)
+  public @interface QueryBundle {
+  }
 }

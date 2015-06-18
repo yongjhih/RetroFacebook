@@ -25,10 +25,12 @@ import com.facebook.login.*;
 
 import android.content.Intent;
 import android.app.Activity;
+import android.os.Bundle;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Arrays;
+import java.util.Map;
 
 @RetroFacebook
 public abstract class Facebook {
@@ -41,6 +43,18 @@ public abstract class Facebook {
      */
     @RetroFacebook.GET(value = "/{user-id}/photos", permissions = "user_photos")
     public abstract Observable<Photo> getPhotos(@RetroFacebook.Path("user-id") String userId);
+
+    //@RetroFacebook.GET("/{user-id}/photos")
+    //public abstract Observable<Photo> getPhotos(@RetroFacebook.Path("user-id") String userId, @RetroFacebook.Query String type);
+
+    //@RetroFacebook.GET("/{user-id}/photos")
+    //public abstract Observable<Photo> getPhotos(@RetroFacebook.Path("user-id") String userId, @RetroFacebook.QueryMap Map<String, String> queries);
+
+    //@RetroFacebook.GET("/{user-id}/photos")
+    //public abstract Observable<Photo> getPhotos(@RetroFacebook.Path("user-id") String userId, @RetroFacebook.QueryBundle Bundle queries);
+
+    @RetroFacebook.GET("/{user-id}/photos?type=uploaded")
+    public abstract Observable<Photo> getUploadedPhotos(@RetroFacebook.Path("user-id") String userId);
 
     public Observable<Photo> getPhotos() {
         return getPhotos("me");
