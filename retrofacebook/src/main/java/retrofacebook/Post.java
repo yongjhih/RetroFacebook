@@ -17,6 +17,7 @@ package retrofacebook;
 
 import auto.json.AutoJson;
 import android.support.annotation.Nullable;
+import android.os.Bundle;
 
 import java.util.List;
 
@@ -157,4 +158,7 @@ public abstract class Post {
     public static Builder builder() {
         return new AutoJson_Post.Builder();
     }
+
+    //public abstract Builder toBuilder();
+    public abstract Bundle toBundle();
 }

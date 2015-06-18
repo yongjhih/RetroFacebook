@@ -134,6 +134,7 @@ class AutoJsonTemplateVars extends TemplateVars {
    * The names of any {@code toBuilder()} methods, that is methods that return the builder type.
    */
   List<String> toBuilderMethods;
+  List<String> toBundleMethods;
 
   /**
    * The simple names of validation methods (marked {@code @AutoJson.Validate}) in the AutoJson

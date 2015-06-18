@@ -193,6 +193,7 @@ public class AutoJsonProcessor extends AbstractProcessor {
     private final String type;
     private final ImmutableList<String> annotations;
     private final List<String> annotatedNames;
+    private final TypeSimplifier typeSimplifier;
 
     Property(
         String name,
@@ -207,6 +208,7 @@ public class AutoJsonProcessor extends AbstractProcessor {
       this.method = method;
       this.type = type;
       this.annotatedNames = annotatedNames;
+      this.typeSimplifier = typeSimplifier;
       this.annotations = buildAnnotations(typeSimplifier);
     }
 
@@ -298,6 +300,10 @@ public class AutoJsonProcessor extends AbstractProcessor {
 
     public String getCastType() {
       return primitive() ? box(method.getReturnType().getKind()) : getType();
+    }
+
+    public boolean getStringable() {
+        return "java.lang.String".equals(typeSimplifier.simplify(getTypeMirror()));
     }
 
     private String box(TypeKind kind) {
@@ -488,6 +494,12 @@ public class AutoJsonProcessor extends AbstractProcessor {
     vars.toBuilderMethods =
         FluentIterable.from(toBuilderMethods).transform(SimpleNameFunction.INSTANCE).toList();
     Set<ExecutableElement> propertyMethods = Sets.difference(methodsToImplement, toBuilderMethods);
+
+    ImmutableSet<ExecutableElement> toBundleMethods = toBundleMethods(typeUtils, methodsToImplement);
+    vars.toBundleMethods =
+        FluentIterable.from(toBundleMethods).transform(SimpleNameFunction.INSTANCE).toList();
+
+    propertyMethods = Sets.difference(propertyMethods, toBundleMethods);
     String pkg = TypeSimplifier.packageNameOf(type);
     TypeSimplifier typeSimplifier = new TypeSimplifier(typeUtils, pkg, types, type.asType());
     vars.imports = typeSimplifier.typesToImport();
@@ -536,6 +548,19 @@ public class AutoJsonProcessor extends AbstractProcessor {
     if (builder.isPresent()) {
       builder.get().defineVars(vars, typeSimplifier, methodToPropertyName);
     }
+  }
+
+  ImmutableSet<ExecutableElement> toBundleMethods(Types typeUtils, Set<ExecutableElement> abstractMethods) {
+    ImmutableSet.Builder<ExecutableElement> methods = ImmutableSet.builder();
+    StringBuilder sb = new StringBuilder();
+    for (ExecutableElement method : abstractMethods) {
+        TypeElement typeElement = (TypeElement) typeUtils.asElement(method.getReturnType());
+        if (typeElement.getQualifiedName().toString().endsWith("Bundle")) {
+            methods.add(method);
+        }
+    }
+    ImmutableSet<ExecutableElement> builderMethods = methods.build();
+    return builderMethods;
   }
 
   public String toTypeArguments(TypeElement type) {
