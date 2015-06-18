@@ -565,9 +565,12 @@ public class AutoJsonProcessor extends AbstractProcessor {
     ImmutableSet.Builder<ExecutableElement> methods = ImmutableSet.builder();
     StringBuilder sb = new StringBuilder();
     for (ExecutableElement method : abstractMethods) {
+        try {
         TypeElement typeElement = (TypeElement) typeUtils.asElement(method.getReturnType());
         if (typeElement.getQualifiedName().toString().endsWith("Bundle")) { // FIXME hardcode
             methods.add(method);
+        }
+        } catch (NullPointerException e) {
         }
     }
     ImmutableSet<ExecutableElement> builderMethods = methods.build();
