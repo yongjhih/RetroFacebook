@@ -43,13 +43,17 @@ public final class $subclass$formalTypes extends $origClass$actualTypes {
             @Override public Bundle call($subclass$formalTypes t) {
 #set ($map = ${p.queries})
 #set ($maps = ${p.queryMaps})
-#if (!$map.isEmpty() || !$maps.isEmpty())
+#set ($bundles = ${p.queryBundles})
+#if (!$map.isEmpty() || !$maps.isEmpty() || !$bundles.isEmpty())
                 Bundle bundle = new Bundle();
 #foreach ($query in $map.entrySet())
                 bundle.putString($query.key, $query.value);
 #end
 #foreach ($queryMap in $maps)
                 addMapToBubdle(bundle, ${queryMap});
+#end
+#foreach ($queryBundle in $bundles)
+                bundle.putAll(${queryBundle});
 #end
                 return bundle;
 #else

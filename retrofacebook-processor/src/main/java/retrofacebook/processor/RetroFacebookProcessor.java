@@ -199,6 +199,7 @@ public class RetroFacebookProcessor extends AbstractProcessor {
     private final String path;
     private final Map<String, String> queries;
     private final List<String> queryMaps;
+    private final List<String> queryBundles;
 
     Property(
         String name,
@@ -216,6 +217,7 @@ public class RetroFacebookProcessor extends AbstractProcessor {
       this.typeArgs = buildTypeArguments(type);
       this.queries = buildQueries(method);
       this.queryMaps = buildQueryMaps(method);
+      this.queryBundles = buildQueryBundles(method);
     }
 
     private String buildTypeArguments(String type) {
@@ -295,6 +297,21 @@ public class RetroFacebookProcessor extends AbstractProcessor {
         queryMaps.add(parameter.getSimpleName().toString());
       }
       return queryMaps;
+    }
+
+    public List<String> buildQueryBundles(ExecutableElement method) {
+      List<String> queryBundles = new ArrayList<String>();
+      List<? extends VariableElement> parameters = method.getParameters();
+      for (VariableElement parameter : parameters) {
+        retrofacebook.RetroFacebook.QueryBundle queryBundle = parameter
+            .getAnnotation(retrofacebook.RetroFacebook.QueryBundle.class);
+        if (queryBundle == null) {
+          continue;
+        }
+
+        queryBundles.add(parameter.getSimpleName().toString());
+      }
+      return queryBundles;
     }
 
     private ImmutableList<String> buildAnnotations(TypeSimplifier typeSimplifier) {
@@ -414,6 +431,10 @@ public class RetroFacebookProcessor extends AbstractProcessor {
 
     public List<String> getQueryMaps() {
       return queryMaps;
+    }
+
+    public List<String> getQueryBundles() {
+      return queryBundles;
     }
 
     public boolean isNullable() {
