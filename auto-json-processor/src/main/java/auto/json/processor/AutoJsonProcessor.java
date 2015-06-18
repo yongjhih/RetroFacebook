@@ -227,7 +227,7 @@ public class AutoJsonProcessor extends AbstractProcessor {
         }
 
         // annoatioan: Auto.Field -> JsonField
-        if (annotationElement.getQualifiedName().toString().endsWith("auto.json.AutoJson.Field")) {
+        if (annotationElement.getQualifiedName().toString().endsWith("auto.json.AutoJson.Field")) { // FIXME hardcode
         //if (annotationElement.getQualifiedName().toString().endsWith(AutoJson.Field.class.getName())) {
           //TypeMirror jsonField = getTypeMirror(JsonField.class);
           AnnotationOutput annotationOutput = new AnnotationOutput(typeSimplifier);
@@ -237,9 +237,9 @@ public class AutoJsonProcessor extends AbstractProcessor {
           if (args.length > 0) {
               // List<Post> -> Post
               String arg = args[0].replaceAll("[^<]*<", "").replace(" ", "").replace("<", "").replace(">", "");
-              if (annotatedNames.contains("retrofacebook." + arg)) {
+              if (annotatedNames.contains("retrofacebook." + arg)) { // FIXME hardcode
                   //autoType = autoType.replace(arg, "AutoJson_" + arg); // List<Post> -> List<AutoJson_Post>
-                  annotation = annotation + "(" + "typeConverter" + " = " + arg + "Converter.class" + ")";
+                  annotation = annotation + "(" + "typeConverter" + " = " + arg + "Converter.class" + ")"; // FIXME hardcode
               }
           }
           annotation = annotation.replace("auto.json.AutoJson.Field", "com.bluelinelabs.logansquare.annotation.JsonField");
@@ -247,7 +247,7 @@ public class AutoJsonProcessor extends AbstractProcessor {
           builder.add(annotation);
 
           if (annotation.contains("name")) {
-              key = annotation.replaceAll(".*name\\s*=[^\"]*\"([^\"]*)\".*", "$1");
+              key = annotation.replaceAll(".*name\\s*=[^\"]*\"([^\"]*)\".*", "$1"); // FIXME hardcode
           }
           if (key == null || "".equals(key)) key = name;
         } else {
@@ -314,7 +314,7 @@ public class AutoJsonProcessor extends AbstractProcessor {
     }
 
     public boolean getStringable() {
-        return "String".equals(typeSimplifier.simplify(getTypeMirror()));
+        return "String".equals(typeSimplifier.simplify(getTypeMirror())); // FIXME hardcode
     }
 
     private String box(TypeKind kind) {
@@ -566,7 +566,7 @@ public class AutoJsonProcessor extends AbstractProcessor {
     StringBuilder sb = new StringBuilder();
     for (ExecutableElement method : abstractMethods) {
         TypeElement typeElement = (TypeElement) typeUtils.asElement(method.getReturnType());
-        if (typeElement.getQualifiedName().toString().endsWith("Bundle")) {
+        if (typeElement.getQualifiedName().toString().endsWith("Bundle")) { // FIXME hardcode
             methods.add(method);
         }
     }
