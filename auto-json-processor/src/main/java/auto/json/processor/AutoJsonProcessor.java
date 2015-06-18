@@ -188,6 +188,7 @@ public class AutoJsonProcessor extends AbstractProcessor {
    */
   public static class Property {
     private final String name;
+    private String key;
     private final String identifier;
     private final ExecutableElement method;
     private final String type;
@@ -204,6 +205,7 @@ public class AutoJsonProcessor extends AbstractProcessor {
         List<String> annotatedNames
         ) {
       this.name = name;
+      this.key = name;
       this.identifier = identifier;
       this.method = method;
       this.type = type;
@@ -243,6 +245,11 @@ public class AutoJsonProcessor extends AbstractProcessor {
           annotation = annotation.replace("auto.json.AutoJson.Field", "com.bluelinelabs.logansquare.annotation.JsonField");
           annotation = annotation.replace(")(", ", ");
           builder.add(annotation);
+
+          if (annotation.contains("name")) {
+              key = annotation.replaceAll(".*name\\s*=[^\"]*\"([^\"]*)\".*", "$1");
+          }
+          if (key == null || "".equals(key)) key = name;
         } else {
           // TODO(user): we should import this type if it is not already imported
           AnnotationOutput annotationOutput = new AnnotationOutput(typeSimplifier);
@@ -274,6 +281,10 @@ public class AutoJsonProcessor extends AbstractProcessor {
       return name;
     }
 
+    public String getKey() {
+      return key;
+    }
+
     /**
      * Returns the name of the getter method for this property as defined by the {@code @AutoJson}
      * class. For property {@code foo}, this will be {@code foo} or {@code getFoo} or {@code isFoo}.
@@ -303,7 +314,7 @@ public class AutoJsonProcessor extends AbstractProcessor {
     }
 
     public boolean getStringable() {
-        return "java.lang.String".equals(typeSimplifier.simplify(getTypeMirror()));
+        return "String".equals(typeSimplifier.simplify(getTypeMirror()));
     }
 
     private String box(TypeKind kind) {

@@ -245,7 +245,7 @@ final class $subclass$formalTypes extends $origClass$actualTypes {
 
       #if ($p.stringable)
 
-      bundles.put(bundle, ${p.name}, ${p.getter}());
+      Bundles.put(bundle, "${p.key}", ${p.getter}());
 
       #end
 
@@ -257,34 +257,34 @@ final class $subclass$formalTypes extends $origClass$actualTypes {
 #end
 
     public static class Bundles {
-        void put(Bundle bundle, String key, boolean value) {
+        public static void put(Bundle bundle, String key, boolean value) {
             bundle.putBoolean(key, value);
         }
-        void put(Bundle bundle, String key, boolean[] value) {
+        public static void put(Bundle bundle, String key, boolean[] value) {
             bundle.putBooleanArray(key, value);
         }
-        void put(Bundle bundle, String key, double value) {
+        public static void put(Bundle bundle, String key, double value) {
             bundle.putDouble(key, value);
         }
-        void put(Bundle bundle, String key, double[] value) {
+        public static void put(Bundle bundle, String key, double[] value) {
             bundle.putDoubleArray(key, value);
         }
-        void put(Bundle bundle, String key, int value) {
+        public static void put(Bundle bundle, String key, int value) {
             bundle.putInt(key, value);
         }
-        void put(Bundle bundle, String key, int[] value) {
+        public static void put(Bundle bundle, String key, int[] value) {
             bundle.putIntArray(key, value);
         }
-        void put(Bundle bundle, String key, long value) {
+        public static void put(Bundle bundle, String key, long value) {
             bundle.putLong(key, value);
         }
-        void put(Bundle bundle, String key, long[] value) {
+        public static void put(Bundle bundle, String key, long[] value) {
             bundle.putLongArray(key, value);
         }
-        void put(Bundle bundle, String key, String value) {
+        public static void put(Bundle bundle, String key, String value) {
             bundle.putString(key, value);
         }
-        void put(Bundle bundle, String key, String[] value) {
+        public static void put(Bundle bundle, String key, String[] value) {
             bundle.putStringArray(key, value);
         }
     }
