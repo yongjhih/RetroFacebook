@@ -24,6 +24,8 @@ import rx.Subscriber;
 import rx.functions.*;
 
 import com.bluelinelabs.logansquare.LoganSquare;
+
+import android.os.Bundle;
 import android.util.Log;
 
 ${gwtCompatibleAnnotation}
@@ -35,15 +37,29 @@ public final class $subclass$formalTypes extends $origClass$actualTypes {
 
     @Override
     ${p.access}${p.type} ${p.getter}(${p.args}) {
-        return Observable.create(new OnSubscribeResponse(
-                new Request(
-                    Session.getActiveSession(),
-                    ${p.path},
-                    null,
-                    HttpMethod.GET
-                )
-            )
-        ).map(new Func1<Response, ${p.typeArgs}s>() {
+        return Observable.just(this).map(new Func1<$subclass$formalTypes, Bundle>() {
+            @Override public Bundle call($subclass$formalTypes t) {
+#set ($map = ${p.queries})
+#if (!$map.isEmpty())
+                Bundle bundle = new Bundle();
+#foreach ($query in $map.entrySet())
+                bundle.putString($query.key, $query.value);
+#end
+                return bundle;
+#else
+                return null;
+#end
+            }
+        }).flatMap(new Func1<Bundle, Observable<Response>>() {
+            @Override public Observable<Response> call(Bundle queries) {
+                Request request = new Request(
+                        Session.getActiveSession(),
+                        ${p.path},
+                        queries,
+                        HttpMethod.GET);
+                return Observable.create(new OnSubscribeResponse(request));
+            }
+        }).map(new Func1<Response, ${p.typeArgs}s>() {
             @Override public ${p.typeArgs}s call(Response response) {
                 try {
                     Log.d("RetroFacebook", "${p.typeArgs}s: " + response.getGraphObject().getInnerJSONObject().toString());
