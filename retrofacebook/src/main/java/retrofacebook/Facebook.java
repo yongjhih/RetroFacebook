@@ -90,6 +90,36 @@ public abstract class Facebook {
     @RetroFacebook.GET(value = "/{friend-list-id}", permissions = "read_custom_friendlists")
     public abstract Observable<FriendList> getFriendList(@RetroFacebook.Path("friend-list-id") String friendListId);
 
+    /**
+     * @see <a href="https://developers.facebook.com/docs/graph-api/reference/photo">Graph API Photo Node - Facebook Developers</a>
+     */
+    @RetroFacebook.POST(value = "/{page_id}/photos", permissions = "publish_actions")
+    public abstract Observable<Struct> postToPage(Photo photo, @RetroFacebook.Path("page_id") String pageId);
+
+    /**
+     * @see <a href="https://developers.facebook.com/docs/graph-api/reference/photo">Graph API Photo Node - Facebook Developers</a>
+     */
+    @RetroFacebook.POST(value = "/{user_id}/photos", permissions = "publish_actions")
+    public abstract Observable<Struct> postToUser(Photo photo, @RetroFacebook.Path("user_id") String userId);
+
+    /**
+     * @see <a href="https://developers.facebook.com/docs/graph-api/reference/photo">Graph API Photo Node - Facebook Developers</a>
+     */
+    @RetroFacebook.POST(value = "/{album_id}/photos", permissions = "publish_actions")
+    public abstract Observable<Struct> postToAlbum(Photo photo, @RetroFacebook.Path("album_id") String albumId);
+
+    /**
+     * @see <a href="https://developers.facebook.com/docs/graph-api/reference/photo">Graph API Photo Node - Facebook Developers</a>
+     */
+    @RetroFacebook.POST(value = "/{event_id}/photos", permissions = "publish_actions")
+    public abstract Observable<Struct> postToEvent(Photo photo, @RetroFacebook.Path("event_id") String eventId);
+
+    /**
+     * @see <a href="https://developers.facebook.com/docs/graph-api/reference/photo">Graph API Photo Node - Facebook Developers</a>
+     */
+    @RetroFacebook.POST(value = "/{group_id}/photos", permissions = "publish_actions")
+    public abstract Observable<Struct> postToGroup(Photo photo, @RetroFacebook.Path("group_id") String groupId);
+
     public Observable<User> getFriends() {
         return getFriends("me");
     }

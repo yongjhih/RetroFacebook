@@ -47,6 +47,13 @@ public @interface RetroFacebook {
   }
 
   @Retention(RetentionPolicy.RUNTIME) // RUNTIME, keep annotation for anothor processor
+  @Target(ElementType.METHOD)
+  public @interface POST {
+    String value();
+    String[] permissions() default {};
+  }
+
+  @Retention(RetentionPolicy.RUNTIME) // RUNTIME, keep annotation for anothor processor
   @Target(ElementType.PARAMETER)
   public @interface Path {
     String value() default "null";

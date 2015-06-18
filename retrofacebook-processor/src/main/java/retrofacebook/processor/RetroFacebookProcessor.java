@@ -233,7 +233,10 @@ public class RetroFacebookProcessor extends AbstractProcessor {
     // "/" + userIdA + "/friends/" + userIdB + ""
     public String buildPath(ExecutableElement method) {
       retrofacebook.RetroFacebook.GET get = method.getAnnotation(retrofacebook.RetroFacebook.GET.class);
-      String fullPath = get.value();
+      retrofacebook.RetroFacebook.POST post = method.getAnnotation(retrofacebook.RetroFacebook.POST.class);
+      String fullPath = null;
+      if (get != null) fullPath = get.value();
+      if (post != null) fullPath = post.value();
 
       List<? extends VariableElement> parameters = method.getParameters();
       for (VariableElement parameter : parameters) {
@@ -255,7 +258,11 @@ public class RetroFacebookProcessor extends AbstractProcessor {
       Map<String, String> map = new HashMap<String, String>();
 
       retrofacebook.RetroFacebook.GET get = method.getAnnotation(retrofacebook.RetroFacebook.GET.class);
-      String fullPath = get.value();
+      retrofacebook.RetroFacebook.POST post = method.getAnnotation(retrofacebook.RetroFacebook.POST.class);
+      String fullPath = null;
+      if (get != null) fullPath = get.value();
+      if (post != null) fullPath = post.value();
+
       if (fullPath.indexOf("?") != -1) {
         fullPath = fullPath.replaceAll("^.*\\?", "");
         String[] queries = fullPath.split("&");
