@@ -43,6 +43,7 @@ public @interface RetroFacebook {
   @Target(ElementType.METHOD)
   public @interface GET {
     String value();
+    String[] permissions() default {};
   }
 
   @Retention(RetentionPolicy.RUNTIME) // RUNTIME, keep annotation for anothor processor

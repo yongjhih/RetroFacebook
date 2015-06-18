@@ -36,21 +36,30 @@ public abstract class Facebook {
     public abstract Observable<Post> getPost(@RetroFacebook.Path("post-id") String postId);
 
     // TODO @RetroFacebook.GET("/{userId}/photos?type=uploaded")
-    @RetroFacebook.GET("/{user-id}/photos")
+    /**
+     * @see <a href="https://developers.facebook.com/docs/graph-api/reference/user/photos/">Graph API User Photo Edge - Facebook Developers</a>
+     */
+    @RetroFacebook.GET(value = "/{user-id}/photos", permissions = "user_photos")
     public abstract Observable<Photo> getPhotos(@RetroFacebook.Path("user-id") String userId);
 
     public Observable<Photo> getPhotos() {
         return getPhotos("me");
     }
 
-    @RetroFacebook.GET("/{user-id}/feed")
+    /**
+     * @see <a href="https://developers.facebook.com/docs/graph-api/reference/v2.3/user/feed">{user-id}/feed - Facebook Developers</a>
+     */
+    @RetroFacebook.GET(value = "/{user-id}/feed", permissions = "user_posts")
     public abstract Observable<Post> getPosts(@RetroFacebook.Path("user-id") String userId);
 
     public Observable<Post> getPosts() {
         return getPosts("me");
     }
 
-    @RetroFacebook.GET("/{user-id}/friends")
+    /**
+     * @see <a href="https://developers.facebook.com/docs/graph-api/reference/v2.3/user/friends">Graph API /user/friends - Facebook Developers</a>
+     */
+    @RetroFacebook.GET(value = "/{user-id}/friends", permissions = "user_friends")
     public abstract Observable<User> getFriends(@RetroFacebook.Path("user-id") String userId);
 
     public Observable<User> getFriends() {
