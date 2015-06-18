@@ -8,6 +8,7 @@ Inspired by retrofit.
 
 
 ![photos.png](art/screenshot-photos.png)
+![photos.png](art/screenshot-friends.png)
 ![posts.png](art/screenshot-posts.png)
 
 ## Usage

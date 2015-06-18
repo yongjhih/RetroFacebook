@@ -62,6 +62,20 @@ public abstract class Facebook {
     @RetroFacebook.GET(value = "/{user-id}/friends", permissions = "user_friends")
     public abstract Observable<User> getFriends(@RetroFacebook.Path("user-id") String userId);
 
+    /**
+     * @see <a href="https://developers.facebook.com/docs/graph-api/reference/user/friendlists">User friendlists - Facebook Developers</a>
+     */
+    @RetroFacebook.GET("/{user-id}/friendlists")
+    public abstract Observable<FriendList> getFriendLists(@RetroFacebook.Path("user-id") String userId);
+
+    /**
+     * Single.
+     *
+     * @see <a href="https://developers.facebook.com/docs/graph-api/reference/friend-list/">Friend List - Facebook Developers</a>
+     */
+    @RetroFacebook.GET(value = "/{friend-list-id}", permissions = "read_custom_friendlists")
+    public abstract Observable<FriendList> getFriendList(@RetroFacebook.Path("friend-list-id") String friendListId);
+
     public Observable<User> getFriends() {
         return getFriends("me");
     }
@@ -69,6 +83,8 @@ public abstract class Facebook {
     public static Facebook create() {
         return new RetroFacebook_Facebook();
     }
+
+    // LifeCycle management
 
     CallbackManager callbackManager;
     Activity activity;
