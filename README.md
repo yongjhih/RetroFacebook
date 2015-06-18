@@ -25,6 +25,8 @@ Observable<Photo> myPhotos = facebook.getPhotos();
 myPhotos.subscribe(photo -> System.out.println(photo.id()));
 ```
 
+Easy to add API:
+
 [retrofacebook/src/main/java/retrofacebook/Facebook.java](retrofacebook/src/main/java/retrofacebook/Facebook.java):
 
 ```java
@@ -39,6 +41,8 @@ abstract class Facebook {
     // ...
 }
 ```
+
+Easy to add Model:
 
 [retrofacebook/src/main/java/retrofacebook/Post.java](retrofacebook/src/main/java/retrofacebook/Post.java):
 
@@ -73,97 +77,26 @@ dependencies {
 }
 ```
 
-## Development
+## TODO
 
-[retrofacebook/src/main/java/retrofacebook/Facebook.java](retrofacebook/src/main/java/retrofacebook/Facebook.java):
-[retrofacebook/src/main/java/retrofacebook/Post.java](retrofacebook/src/main/java/retrofacebook/Post.java):
+Missing Models:
 
-Generated(v4):
-
-```java
-final class RetroFacebook_Facebook extends Facebook {
-
-  @Override
-  public Observable<Post> getPost(java.lang.String postId) {
-        return Observable.create(new OnSubscribeGraphResponse(
-                GraphRequest.newGraphPathRequest(
-                    AccessToken.getCurrentAccessToken(),
-                    "/" + postId + "", null
-                )
-            )
-        ).map(new Func1<GraphResponse, Post>() {
-            @Override public Post call(GraphResponse response) {
-                try {
-                    return LoganSquare.parse(response.getJSONObject().toString(), AutoJson_Post.class);
-                } catch (java.io.IOException e) {
-                    e.printStackTrace();
-                    return null;
-                }
-            }
-        });
-  }
-
-  //...
-
-}
-```
-
-```java
-@JsonObject
-final class AutoJson_Post extends Post {
-
-  @android.support.annotation.Nullable
-  @com.bluelinelabs.logansquare.annotation.JsonField
-  String id;
-
-  @android.support.annotation.Nullable
-  @com.bluelinelabs.logansquare.annotation.JsonField(name = {"is_hidden"})
-  Boolean isHidden;
-
-  public AutoJson_Post() {
-    super();
-  }
-
-  private AutoJson_Post(
-      String id,
-      Boolean isHidden) {
-    this.id = id;
-    this.isHidden = isHidden;
-  }
-
-  @Override
-  public String id() {
-    return id;
-  }
-
-  @Override
-  public Boolean isHidden() {
-    return isHidden;
-  }
-
-  @Override
-  public String toString() {
-    return "Post{"
-        + "id=" + id + ", "
-        + "isHidden=" + isHidden
-        + "}";
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (o == this) {
-      return true;
-    }
-    if (o instanceof Post) {
-      Post that = (Post) o;
-      return ((this.id == null) ? (that.id() == null) : this.id.equals(that.id()))
-           && ((this.isHidden == null) ? (that.isHidden() == null) : this.isHidden.equals(that.isHidden()));
-    }
-    return false;
-  }
-
-  // ...
-```
+* Account
+* AppRequest
+* Checkin
+* Event
+* FamilyUser
+* Feed
+* Group
+* Notification
+* Page
+* Parking
+* Publishable
+* RestaurantService
+* RestaurantSpecialties
+* Score
+* Story
+* Video
 
 ## Credit
 
