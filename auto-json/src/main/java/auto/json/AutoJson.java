@@ -41,7 +41,18 @@ public @interface AutoJson {
 
   @Retention(RetentionPolicy.SOURCE)
   @Target(ElementType.METHOD)
-  public @interface Field {
+  public @interface Field { // for de/serialization
+  //public @interface Field extends com.bluelinelabs.logansquare.annotation.JsonField {
+    /**
+     * The name(s) of this field in JSON. Use an array if this could be represented by multiple names.
+     * Note that using this field will override the enclosing JsonObject's fieldNamingPolicy.
+     */
+    String[] name() default {};
+
+    /** The TypeConverter that will be used to parse/serialize this variable. */
+    Class typeConverter() default void.class;
+  }
+  public @interface ToField { // only for serialization
   //public @interface Field extends com.bluelinelabs.logansquare.annotation.JsonField {
     /**
      * The name(s) of this field in JSON. Use an array if this could be represented by multiple names.

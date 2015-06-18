@@ -17,19 +17,13 @@ package retrofacebook;
 
 import auto.json.AutoJson;
 import android.support.annotation.Nullable;
+import android.os.Bundle;
 import java.util.List;
 import java.util.Date;
 import com.bluelinelabs.logansquare.typeconverters.*;
 
 @AutoJson
 public abstract class Photo {
-    @Nullable
-    @AutoJson.Field
-    public abstract String caption();
-    @Nullable
-    @AutoJson.Field
-    public abstract String url();
-
     @Nullable
     @AutoJson.Field
     public abstract String id();
@@ -40,8 +34,8 @@ public abstract class Photo {
     @AutoJson.Field(name = "backdated_time")
     public abstract Date backDateTime();
     @Nullable
-    @AutoJson.Field(name = "backdate_time_granularity", typeConverter = BackDatetimeGranularityConverter.class)
-    public abstract BackDatetimeGranularity backDatetimeGranularity();
+    @AutoJson.Field(name = "backdated_time_granularity", typeConverter = BackdatedTimeGranularityConverter.class)
+    public abstract BackdatedTimeGranularity backdatedTimeGranularity();
     @Nullable
     @AutoJson.Field(name = "created_time")
     public abstract Date createdTime();
@@ -72,27 +66,200 @@ public abstract class Photo {
     @Nullable
     @AutoJson.Field
     public abstract Place place();
-    @Nullable
-    @AutoJson.Field
-    public abstract String source();
+    /**
+     * deprecated, instead of images
+     */
+    //@Nullable
+    //@AutoJson.Field
+    //public abstract String source();
     @Nullable
     @AutoJson.Field(name = "updated_time")
     public abstract Date updatedTime();
     @Nullable
     @AutoJson.Field
     public abstract Integer width();
+    //@Nullable
+    //@AutoJson.Field
+    //public abstract Event event(); // v2.3 // TODO
+    //@Nullable
+    //@AutoJson.Field(name = "name_tags")
+    //public abstract Map<String, List<TextRange>> nameTags(); // TODO
+    /**
+     * deprecated
+     */
+    //@Nullable
+    //@AutoJson.Field
+    //public abstract Integer position();
+
+    /**
+     * People who like this
+     */
     @Nullable
+    @AutoJson.Field
+    public abstract List<Like> likes();
+
+    /**
+     * Comments on an object
+     */
+    @Nullable
+    @AutoJson.Field
+    public abstract List<Comment> comments();
+
+    // POST
+
+    /**
+     * numeric string or integer
+     */
+    //public abstract String id();
+    /**
+     * string
+     */
+    @Nullable
+    @AutoJson.Field
+    public abstract String caption();
+    /**
+     * URL
+     */
+    @Nullable
+    @AutoJson.Field
+    public abstract String url();
+    /**
+     * numeric string or integer
+     */
+    @Nullable
+    @AutoJson.Field(name = "vault_image_id")
+    public abstract String vaultImageId();
+    /**
+     * list&lt;Object&gt;
+     */
+    @Nullable
+    @AutoJson.Field
+    public abstract List<Tag> tags();
+    /**
+     * place tag
+     */
+    @Nullable
+    @AutoJson.ToField(name = "place")
     public abstract String placeId();
+    /**
+     * target
+     */
+    @Nullable
+    @AutoJson.Field
+    public abstract Target targeting();
+    /**
+     * feed target
+     */
+    @Nullable
+    @AutoJson.Field(name = "feed_targeting")
+    public abstract FeedTarget feedTargeting();
+    /**
+     * boolean
+     */
+    @Nullable
+    @AutoJson.Field(name = "no_story")
+    public abstract boolean noStory();
+    /**
+     * boolean
+     */
+    @Nullable
+    @AutoJson.Field
+    public abstract boolean published();
+    /**
+     * unsigned int32
+     */
+    @Nullable
+    @AutoJson.Field(name = "offline_id")
+    public abstract int offlineId();
+    /**
+     * unsigned int32
+     */
+    @Nullable
+    @AutoJson.Field
+    public abstract int attempt();
+    /**
+     * datetime
+     */
+    @Nullable
+    @AutoJson.Field(name = "backdated_time")
+    public abstract Date backdatedTime();
+    /**
+     * enum{year, month, day, hour, min, none}
+     */
+    //public abstract BackdatedTimeGranularity backdatedTimeGranularity();
+    /**
+     * unsigned int32
+     */
+    @Nullable
+    @AutoJson.Field(name = "filter_type")
+    public abstract int filterType();
+    /**
+     * boolean
+     */
+    @Nullable
+    @AutoJson.Field
+    public abstract boolean temporary();
+    /**
+     * unsigned int32
+     */
+    @Nullable
+    @AutoJson.Field(name = "scheduled_publish_time")
+    public abstract long scheduledPublishTime();
+    /**
+     * enum {SCHEDULED, DRAFT, ADSPOST, INLINECREATED, PREVIEW, VALIDATION}
+     */
+    @Nullable
+    @AutoJson.Field(name = "unpublished_content_type")
+    public abstract String unpublishedContentType(); // TODO enum
+    /**
+     * string
+     */
+    @Nullable
+    @AutoJson.Field(name = "nectar_module")
+    public abstract String nectarModule();
+    /**
+     * id
+     */
+    @Nullable
+    @AutoJson.Field(name = "og_action_type_id")
+    public abstract String ogActionTypeId();
+    /**
+     * OG object ID or URL string
+     */
+    @Nullable
+    @AutoJson.Field(name = "og_action_type_id")
+    public abstract String ogObjectId();
+    /**
+     * string
+     */
+    @Nullable
+    @AutoJson.Field(name = "og_phrase")
+    public abstract String ogPhrase();
+    /**
+     * id
+     */
+    @Nullable
+    @AutoJson.Field(name = "og_icon_id")
+    public abstract String ogIconId();
+    /**
+     * string
+     */
+    @Nullable
+    @AutoJson.Field(name = "og_suggestion_mechanism")
+    public abstract String ogSuggestionMechanism();
+    /**
+     * string
+     */
+    @Nullable
+    @AutoJson.Field(name = "composer_session_id")
+    public abstract String composerSessionId();
 
     @AutoJson.Builder
     public abstract static class Builder {
-        public abstract Builder caption(String x);
-        public abstract Builder url(String x);
-
         public abstract Builder id(String x);
         public abstract Builder album(Album x);
         public abstract Builder backDateTime(Date x);
-        public abstract Builder backDatetimeGranularity(BackDatetimeGranularity x);
+        public abstract Builder backdatedTimeGranularity(BackdatedTimeGranularity x);
         public abstract Builder createdTime(Date x);
         public abstract Builder from(User x);
         public abstract Builder height(Integer x);
@@ -103,10 +270,35 @@ public abstract class Photo {
         public abstract Builder pageStoryId(String x);
         public abstract Builder picture(String x);
         public abstract Builder place(Place x);
-        public abstract Builder source(String x);
         public abstract Builder updatedTime(Date x);
         public abstract Builder width(Integer x);
+        public abstract Builder likes(List<Like> x);
+        public abstract Builder comments(List<Comment> x);
+
+        // POST
+        public abstract Builder caption(String x);
+        public abstract Builder url(String x);
+        public abstract Builder vaultImageId(String x);
+        public abstract Builder tags(List<Tag> x);
         public abstract Builder placeId(String x);
+        public abstract Builder targeting(Target x);
+        public abstract Builder feedTargeting(FeedTarget x);
+        public abstract Builder noStory(boolean x);
+        public abstract Builder published(boolean x);
+        public abstract Builder offlineId(int x);
+        public abstract Builder attempt(int x);
+        public abstract Builder backdatedTime(Date x);
+        public abstract Builder filterType(int x);
+        public abstract Builder temporary(boolean x);
+        public abstract Builder scheduledPublishTime(long x);
+        public abstract Builder unpublishedContentType(String x);
+        public abstract Builder nectarModule(String x);
+        public abstract Builder ogActionTypeId(String x);
+        public abstract Builder ogObjectId(String x);
+        public abstract Builder ogPhrase(String x);
+        public abstract Builder ogIconId(String x);
+        public abstract Builder ogSuggestionMechanism(String x);
+        public abstract Builder composerSessionId(String x);
 
         public abstract Photo build();
     }
@@ -115,7 +307,10 @@ public abstract class Photo {
         return new AutoJson_Photo.Builder();
     }
 
-    public static enum BackDatetimeGranularity {
+    //public abstract Builder toBuilder();
+    public abstract Bundle toBundle();
+
+    public static enum BackdatedTimeGranularity {
         YEAR("year"),
         MONTH("month"),
         DAY("day"),
@@ -125,7 +320,7 @@ public abstract class Photo {
 
         private String mValue;
 
-        private BackDatetimeGranularity(String value) {
+        private BackdatedTimeGranularity(String value) {
             mValue = value;
         }
 
@@ -133,23 +328,23 @@ public abstract class Photo {
             return mValue;
         }
 
-        public static BackDatetimeGranularity fromValue(String value) {
-            for (BackDatetimeGranularity granularityEnum : values()) {
+        public static BackdatedTimeGranularity fromValue(String value) {
+            for (BackdatedTimeGranularity granularityEnum : values()) {
                 if (granularityEnum.mValue.equals(value)) {
                     return granularityEnum;
                 }
             }
-            return BackDatetimeGranularity.NONE;
+            return BackdatedTimeGranularity.NONE;
         }
     }
 
-    public static class BackDatetimeGranularityConverter extends StringBasedTypeConverter<BackDatetimeGranularity> {
+    public static class BackdatedTimeGranularityConverter extends StringBasedTypeConverter<BackdatedTimeGranularity> {
         @Override
-        public BackDatetimeGranularity getFromString(String s) {
-            return BackDatetimeGranularity.fromValue(s);
+        public BackdatedTimeGranularity getFromString(String s) {
+            return BackdatedTimeGranularity.fromValue(s);
         }
 
-        public String convertToString(BackDatetimeGranularity object) {
+        public String convertToString(BackdatedTimeGranularity object) {
             return object.getValue();
         }
     }
