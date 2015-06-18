@@ -22,11 +22,11 @@ import android.support.annotation.Nullable;
 public abstract class Like {
     @Nullable
     @AutoJson.Field
-    public abstract String id();
+    public abstract User user();
 
     @AutoJson.Builder
     public abstract static class Builder {
-        public abstract Builder id(String x);
+        public abstract Builder user(User x);
         public abstract Like build();
     }
 

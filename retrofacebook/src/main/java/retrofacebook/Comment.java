@@ -17,16 +17,62 @@ package retrofacebook;
 
 import auto.json.AutoJson;
 import android.support.annotation.Nullable;
+import java.util.List;
 
 @AutoJson
 public abstract class Comment {
     @Nullable
     @AutoJson.Field
     public abstract String id();
+    @Nullable
+    @AutoJson.Field
+    public abstract Attachment attachment();
+    @Nullable
+    @AutoJson.Field(name = "can_comment")
+    public abstract Boolean canComment();
+    @Nullable
+    @AutoJson.Field(name = "can_remove")
+    public abstract Boolean canRemove();
+    @Nullable
+    @AutoJson.Field(name = "comment_count")
+    public abstract Integer commentCount();
+    @Nullable
+    @AutoJson.Field(name = "created_time")
+    public abstract Long createdTime();
+    @Nullable
+    @AutoJson.Field
+    public abstract User from();
+    @Nullable
+    @AutoJson.Field(name = "like_count")
+    public abstract Integer likeCount();
+    @Nullable
+    @AutoJson.Field
+    public abstract String message();
+    @Nullable
+    @AutoJson.Field(name = "message_tags")
+    public abstract List<String> messageTags();
+    @Nullable
+    @AutoJson.Field
+    public abstract Comment parent();
+    @Nullable
+    @AutoJson.Field(name = "user_likes")
+    public abstract Boolean userLikes();
 
     @AutoJson.Builder
     public abstract static class Builder {
         public abstract Builder id(String x);
+        public abstract Builder attachment(Attachment x);
+        public abstract Builder canComment(Boolean x);
+        public abstract Builder canRemove(Boolean x);
+        public abstract Builder commentCount(Integer x);
+        public abstract Builder createdTime(Long x);
+        public abstract Builder from(User x);
+        public abstract Builder likeCount(Integer x);
+        public abstract Builder message(String x);
+        public abstract Builder messageTags(List<String> x);
+        public abstract Builder parent(Comment x);
+        public abstract Builder userLikes(Boolean x);
+
         public abstract Comment build();
     }
 

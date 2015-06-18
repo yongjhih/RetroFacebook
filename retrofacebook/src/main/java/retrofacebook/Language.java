@@ -23,10 +23,14 @@ public abstract class Language {
     @Nullable
     @AutoJson.Field
     public abstract String id();
+    @Nullable
+    @AutoJson.Field
+    public abstract String name();
 
     @AutoJson.Builder
     public abstract static class Builder {
         public abstract Builder id(String x);
+        public abstract Builder name(String x);
         public abstract Language build();
     }
 

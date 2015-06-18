@@ -22,11 +22,16 @@ import android.support.annotation.Nullable;
 public abstract class AgeRange {
     @Nullable
     @AutoJson.Field
-    public abstract String id();
+    public abstract String min();
+    @Nullable
+    @AutoJson.Field
+    public abstract String max();
 
     @AutoJson.Builder
     public abstract static class Builder {
-        public abstract Builder id(String x);
+        public abstract Builder min(String x);
+        public abstract Builder max(String x);
+
         public abstract AgeRange build();
     }
 

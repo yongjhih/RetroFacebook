@@ -17,16 +17,38 @@ package retrofacebook;
 
 import auto.json.AutoJson;
 import android.support.annotation.Nullable;
+import java.util.List;
 
 @AutoJson
 public abstract class Education {
     @Nullable
     @AutoJson.Field
-    public abstract String id();
+    public abstract String school();
+    @Nullable
+    @AutoJson.Field
+    public abstract String degree();
+    @Nullable
+    @AutoJson.Field
+    public abstract String year();
+    @Nullable
+    @AutoJson.Field(name = "concentration")
+    public abstract List<String> concentrations();
+    @Nullable
+    @AutoJson.Field
+    public abstract List<User> with();
+    @Nullable
+    @AutoJson.Field
+    public abstract String type();
 
     @AutoJson.Builder
     public abstract static class Builder {
-        public abstract Builder id(String x);
+        public abstract Builder school(String x);
+        public abstract Builder degree(String x);
+        public abstract Builder year(String x);
+        public abstract Builder concentrations(List<String> x);
+        public abstract Builder with(List<User> x);
+        public abstract Builder type(String x);
+
         public abstract Education build();
     }
 

@@ -22,11 +22,32 @@ import android.support.annotation.Nullable;
 public abstract class Work {
     @Nullable
     @AutoJson.Field
-    public abstract String id();
+    public abstract User employer();
+    @Nullable
+    @AutoJson.Field
+    public abstract Location location();
+    @Nullable
+    @AutoJson.Field
+    public abstract String position();
+    @Nullable
+    @AutoJson.Field
+    public abstract String description();
+    @Nullable
+    @AutoJson.Field
+    public abstract String startDate();
+    @Nullable
+    @AutoJson.Field
+    public abstract String endDate();
 
     @AutoJson.Builder
     public abstract static class Builder {
-        public abstract Builder id(String x);
+        public abstract Builder employer(User x);
+        public abstract Builder location(Location x);
+        public abstract Builder position(String x);
+        public abstract Builder description(String x);
+        public abstract Builder startDate(String x);
+        public abstract Builder endDate(String x);
+
         public abstract Work build();
     }
 
