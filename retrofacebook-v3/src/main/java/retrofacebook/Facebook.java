@@ -32,6 +32,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Map;
 
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -46,6 +47,9 @@ public abstract class Facebook {
 
     //@RetroFacebook.GET("/{user-id}/photos")
     //public abstract Observable<Photo> getPhotos(@RetroFacebook.Path("user-id") String userId, @RetroFacebook.Query String type);
+
+    //@RetroFacebook.GET("/{user-id}/photos")
+    //public abstract Observable<Photo> getPhotos(@RetroFacebook.Path("user-id") String userId, @RetroFacebook.QueryMap Map<String, String> queries);
 
     @RetroFacebook.GET("/{user-id}/photos?type=uploaded")
     public abstract Observable<Photo> getUploadedPhotos(@RetroFacebook.Path("user-id") String userId);

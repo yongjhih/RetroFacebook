@@ -28,6 +28,8 @@ import com.bluelinelabs.logansquare.LoganSquare;
 import android.os.Bundle;
 import android.util.Log;
 
+import java.util.Map;
+
 ${gwtCompatibleAnnotation}
 public final class $subclass$formalTypes extends $origClass$actualTypes {
 
@@ -40,10 +42,14 @@ public final class $subclass$formalTypes extends $origClass$actualTypes {
         return Observable.just(this).map(new Func1<$subclass$formalTypes, Bundle>() {
             @Override public Bundle call($subclass$formalTypes t) {
 #set ($map = ${p.queries})
-#if (!$map.isEmpty())
+#set ($maps = ${p.queryMaps})
+#if (!$map.isEmpty() || !$maps.isEmpty())
                 Bundle bundle = new Bundle();
 #foreach ($query in $map.entrySet())
                 bundle.putString($query.key, $query.value);
+#end
+#foreach ($queryMap in $maps)
+                addMapToBubdle(bundle, ${queryMap});
 #end
                 return bundle;
 #else
@@ -132,6 +138,12 @@ public final class $subclass$formalTypes extends $origClass$actualTypes {
             } else {
                 sub.onCompleted();
             }
+        }
+    }
+
+    private static void addMapToBubdle(Bundle bundle, Map<String, String> map) {
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            bundle.putString(entry.getKey(), entry.getValue());
         }
     }
 }

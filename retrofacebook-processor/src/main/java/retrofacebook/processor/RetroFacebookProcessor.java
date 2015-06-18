@@ -198,6 +198,7 @@ public class RetroFacebookProcessor extends AbstractProcessor {
     private final String args;
     private final String path;
     private final Map<String, String> queries;
+    private final List<String> queryMaps;
 
     Property(
         String name,
@@ -214,6 +215,7 @@ public class RetroFacebookProcessor extends AbstractProcessor {
       this.path = buildPath(method);
       this.typeArgs = buildTypeArguments(type);
       this.queries = buildQueries(method);
+      this.queryMaps = buildQueryMaps(method);
     }
 
     private String buildTypeArguments(String type) {
@@ -278,6 +280,21 @@ public class RetroFacebookProcessor extends AbstractProcessor {
       }
 
       return map;
+    }
+
+    public List<String> buildQueryMaps(ExecutableElement method) {
+      List<String> queryMaps = new ArrayList<String>();
+      List<? extends VariableElement> parameters = method.getParameters();
+      for (VariableElement parameter : parameters) {
+        retrofacebook.RetroFacebook.QueryMap queryMap = parameter
+            .getAnnotation(retrofacebook.RetroFacebook.QueryMap.class);
+        if (queryMap == null) {
+          continue;
+        }
+
+        queryMaps.add(parameter.getSimpleName().toString());
+      }
+      return queryMaps;
     }
 
     private ImmutableList<String> buildAnnotations(TypeSimplifier typeSimplifier) {
@@ -393,6 +410,10 @@ public class RetroFacebookProcessor extends AbstractProcessor {
 
     public Map<String, String> getQueries() {
       return queries;
+    }
+
+    public List<String> getQueryMaps() {
+      return queryMaps;
     }
 
     public boolean isNullable() {
