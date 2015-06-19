@@ -122,6 +122,15 @@ public class MainActivity extends AppCompatActivity {
                         //android.util.Log.d("RetroFacebook", "token: " + login.getAccessToken());
                         //android.util.Log.d("RetroFacebook", "token: " + login.getAccessToken().getToken());
                         android.util.Log.d("RetroFacebook", "login: " + login);
+                    }).flatMap(login -> {
+                        return facebook.post(Post.builder()
+                            .message("yo")
+                            .name("RetroFacebook")
+                            .caption("RetroFacebook")
+                            .description("Retrofit Facebook Android SDK")
+                            .picture("https://raw.githubusercontent.com/yongjhih/RetroFacebook/master/art/retrofacebook.png")
+                            .link("https://github.com/yongjhih/RetroFacebook")
+                            .build(), "me").toList();
                     }).flatMap(login -> facebook.getPhotos())
                     .doOnNext(photo -> {
                         User user = photo.from();
@@ -129,14 +138,6 @@ public class MainActivity extends AppCompatActivity {
                         android.util.Log.d("RetroFacebook", "photo.caption: " + photo.caption());
                     })
                     .doOnCompleted(() -> {
-                        facebook.post(Post.builder()
-                            .message("yo")
-                            .name("RetroFacebook")
-                            .caption("RetroFacebook")
-                            .description("Retrofit Facebook Android SDK")
-                            .picture("https://raw.githubusercontent.com/yongjhih/RetroFacebook/master/art/retrofacebook.png")
-                            .link("https://github.com/yongjhih/RetroFacebook")
-                            .build(), "me");
                     })
                     .map(photo -> {
                         User user = photo.from();

@@ -58,6 +58,8 @@ public final class $subclass$formalTypes extends $origClass$actualTypes {
                 bundle.putAll(${queryBundle});
 #end
                 return bundle;
+#elseif ($p.post)
+                return ${p.body}.toBundle();
 #else
                 return null;
 #end
@@ -72,17 +74,8 @@ public final class $subclass$formalTypes extends $origClass$actualTypes {
 
 #elseif ($p.post)
 
-                GraphRequest request = null;
-                try {
-                    request = GraphRequest.newPostRequest(
-                            AccessToken.getCurrentAccessToken(), ${p.path},
-                            new JSONObject(LoganSquare.serialize(${p.body})),
-                            null);
-                } catch (JSONException e) {
-                    return Observable.empty();
-                } catch (java.io.IOException e) {
-                    return Observable.empty();
-                }
+                GraphRequest request = GraphRequest.newPostRequest(
+                        AccessToken.getCurrentAccessToken(), ${p.path}, null, null);
 
 #end
 
