@@ -101,40 +101,40 @@ public abstract class Facebook {
      * @see <a href="https://developers.facebook.com/docs/graph-api/reference/photo">Graph API Photo Node - Facebook Developers</a>
      */
     @RetroFacebook.POST(value = "/{page_id}/photos", permissions = "publish_actions")
-    public abstract Observable<Struct> postToPage(@RetroFacebook.Body Photo photo, @RetroFacebook.Path("page_id") String pageId);
+    public abstract Observable<Struct> publishPage(@RetroFacebook.Body Photo photo, @RetroFacebook.Path("page_id") String pageId);
 
     /**
      * @see <a href="https://developers.facebook.com/docs/graph-api/reference/photo">Graph API Photo Node - Facebook Developers</a>
      */
     @RetroFacebook.POST(value = "/{user_id}/photos", permissions = "publish_actions")
-    public abstract Observable<Struct> postToUser(@RetroFacebook.Body Photo photo, @RetroFacebook.Path("user_id") String userId);
+    public abstract Observable<Struct> publishUser(@RetroFacebook.Body Photo photo, @RetroFacebook.Path("user_id") String userId);
 
     /**
      * @see <a href="https://developers.facebook.com/docs/graph-api/reference/photo">Graph API Photo Node - Facebook Developers</a>
      */
     @RetroFacebook.POST(value = "/{album_id}/photos", permissions = "publish_actions")
-    public abstract Observable<Struct> postToAlbum(@RetroFacebook.Body Photo photo, @RetroFacebook.Path("album_id") String albumId);
+    public abstract Observable<Struct> publishAlbum(@RetroFacebook.Body Photo photo, @RetroFacebook.Path("album_id") String albumId);
 
     /**
      * @see <a href="https://developers.facebook.com/docs/graph-api/reference/photo">Graph API Photo Node - Facebook Developers</a>
      */
     @RetroFacebook.POST(value = "/{event_id}/photos", permissions = "publish_actions")
-    public abstract Observable<Struct> postToEvent(@RetroFacebook.Body Photo photo, @RetroFacebook.Path("event_id") String eventId);
+    public abstract Observable<Struct> publishEvent(@RetroFacebook.Body Photo photo, @RetroFacebook.Path("event_id") String eventId);
 
     /**
      * @see <a href="https://developers.facebook.com/docs/graph-api/reference/photo">Graph API Photo Node - Facebook Developers</a>
      */
     @RetroFacebook.POST(value = "/{group_id}/photos", permissions = "publish_actions")
-    public abstract Observable<Struct> postToGroup(@RetroFacebook.Body Photo photo, @RetroFacebook.Path("group_id") String groupId);
+    public abstract Observable<Struct> publishGroup(@RetroFacebook.Body Photo photo, @RetroFacebook.Path("group_id") String groupId);
 
     /**
      * @see <a href="https://developers.facebook.com/docs/graph-api/reference/post">Graph API Post Node - Facebook Developers</a>
      */
     @RetroFacebook.POST(value = "/{user-id}/feed", permissions = "publish_actions")
-    public abstract Observable<Struct> post(@RetroFacebook.Body Post post, @RetroFacebook.Path("user-id") String userId);
+    public abstract Observable<Struct> publish(@RetroFacebook.Body Post post, @RetroFacebook.Path("user-id") String userId);
 
-    public Observable<Struct> post(Post post) {
-        return post(post, "me");
+    public Observable<Struct> publish(Post post) {
+        return publish(post, "me");
     }
 
     public static Facebook create() {

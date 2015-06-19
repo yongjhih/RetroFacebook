@@ -93,7 +93,7 @@ facebook.post(Post.builder()
 @RetroFacebook
 abstract class Facebook {
     @POST("/me/feed")
-    abstract Observable<Struct> post(@Body Post post);
+    abstract Observable<Struct> publish(@Body Post post);
 }
 ```
 

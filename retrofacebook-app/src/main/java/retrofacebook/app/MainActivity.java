@@ -160,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
         adapter.fragments.add(FragmentPage.create().title("Publish").fragment(() -> {
             return CardsFragment.create()
                 .items(facebook.logInWithPublishPermissions().flatMap(login -> {
-                        return facebook.post(Post.builder()
+                        return facebook.publish(Post.builder()
                             .message("yo")
                             .name("RetroFacebook")
                             .caption("RetroFacebook")
