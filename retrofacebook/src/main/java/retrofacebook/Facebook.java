@@ -76,6 +76,10 @@ public abstract class Facebook {
     @RetroFacebook.GET(value = "/{user-id}/friends", permissions = "user_friends")
     public abstract Observable<User> getFriends(@RetroFacebook.Path("user-id") String userId);
 
+    public Observable<User> getFriends() {
+        return getFriends("me");
+    }
+
     /**
      * @see <a href="https://developers.facebook.com/docs/graph-api/reference/user/friendlists">User friendlists - Facebook Developers</a>
      */
@@ -126,9 +130,8 @@ public abstract class Facebook {
     @RetroFacebook.POST(value = "/{user-id}/feed", permissions = "publish_actions")
     public abstract Observable<Struct> post(@RetroFacebook.Body Post post, @RetroFacebook.Path("user-id") String userId);
 
-
-    public Observable<User> getFriends() {
-        return getFriends("me");
+    public Observable<Struct> post(Post post) {
+        return post(post, "me");
     }
 
     public static Facebook create() {

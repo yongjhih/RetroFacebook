@@ -118,36 +118,23 @@ public class MainActivity extends AppCompatActivity {
         adapter.fragments.add(FragmentPage.create().fragment(() -> {
             return CardsFragment.create()
                 .items(
-                    facebook.logInWithPublishPermissions().doOnNext(login -> {
+                    facebook.logIn().doOnNext(login -> {
                         //android.util.Log.d("RetroFacebook", "token: " + login.getAccessToken());
                         //android.util.Log.d("RetroFacebook", "token: " + login.getAccessToken().getToken());
                         android.util.Log.d("RetroFacebook", "login: " + login);
-                    }).flatMap(login -> {
-                        return facebook.post(Post.builder()
-                            .message("yo")
-                            .name("RetroFacebook")
-                            .caption("RetroFacebook")
-                            .description("Retrofit Facebook Android SDK")
-                            .picture("https://raw.githubusercontent.com/yongjhih/RetroFacebook/master/art/retrofacebook.png")
-                            .link("https://github.com/yongjhih/RetroFacebook")
-                            .build(), "me").toList();
                     }).flatMap(login -> facebook.getPhotos())
                     .doOnNext(photo -> {
-                        User user = photo.from();
-                        android.util.Log.d("RetroFacebook", "user: " + user);
+                        android.util.Log.d("RetroFacebook", "user: " + photo.from());
                         android.util.Log.d("RetroFacebook", "photo.caption: " + photo.caption());
                     })
                     .doOnCompleted(() -> {
                     })
                     .map(photo -> {
-                        User user = photo.from();
-                        Image image = photo.images().get(0);
-
                         return Card.builder()
-                            .icon("http://graph.facebook.com/" + user.id() + "/picture?width=400&height=400")
-                            .text1(user.name())
+                            .icon("http://graph.facebook.com/" + photo.from().id() + "/picture?width=400&height=400")
+                            .text1(photo.from().name())
                             .message(photo.caption())
-                            .image(image.source())
+                            .image(photo.images().get(0).source())
                             .build();
                     }));
         }).title("Photos"));
@@ -163,14 +150,31 @@ public class MainActivity extends AppCompatActivity {
         adapter.fragments.add(FragmentPage.create().fragment(() -> {
             return CardsFragment.create()
                 .items(facebook.getPosts().map(post -> {
-                    User user = post.from();
                     return Card.builder()
-                        .icon("http://graph.facebook.com/" + user.id() + "/picture?width=400&height=400")
-                        .text1(user.name())
+                        .icon("http://graph.facebook.com/" + post.from().id() + "/picture?width=400&height=400")
+                        .text1(post.from().name())
                         .message(post.message())
                         .build();
                 }));
         }).title("Posts"));
+        adapter.fragments.add(FragmentPage.create().fragment(() -> {
+            return CardsFragment.create()
+                .items(facebook.logInWithPublishPermissions().flatMap(login -> {
+                        return facebook.post(Post.builder()
+                            .message("yo")
+                            .name("RetroFacebook")
+                            .caption("RetroFacebook")
+                            .description("Retrofit Facebook Android SDK")
+                            .picture("https://raw.githubusercontent.com/yongjhih/RetroFacebook/master/art/retrofacebook.png")
+                            .link("https://github.com/yongjhih/RetroFacebook")
+                            .build());
+                    }).map(response -> {
+                        return Card.builder()
+                            .text1(response.id())
+                            .message(response.id())
+                            .build();
+                }));
+        }).title("Publish"));
         //adapter.fragments.add(FragmentPage.create().fragment(() -> new CheeseListFragment()).title("Category 4"));
         //adapter.fragments.add(FragmentPage.create().fragment(() -> new CheeseListFragment()).title("Category 5"));
         //adapter.fragments.add(FragmentPage.create().fragment(() -> new CheeseListFragment()).title("Category 6"));
