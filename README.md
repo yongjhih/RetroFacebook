@@ -13,18 +13,70 @@ Inspired by retrofit.
 
 ## Usage
 
+My posts:
+
 ```java
 Facebook facebook = Facebook.create(activity);
 
-Observable<Post> posts = facebook.getPosts("4");
-posts.subscribe(post -> System.out.println(post.id()));
-
 Observable<Post> myPosts = facebook.getPosts();
-myPosts.subscribe(post -> System.out.println(post.id()));
-
-Observable<Photo> myPhotos = facebook.getPhotos();
-myPhotos.subscribe(photo -> System.out.println(photo.id()));
+myPosts.forEach(post -> System.out.println(post.id()));
 ```
+
+```java
+@RetroFacebook
+abstract class Facebook {
+    @GET("/me/feed")
+    Observable<Post> getPosts();
+}
+```
+
+![Mark](https://graph.facebook.com/4/picture?width=160&height=160)Mark Elliot Zuckerberg's posts:
+
+```java
+String zuckId = "4";
+Observable<Post> zuckPosts = facebook.getPosts(zuckId);
+zuckPosts.forEach(post -> System.out.println(post.id()));
+```
+
+```java
+@RetroFacebook
+abstract class Facebook {
+    @GET("/{user-id}/feed")
+    Observable<Post> getPosts(@Path("user-id") String userId);
+}
+```
+
+Mark Elliot Zuckerberg's uploaded photos:
+
+```java
+Observable<Photo> zuckUploadedPhotos = facebook.getUploadedPhotos("4");
+zuckUploadedPhotos.forEach(photo -> System.out.println(photo.id()));
+```
+
+```java
+@RetroFacebook
+abstract class Facebook {
+    @GET("/{user-id}/photos?type=uploaded")
+    Observable<Post> getUploadedPhotos() String userId);
+}
+```
+
+My UploadedPhotos:
+
+```java
+Observable<Photo> myUploadedPhotos = facebook.getUploadedPhotos("uploaded");
+myPhotos.forEach(photo -> System.out.println(photo.id()));
+```
+
+```java
+@RetroFacebook
+abstract class Facebook {
+    @GET("/me/photos")
+    Observable<Post> getUploadedPhotos(@Query("type") String type); // getUploadedPhotos("uploaded") -> /me/photos?type=uploaded
+}
+```
+
+Publish:
 
 ```java
 facebook.post(Post.builder()
@@ -34,25 +86,20 @@ facebook.post(Post.builder()
     .description("Retrofit Facebook Android SDK")
     .picture("https://raw.githubusercontent.com/yongjhih/RetroFacebook/master/art/retrofacebook.png")
     .link("https://github.com/yongjhih/RetroFacebook")
-    .build());
+    .build()).subscribe();
+```
+
+```java
+@RetroFacebook
+abstract class Facebook {
+    @POST("/me/feed")
+    Observable<Struct> post(@Body Post post);
+}
 ```
 
 Easy to add API:
 
 [retrofacebook/src/main/java/retrofacebook/Facebook.java](retrofacebook/src/main/java/retrofacebook/Facebook.java):
-
-```java
-@RetroFacebook
-abstract class Facebook {
-    @RetroFacebook.GET("/{user-id}")
-    Observable<Post> getPosts(@RetroFacebook.Path("user-id") String userId);
-
-    @RetroFacebook.GET("/{user-id}")
-    Observable<Photo> getPhotos(@RetroFacebook.Path("user-id") String userId);
-
-    // ...
-}
-```
 
 Easy to add Model:
 
