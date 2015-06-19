@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupViewPager(ViewPager viewPager) {
         Adapter adapter = new Adapter(getSupportFragmentManager());
-        adapter.fragments.add(FragmentPage.create().fragment(() -> {
+        adapter.fragments.add(FragmentPage.create().title("Photos").fragment(() -> {
             return CardsFragment.create()
                 .items(
                     facebook.logIn().doOnNext(login -> {
@@ -137,8 +137,8 @@ public class MainActivity extends AppCompatActivity {
                             .image(photo.images().get(0).source())
                             .build();
                     }));
-        }).title("Photos"));
-        adapter.fragments.add(FragmentPage.create().fragment(() -> {
+        }));
+        adapter.fragments.add(FragmentPage.create().title("Friends").fragment(() -> {
             return ListFragment.create()
                 .items(facebook.getFriends().map(user -> {
                     return Item.builder()
@@ -146,8 +146,8 @@ public class MainActivity extends AppCompatActivity {
                         .text1(user.name())
                         .build();
                 }));
-        }).title("Friends"));
-        adapter.fragments.add(FragmentPage.create().fragment(() -> {
+        }));
+        adapter.fragments.add(FragmentPage.create().title("Posts").fragment(() -> {
             return CardsFragment.create()
                 .items(facebook.getPosts().map(post -> {
                     return Card.builder()
@@ -156,8 +156,8 @@ public class MainActivity extends AppCompatActivity {
                         .message(post.message())
                         .build();
                 }));
-        }).title("Posts"));
-        adapter.fragments.add(FragmentPage.create().fragment(() -> {
+        }));
+        adapter.fragments.add(FragmentPage.create().title("Publish").fragment(() -> {
             return CardsFragment.create()
                 .items(facebook.logInWithPublishPermissions().flatMap(login -> {
                         return facebook.post(Post.builder()
@@ -174,7 +174,36 @@ public class MainActivity extends AppCompatActivity {
                             .message(response.id())
                             .build();
                 }));
-        }).title("Publish"));
+        }));
+        adapter.fragments.add(FragmentPage.create().title("Mark Elliot Zuckerberg's photos").fragment(() -> {
+            return CardsFragment.create()
+                .items(
+                    facebook.getPhotos("4")
+                    .doOnNext(photo -> {
+                        android.util.Log.d("RetroFacebook", "user: " + photo.from());
+                        android.util.Log.d("RetroFacebook", "photo.caption: " + photo.caption());
+                    })
+                    .doOnCompleted(() -> {
+                    })
+                    .map(photo -> {
+                        return Card.builder()
+                            .icon("http://graph.facebook.com/" + photo.from().id() + "/picture?width=400&height=400")
+                            .text1(photo.from().name())
+                            .message(photo.caption())
+                            .image(photo.images().get(0).source())
+                            .build();
+                    }));
+        }));
+        adapter.fragments.add(FragmentPage.create().title("Mark Elliot Zuckerberg's posts").fragment(() -> {
+            return CardsFragment.create()
+                .items(facebook.getPosts("4").map(post -> {
+                    return Card.builder()
+                        .icon("http://graph.facebook.com/" + post.from().id() + "/picture?width=400&height=400")
+                        .text1(post.from().name())
+                        .message(post.message())
+                        .build();
+                }));
+        }));
         /* {FacebookServiceException: httpResponseCode: 400, facebookErrorCode: 15, facebookErrorType: OAuthException, message: (#15) This method must be called with an app access_token.}
         adapter.fragments.add(FragmentPage.create().fragment(() -> {
             return CardsFragment.create()
