@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
                         //android.util.Log.d("RetroFacebook", "token: " + login.getAccessToken());
                         //android.util.Log.d("RetroFacebook", "token: " + login.getAccessToken().getToken());
                         android.util.Log.d("RetroFacebook", "login: " + login);
-                    }).flatMap(login -> facebook.getPhotos())
+                    }).flatMap(login -> facebook.getPhotos().take(32))
                     .doOnNext(photo -> {
                         android.util.Log.d("RetroFacebook", "user: " + photo.from());
                         android.util.Log.d("RetroFacebook", "photo.caption: " + photo.caption());
@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
         }));
         adapter.fragments.add(FragmentPage.create().title("Posts").fragment(() -> {
             return CardsFragment.create()
-                .items(facebook.getPosts().map(post -> {
+                .items(facebook.getPosts().take(32).map(post -> {
                     return Card.builder()
                         .icon("http://graph.facebook.com/" + post.from().id() + "/picture?width=400&height=400")
                         .text1(post.from().name())
@@ -175,10 +175,23 @@ public class MainActivity extends AppCompatActivity {
                             .build();
                 }));
         }));
+        /* {FacebookServiceException: httpResponseCode: 400, facebookErrorCode: 15, facebookErrorType: OAuthException, message: (#15) This method must be called with an app access_token.}
+        adapter.fragments.add(FragmentPage.create().fragment(() -> {
+            return CardsFragment.create()
+                .items(facebook.searchTopic("clinton")
+                    .map(p -> {
+                        return Card.builder()
+                            .text1(p.id())
+                            .message(p.name())
+                            .build();
+                }));
+        }).title("Search"));
+        // oauth
         adapter.fragments.add(FragmentPage.create().title("Mark Elliot Zuckerberg's photos").fragment(() -> {
             return CardsFragment.create()
                 .items(
                     facebook.getPhotos("4")
+                    .take(32)
                     .doOnNext(photo -> {
                         android.util.Log.d("RetroFacebook", "user: " + photo.from());
                         android.util.Log.d("RetroFacebook", "photo.caption: " + photo.caption());
@@ -196,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
         }));
         adapter.fragments.add(FragmentPage.create().title("Mark Elliot Zuckerberg's posts").fragment(() -> {
             return CardsFragment.create()
-                .items(facebook.getPosts("4").map(post -> {
+                .items(facebook.getPosts("4").take(32).map(post -> {
                     return Card.builder()
                         .icon("http://graph.facebook.com/" + post.from().id() + "/picture?width=400&height=400")
                         .text1(post.from().name())
@@ -204,17 +217,6 @@ public class MainActivity extends AppCompatActivity {
                         .build();
                 }));
         }));
-        /* {FacebookServiceException: httpResponseCode: 400, facebookErrorCode: 15, facebookErrorType: OAuthException, message: (#15) This method must be called with an app access_token.}
-        adapter.fragments.add(FragmentPage.create().fragment(() -> {
-            return CardsFragment.create()
-                .items(facebook.searchTopic("clinton")
-                    .map(p -> {
-                        return Card.builder()
-                            .text1(p.id())
-                            .message(p.name())
-                            .build();
-                }));
-        }).title("Search"));
         */
         //adapter.fragments.add(FragmentPage.create().fragment(() -> new CheeseListFragment()).title("Category 4"));
         //adapter.fragments.add(FragmentPage.create().fragment(() -> new CheeseListFragment()).title("Category 5"));
