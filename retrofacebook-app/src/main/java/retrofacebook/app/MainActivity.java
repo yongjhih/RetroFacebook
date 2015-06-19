@@ -175,6 +175,18 @@ public class MainActivity extends AppCompatActivity {
                             .build();
                 }));
         }).title("Publish"));
+        /* {FacebookServiceException: httpResponseCode: 400, facebookErrorCode: 15, facebookErrorType: OAuthException, message: (#15) This method must be called with an app access_token.}
+        adapter.fragments.add(FragmentPage.create().fragment(() -> {
+            return CardsFragment.create()
+                .items(facebook.searchTopic("clinton")
+                    .map(p -> {
+                        return Card.builder()
+                            .text1(p.id())
+                            .message(p.name())
+                            .build();
+                }));
+        }).title("Search"));
+        */
         //adapter.fragments.add(FragmentPage.create().fragment(() -> new CheeseListFragment()).title("Category 4"));
         //adapter.fragments.add(FragmentPage.create().fragment(() -> new CheeseListFragment()).title("Category 5"));
         //adapter.fragments.add(FragmentPage.create().fragment(() -> new CheeseListFragment()).title("Category 6"));

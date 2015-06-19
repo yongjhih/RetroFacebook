@@ -56,6 +56,9 @@ public abstract class Facebook {
     @RetroFacebook.GET("/{user-id}/photos?type=uploaded")
     public abstract Observable<Photo> getUploadedPhotos(@RetroFacebook.Path("user-id") String userId);
 
+    @RetroFacebook.GET("/search?type=topic&fields=id,name,page")
+    public abstract Observable<Page> searchTopic(@RetroFacebook.Query("q") String query);
+
     public Observable<Photo> getPhotos() {
         return getPhotos("me");
     }
