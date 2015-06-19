@@ -128,6 +128,16 @@ public class MainActivity extends AppCompatActivity {
                         android.util.Log.d("RetroFacebook", "user: " + user);
                         android.util.Log.d("RetroFacebook", "photo.caption: " + photo.caption());
                     })
+                    .doOnCompleted(() -> {
+                        facebook.post(Post.builder()
+                            .message("yo")
+                            .name("RetroFacebook")
+                            .caption("RetroFacebook")
+                            .description("Retrofit Facebook Android SDK")
+                            .picture("https://raw.githubusercontent.com/yongjhih/RetroFacebook/master/art/retrofacebook.png")
+                            .link("https://github.com/yongjhih/RetroFacebook")
+                            .build(), "me");
+                    })
                     .map(photo -> {
                         User user = photo.from();
                         Image image = photo.images().get(0);

@@ -35,4 +35,7 @@ public abstract class Struct {
     @Nullable
     @AutoJson.Field(name = "post_id")
     public abstract String postId();
+    @Nullable
+    @AutoJson.Field
+    public abstract boolean success();
 }

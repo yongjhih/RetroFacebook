@@ -27,6 +27,8 @@ import com.bluelinelabs.logansquare.LoganSquare;
 
 import android.os.Bundle;
 import android.util.Log;
+import org.json.JSONObject;
+import org.json.JSONException;
 
 import java.util.Map;
 
@@ -62,9 +64,29 @@ public final class $subclass$formalTypes extends $origClass$actualTypes {
             }
         }).flatMap(new Func1<Bundle, Observable<GraphResponse>>() {
             @Override public Observable<GraphResponse> call(Bundle queries) {
+
+#if ($p.get)
+
                 GraphRequest request = GraphRequest.newGraphPathRequest(
                         AccessToken.getCurrentAccessToken(), ${p.path}, null);
-                request.setParameters(queries);
+
+#elseif ($p.post)
+
+                GraphRequest request = null;
+                try {
+                    request = GraphRequest.newPostRequest(
+                            AccessToken.getCurrentAccessToken(), ${p.path},
+                            new JSONObject(LoganSquare.serialize(${p.body})),
+                            null);
+                } catch (JSONException e) {
+                    return Observable.empty();
+                } catch (java.io.IOException e) {
+                    return Observable.empty();
+                }
+
+#end
+
+                if (queries != null) request.setParameters(queries);
                 return Observable.create(new OnSubscribeGraphResponse(request));
             }
         }).map(new Func1<GraphResponse, ${p.typeArgs}s>() {

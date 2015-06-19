@@ -74,4 +74,9 @@ public @interface RetroFacebook {
   @Target(ElementType.PARAMETER)
   public @interface QueryBundle {
   }
+
+  @Retention(RetentionPolicy.RUNTIME) // RUNTIME, keep annotation for anothor processor
+  @Target(ElementType.PARAMETER)
+  public @interface Body {
+  }
 }

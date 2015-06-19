@@ -403,7 +403,9 @@ final class $subclass$formalTypes extends $origClass$actualTypes {
 
         @Override
         public void serialize(${j.type} object, String fieldName, boolean writeFieldNameForObject, JsonGenerator jsonGenerator) throws IOException {
-            //AutoJson_${j.type}${D}${D}JsonObjectMapper._serialize((AutoJson_${j.type}) object, fieldName, writeFieldNameForObject, jsonGenerator);
+            //if (writeFieldNameForObject) { }
+            jsonGenerator.writeFieldName(fieldName);
+            AutoJson_${j.type}${D}${D}JsonObjectMapper._serialize((AutoJson_${j.type}) object, jsonGenerator, true);
         }
     }
 #end

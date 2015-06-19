@@ -24,13 +24,3 @@ tasks.withType(Test) {
     events "passed", "skipped", "failed"
   }
 }
-
-sourceSets {
-    main {
-        resources.srcDirs = ['src/main/java']
-    }
-
-    test {
-        resources.srcDirs = ['src/main/java']
-    }
-}

@@ -200,6 +200,9 @@ public class RetroFacebookProcessor extends AbstractProcessor {
     private final Map<String, String> queries;
     private final List<String> queryMaps;
     private final List<String> queryBundles;
+    private final boolean isGet;
+    private final boolean isPost;
+    private final String body;
 
     Property(
         String name,
@@ -218,6 +221,9 @@ public class RetroFacebookProcessor extends AbstractProcessor {
       this.queries = buildQueries(method);
       this.queryMaps = buildQueryMaps(method);
       this.queryBundles = buildQueryBundles(method);
+      this.isGet = buildIsGet(method);
+      this.isPost = buildIsPost(method);
+      this.body = buildBody(method);
     }
 
     private String buildTypeArguments(String type) {
@@ -225,6 +231,29 @@ public class RetroFacebookProcessor extends AbstractProcessor {
       Matcher m = pattern.matcher(type);
       if (m.find()) return m.group(1);
       return null;
+    }
+
+    public boolean buildIsGet(ExecutableElement method) {
+        return method.getAnnotation(retrofacebook.RetroFacebook.GET.class) != null;
+    }
+
+    public boolean buildIsPost(ExecutableElement method) {
+        return method.getAnnotation(retrofacebook.RetroFacebook.POST.class) != null;
+    }
+
+    public String buildBody(ExecutableElement method) {
+      String body = "";
+
+      retrofacebook.RetroFacebook.POST post = method.getAnnotation(retrofacebook.RetroFacebook.POST.class);
+      if (post == null) return body;
+
+      List<? extends VariableElement> parameters = method.getParameters();
+      for (VariableElement parameter : parameters) {
+        if (parameter.getAnnotation(retrofacebook.RetroFacebook.Body.class) != null) {
+          body = parameter.getSimpleName().toString();
+        }
+      }
+      return body;
     }
 
     // /{postId}
@@ -418,6 +447,18 @@ public class RetroFacebookProcessor extends AbstractProcessor {
 
     public boolean primitive() {
       return method.getReturnType().getKind().isPrimitive();
+    }
+
+    public String getBody() {
+      return body;
+    }
+
+    public boolean isGet() {
+      return isGet;
+    }
+
+    public boolean isPost() {
+      return isPost;
     }
 
     public List<String> getAnnotations() {
