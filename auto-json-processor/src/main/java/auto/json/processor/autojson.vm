@@ -245,7 +245,7 @@ final class $subclass$formalTypes extends $origClass$actualTypes {
 
       #if ($p.stringable)
 
-      Bundles.put(bundle, "${p.key}", ${p.getter}());
+      if (${p.getter}() != null) Bundles.put(bundle, "${p.key}", ${p.getter}());
 
       #end
 

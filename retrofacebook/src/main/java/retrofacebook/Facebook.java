@@ -154,7 +154,15 @@ public abstract class Facebook {
     }
 
     public Observable<LoginResult> logIn() {
+        return logInWithReadPermissions();
+    }
+
+    public Observable<LoginResult> logInWithReadPermissions() {
         return logInWithReadPermissions(Arrays.asList("public_profile", "user_friends", "user_photos", "user_posts"));
+    }
+
+    public Observable<LoginResult> logInWithPublishPermissions() {
+        return logInWithPublishPermissions(Arrays.asList("publish_actions"));
     }
 
     public Observable<LoginResult> logInWithReadPermissions(final Collection<String> permissions) {
@@ -178,6 +186,31 @@ public abstract class Facebook {
                     }
                 });
                 LoginManager.getInstance().logInWithReadPermissions(activity, permissions);
+            }
+        });
+    }
+
+    public Observable<LoginResult> logInWithPublishPermissions(final Collection<String> permissions) {
+        return Observable.create(new Observable.OnSubscribe<LoginResult>() {
+            @Override public void call(final Subscriber<? super LoginResult> sub) {
+                LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+                    @Override
+                    public void onSuccess(LoginResult loginResult) {
+                        sub.onNext(loginResult);
+                        sub.onCompleted();
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        sub.onCompleted();
+                    }
+
+                    @Override
+                    public void onError(FacebookException error) {
+                        sub.onError(error);
+                    }
+                });
+                LoginManager.getInstance().logInWithPublishPermissions(activity, permissions);
             }
         });
     }

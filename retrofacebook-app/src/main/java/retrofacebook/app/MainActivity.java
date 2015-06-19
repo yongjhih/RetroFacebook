@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
         adapter.fragments.add(FragmentPage.create().fragment(() -> {
             return CardsFragment.create()
                 .items(
-                    facebook.logIn().doOnNext(login -> {
+                    facebook.logInWithPublishPermissions().doOnNext(login -> {
                         //android.util.Log.d("RetroFacebook", "token: " + login.getAccessToken());
                         //android.util.Log.d("RetroFacebook", "token: " + login.getAccessToken().getToken());
                         android.util.Log.d("RetroFacebook", "login: " + login);
