@@ -26,6 +26,17 @@ Observable<Photo> myPhotos = facebook.getPhotos();
 myPhotos.subscribe(photo -> System.out.println(photo.id()));
 ```
 
+```java
+facebook.post(Post.builder()
+    .message("yo")
+    .name("RetroFacebook")
+    .caption("RetroFacebook")
+    .description("Retrofit Facebook Android SDK")
+    .picture("https://raw.githubusercontent.com/yongjhih/RetroFacebook/master/art/retrofacebook.png")
+    .link("https://github.com/yongjhih/RetroFacebook")
+    .build());
+```
+
 Easy to add API:
 
 [retrofacebook/src/main/java/retrofacebook/Facebook.java](retrofacebook/src/main/java/retrofacebook/Facebook.java):
