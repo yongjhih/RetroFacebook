@@ -57,14 +57,14 @@ zuckUploadedPhotos.forEach(photo -> System.out.println(photo.id()));
 @RetroFacebook
 abstract class Facebook {
     @GET("/{user-id}/photos?type=uploaded")
-    abstract Observable<Post> getUploadedPhotos() String userId);
+    abstract Observable<Photo> getUploadedPhotos() String userId);
 }
 ```
 
 My UploadedPhotos:
 
 ```java
-Observable<Photo> myUploadedPhotos = facebook.getUploadedPhotos("uploaded");
+Observable<Photo> myUploadedPhotos = facebook.getPhotosTypeOf("uploaded");
 myPhotos.forEach(photo -> System.out.println(photo.id()));
 ```
 
@@ -72,7 +72,7 @@ myPhotos.forEach(photo -> System.out.println(photo.id()));
 @RetroFacebook
 abstract class Facebook {
     @GET("/me/photos")
-    abstract Observable<Post> getUploadedPhotos(@Query("type") String type); // getUploadedPhotos("uploaded") -> /me/photos?type=uploaded
+    abstract Observable<Post> getPhotosTypeOf(@Query("type") String type); // getPhotosTypeOf("uploaded") -> /me/photos?type=uploaded
 }
 ```
 
