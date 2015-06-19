@@ -58,8 +58,6 @@ public final class $subclass$formalTypes extends $origClass$actualTypes {
                 bundle.putAll(${queryBundle});
 #end
                 return bundle;
-#elseif ($p.post)
-                return ${p.body}.toBundle();
 #else
                 return null;
 #end
@@ -74,8 +72,17 @@ public final class $subclass$formalTypes extends $origClass$actualTypes {
 
 #elseif ($p.post)
 
-                GraphRequest request = GraphRequest.newPostRequest(
-                        AccessToken.getCurrentAccessToken(), ${p.path}, null, null);
+                GraphRequest request = null;
+                try {
+                    request = GraphRequest.newPostRequest(
+                            AccessToken.getCurrentAccessToken(), ${p.path},
+                            new JSONObject(LoganSquare.serialize(${p.body})),
+                            null);
+                } catch (JSONException e) {
+                    return Observable.empty();
+                } catch (java.io.IOException e) {
+                    return Observable.empty();
+                }
 
 #end
 
@@ -165,4 +172,21 @@ public final class $subclass$formalTypes extends $origClass$actualTypes {
             bundle.putString(entry.getKey(), entry.getValue());
         }
     }
+
+    /*
+    public static Observable<GraphResponse> get(String path, Bundle queries) {
+        GraphRequest request = GraphRequest.newGraphPathRequest(
+                AccessToken.getCurrentAccessToken(), path, null);
+        if (queries != null) request.setParameters(queries);
+        return Observable.create(new OnSubscribeGraphResponse(request));
+    }
+
+    public static Observable<GraphResponse> post(String path, JSONObject json, Bundle queries) {
+        GraphRequest request = GraphRequest.newPostRequest(
+                            AccessToken.getCurrentAccessToken(), ${p.path},
+                            json,
+        if (queries != null) request.setParameters(queries);
+        return Observable.create(new OnSubscribeGraphResponse(request));
+    }
+    */
 }
