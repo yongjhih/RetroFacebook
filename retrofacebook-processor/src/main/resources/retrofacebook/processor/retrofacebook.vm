@@ -82,23 +82,29 @@ public final class $subclass$formalTypes extends $origClass$actualTypes {
                 if (queries != null) request.setParameters(queries);
                 return Observable.create(new OnSubscribeGraphResponse(request));
             }
-        }).map(new Func1<GraphResponse, ${p.typeArgs}s>() {
-            @Override public ${p.typeArgs}s call(GraphResponse response) {
+        }).flatMap(new Func1<GraphResponse, Observable<$p.typeArgs>>() {
+            @Override public Observable<${p.typeArgs}> call(GraphResponse response) {
+                // TODO check "data" field to determine parse group or item.
+                ${p.typeArgs}s group = null;
                 try {
                     Log.d("RetroFacebook", "${p.typeArgs}s: " + response.getJSONObject().toString());
-                    return LoganSquare.parse(response.getJSONObject().toString(), AutoJson_${p.typeArgs}s.class);
+                    group = LoganSquare.parse(response.getJSONObject().toString(), AutoJson_${p.typeArgs}s.class);
                 } catch (java.io.IOException e) {
                     e.printStackTrace();
-                    return null;
+                    return Observable.empty();
+                }
+
+                if (group != null && group.data() != null) return Observable.from(group.data());
+
+                try {
+                return Observable.<${p.typeArgs}>just(LoganSquare.parse(response.getJSONObject().toString(), AutoJson_${p.typeArgs}.class));
+                } catch (java.io.IOException e) {
+                    return Observable.empty();
                 }
             }
-        }).filter(new Func1<${p.typeArgs}s, Boolean>() {
-            @Override public Boolean call(${p.typeArgs}s data) {
-                return data != null;
-            }
-        }).flatMap(new Func1<${p.typeArgs}s, Observable<$p.typeArgs>>() {
-            @Override public Observable<${p.typeArgs}> call(${p.typeArgs}s data) {
-                return Observable.from(data.data());
+        }).filter(new Func1<${p.typeArgs}, Boolean>() {
+            @Override public Boolean call(${p.typeArgs} item) {
+                return item != null;
             }
         });
     }
