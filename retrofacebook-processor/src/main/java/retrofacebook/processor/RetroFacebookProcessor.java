@@ -202,6 +202,7 @@ public class RetroFacebookProcessor extends AbstractProcessor {
     private final List<String> queryBundles;
     private final boolean isGet;
     private final boolean isPost;
+    private final boolean isDelete;
     private final String body;
 
     Property(
@@ -223,6 +224,7 @@ public class RetroFacebookProcessor extends AbstractProcessor {
       this.queryBundles = buildQueryBundles(method);
       this.isGet = buildIsGet(method);
       this.isPost = buildIsPost(method);
+      this.isDelete = buildIsDelete(method);
       this.body = buildBody(method);
     }
 
@@ -234,19 +236,28 @@ public class RetroFacebookProcessor extends AbstractProcessor {
     }
 
     public boolean buildIsGet(ExecutableElement method) {
+        // TODO duplicated routine
         return method.getAnnotation(retrofacebook.RetroFacebook.GET.class) != null;
     }
 
     public boolean buildIsPost(ExecutableElement method) {
+        // TODO duplicated routine
         return method.getAnnotation(retrofacebook.RetroFacebook.POST.class) != null;
+    }
+
+    public boolean buildIsDelete(ExecutableElement method) {
+        // TODO duplicated routine
+        return method.getAnnotation(retrofacebook.RetroFacebook.DELETE.class) != null;
     }
 
     public String buildBody(ExecutableElement method) {
       String body = "";
 
+      // TODO duplicated routine
       retrofacebook.RetroFacebook.POST post = method.getAnnotation(retrofacebook.RetroFacebook.POST.class);
       if (post == null) return body;
 
+      // TODO duplicated code
       List<? extends VariableElement> parameters = method.getParameters();
       for (VariableElement parameter : parameters) {
         if (parameter.getAnnotation(retrofacebook.RetroFacebook.Body.class) != null) {
@@ -261,11 +272,14 @@ public class RetroFacebookProcessor extends AbstractProcessor {
     // "/" + userIdA + "/friends/" + userIdB
     // "/" + userIdA + "/friends/" + userIdB + ""
     public String buildPath(ExecutableElement method) {
+      // TODO duplicated routine
       retrofacebook.RetroFacebook.GET get = method.getAnnotation(retrofacebook.RetroFacebook.GET.class);
       retrofacebook.RetroFacebook.POST post = method.getAnnotation(retrofacebook.RetroFacebook.POST.class);
+      retrofacebook.RetroFacebook.DELETE delete = method.getAnnotation(retrofacebook.RetroFacebook.DELETE.class);
       String fullPath = null;
       if (get != null) fullPath = get.value();
       if (post != null) fullPath = post.value();
+      if (delete != null) fullPath = delete.value();
 
       List<? extends VariableElement> parameters = method.getParameters();
       for (VariableElement parameter : parameters) {
@@ -286,11 +300,14 @@ public class RetroFacebookProcessor extends AbstractProcessor {
     public Map<String, String> buildQueries(ExecutableElement method) {
       Map<String, String> map = new HashMap<String, String>();
 
+      // TODO duplicated routine
       retrofacebook.RetroFacebook.GET get = method.getAnnotation(retrofacebook.RetroFacebook.GET.class);
       retrofacebook.RetroFacebook.POST post = method.getAnnotation(retrofacebook.RetroFacebook.POST.class);
+      retrofacebook.RetroFacebook.DELETE delete = method.getAnnotation(retrofacebook.RetroFacebook.DELETE.class);
       String fullPath = null;
       if (get != null) fullPath = get.value();
       if (post != null) fullPath = post.value();
+      if (delete != null) fullPath = delete.value();
 
       if (fullPath.indexOf("?") != -1) {
         fullPath = fullPath.replaceAll("^.*\\?", "");
@@ -459,6 +476,10 @@ public class RetroFacebookProcessor extends AbstractProcessor {
 
     public boolean isPost() {
       return isPost;
+    }
+
+    public boolean isDelete() {
+      return isDelete;
     }
 
     public List<String> getAnnotations() {

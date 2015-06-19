@@ -17,6 +17,8 @@ package retrofacebook;
 
 import auto.json.AutoJson;
 import android.support.annotation.Nullable;
+
+import android.os.Bundle;
 import java.util.List;
 
 @AutoJson
@@ -75,6 +77,8 @@ public abstract class Comment {
 
         public abstract Comment build();
     }
+
+    public abstract Bundle toBundle();
 
     public static Builder builder() {
         return new AutoJson_Comment.Builder();

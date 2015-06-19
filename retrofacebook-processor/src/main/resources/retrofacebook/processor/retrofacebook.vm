@@ -77,6 +77,11 @@ public final class $subclass$formalTypes extends $origClass$actualTypes {
                 GraphRequest request = GraphRequest.newPostRequest(
                         AccessToken.getCurrentAccessToken(), ${p.path}, null, null);
 
+#elseif ($p.delete)
+
+                GraphRequest request = GraphRequest.newDeleteObjectRequest(
+                        AccessToken.getCurrentAccessToken(), ${p.path}, null);
+
 #end
 
                 if (queries != null) request.setParameters(queries);

@@ -79,7 +79,7 @@ abstract class Facebook {
 Publish:
 
 ```java
-facebook.post(Post.builder()
+facebook.publish(Post.builder()
     .message("yo")
     .name("RetroFacebook")
     .caption("RetroFacebook")

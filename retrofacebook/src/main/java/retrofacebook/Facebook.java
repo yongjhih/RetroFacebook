@@ -32,6 +32,9 @@ import java.util.List;
 import java.util.Arrays;
 import java.util.Map;
 
+/**
+ * @see <a href="https://developers.facebook.com/docs/graph-api/using-graph-api/v2.3">Graph API - Facebook Developers</a>
+ */
 @RetroFacebook
 public abstract class Facebook {
     @RetroFacebook.GET("/{post-id}")
@@ -136,6 +139,64 @@ public abstract class Facebook {
     public Observable<Struct> publish(Post post) {
         return publish(post, "me");
     }
+
+    /**
+     * @see <a href="https://developers.facebook.com/docs/graph-api/reference/v2.3/object/comments">Comments - Facebook Developers</a>
+     */
+    @RetroFacebook.POST(value = "/{object-id}/comments", permissions = "publish_actions")
+    public abstract Observable<Struct> comment(@RetroFacebook.Body Comment comment, @RetroFacebook.Path("object-id") String id);
+
+    /**
+     * @see <a href="https://developers.facebook.com/docs/graph-api/reference/v2.3/object/comments">Comments - Facebook Developers</a>
+     */
+    @RetroFacebook.POST(value = "/{comment-id}", permissions = "publish_actions")
+    public abstract Observable<Struct> updateComment(@RetroFacebook.Body Comment comment, @RetroFacebook.Path("comment-id") String id);
+
+    /**
+     * @see <a href="https://developers.facebook.com/docs/graph-api/reference/v2.3/object/comments">Comments - Facebook Developers</a>
+     */
+    @RetroFacebook.POST(value = "/{comment-id}", permissions = "publish_pages")
+    public abstract Observable<Struct> updatePageComment(@RetroFacebook.Body Comment comment, @RetroFacebook.Path("comment-id") String id);
+
+    /**
+     * @see <a href="https://developers.facebook.com/docs/graph-api/reference/v2.3/object/comments">Comments - Facebook Developers</a>
+     */
+    @RetroFacebook.POST(value = "/{object-id}/comments", permissions = "publish_pages")
+    public abstract Observable<Struct> commentPage(@RetroFacebook.Body Comment comment, @RetroFacebook.Path("object-id") String id);
+
+    public Observable<Struct> commentPage(String message, String id) {
+        return comment(Comment.builder().message(message).build(), id);
+    }
+
+    /**
+     * @see <a href="https://developers.facebook.com/docs/graph-api/reference/post">Graph API Post Node - Facebook Developers</a>
+     */
+    @RetroFacebook.DELETE(value = "{id}", permissions = "publish_actions")
+    public abstract Observable<Struct> deletePost(@RetroFacebook.Path("id") String id);
+
+    /**
+     * @see <a href="https://developers.facebook.com/docs/graph-api/reference/post">Graph API Post Node - Facebook Developers</a>
+     */
+    @RetroFacebook.DELETE(value = "{id}", permissions = "publish_pages")
+    public abstract Observable<Struct> deletePage(@RetroFacebook.Path("id") String id);
+
+    /**
+     * @see <a href="https://developers.facebook.com/docs/graph-api/reference/photo">Graph API Photo Node - Facebook Developers</a>
+     */
+    @RetroFacebook.DELETE(value = "{id}", permissions = "publish_actions")
+    public abstract Observable<Struct> deletePhoto(@RetroFacebook.Path("id") String id);
+
+    /**
+     * @see <a href="https://developers.facebook.com/docs/graph-api/reference/photo">Graph API Photo Node - Facebook Developers</a>
+     */
+    @RetroFacebook.DELETE(value = "{id}", permissions = {"publish_pages", "manage_pages"})
+    public abstract Observable<Struct> deletePagePhoto(@RetroFacebook.Path("id") String id);
+
+    /**
+     * @see <a href="https://developers.facebook.com/docs/graph-api/reference/v2.3/object/comments">Comments - Facebook Developers</a>
+     */
+    @RetroFacebook.DELETE(value = "/{comment-id}")
+    public abstract Observable<Struct> deleteComment(@RetroFacebook.Path("comment-id") String id);
 
     public static Facebook create() {
         return new RetroFacebook_Facebook();
