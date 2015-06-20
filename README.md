@@ -127,7 +127,7 @@ public abstract class Post {
 
 via jcenter:
 
-```
+```gradle
 repositories {
     jcenter()
 }
@@ -137,9 +137,15 @@ dependencies {
 }
 ```
 
+```gradle
+dependencies {
+    compile 'com.infstory:retrofacebook-v3:1.0.0' // v3
+}
+```
+
 via jitpack.io:
 
-```
+```gradle
 repositories {
     maven {
         url "https://jitpack.io"
@@ -148,6 +154,11 @@ repositories {
 
 dependencies {
     compile 'com.github.yongjhih.RetroFacebook:retrofacebook:1.0.0' // v4
+}
+```
+
+```gradle
+dependencies {
     compile 'com.github.yongjhih.RetroFacebook:retrofacebook-v3:1.0.0' // v3
 }
 ```
