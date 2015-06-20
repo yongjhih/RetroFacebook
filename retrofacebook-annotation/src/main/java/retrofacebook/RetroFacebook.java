@@ -19,6 +19,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import java.util.List;
+
 /**
  * @see <a href="https://developers.facebook.com/docs/reference/android/current/class/GraphRequest/">GraphRequest - Facebook Developers</a>
  */
@@ -88,5 +90,10 @@ public @interface RetroFacebook {
   @Retention(RetentionPolicy.RUNTIME) // RUNTIME, keep annotation for anothor processor
   @Target(ElementType.PARAMETER)
   public @interface Body {
+  }
+
+  public static interface Callback<T> {
+      public void onCompleted(List<T> t);
+      public void onError(Throwable e);
   }
 }

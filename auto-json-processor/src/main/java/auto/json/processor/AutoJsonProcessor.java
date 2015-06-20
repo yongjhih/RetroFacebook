@@ -534,7 +534,7 @@ public class AutoJsonProcessor extends AbstractProcessor {
       String args[] = propertyType.split(",");
       if (args.length > 0) {
           // List<Post> -> Post
-          String arg = args[0].replaceAll("[^<]*<", "").replace(" ", "").replace("<", "").replace(">", "");
+          String arg = args[0].replaceAll("[^<]*<", "").replace(" ", "").replace("<", "").replace(">", ""); // FIXME hardcode
           if (annotatedNames.contains("retrofacebook." + arg)) {
               //autoType = autoType.replace(arg, "AutoJson_" + arg); // List<Post> -> List<AutoJson_Post>
               jprops.put(arg, new Property(propertyName, identifier, method, arg, typeSimplifier, annotatedNames));

@@ -123,6 +123,27 @@ public abstract class Post {
 }
 ```
 
+Callback mode (in progress):
+
+```java
+facebook.getPosts(new Callback<>() {
+    @Override public void onCompleted(List<Post> posts) {
+        // ...
+    }
+    @Override public void onError(Throwable e) {
+        // ...
+    }
+});
+```
+
+```java
+@RetroFacebook
+abstract class Facebook {
+    @GET("/me/feed")
+    void getPosts(Callback<Post> callback);
+}
+```
+
 ## Installation
 
 via jcenter:
