@@ -2,7 +2,7 @@
 
 ![RetroFacebook.png](art/retrofacebook.png)
 
-Using RxJava to wrap original Facebook SDK.
+Retrofit Facebook SDK.
 
 RetroFacebook turns Facebook API into a Java interface.
 
