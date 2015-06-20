@@ -5,9 +5,9 @@
 
 ![RetroFacebook.png](art/retrofacebook.png)
 
-Retrofit Facebook SDK.
+Retrofit Facebook SDK for v3, v4.
 
-RetroFacebook turns Facebook API into a Java interface. Support RxJava.
+RetroFacebook turns Facebook API into a Java interface using RxJava.
 
 Easy to add API and model.
 
