@@ -177,7 +177,6 @@ Missing Models:
 * Notification
 * Page
 * Parking
-* Publishable
 * RestaurantService
 * RestaurantSpecialties
 * Score
