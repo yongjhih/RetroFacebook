@@ -20,7 +20,7 @@ My posts:
 
 Before:
 
-```
+```java
 GraphRequest request = GraphRequest.newGraphPathRequest(AccessToken.getCurrentAccessToken(), "/me/feed", new GraphRequest.Callback() {
     @Override
     public void onCompleted(GraphResponse response) {
