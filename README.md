@@ -7,7 +7,7 @@
 
 Retrofit Facebook SDK.
 
-RetroFacebook turns Facebook API into a Java interface.
+RetroFacebook turns Facebook API into a Java interface. Support RxJava.
 
 Easy to add API and model.
 
