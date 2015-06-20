@@ -61,7 +61,7 @@ abstract class Facebook {
 
 That's it!
 
-Callback mode:
+And, callback mode:
 
 ```java
 facebook.getPosts(new Callback<>() {
