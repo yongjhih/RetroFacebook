@@ -18,11 +18,37 @@ Inspired by retrofit.
 
 My posts:
 
+Before:
+
+```
+GraphRequest request = GraphRequest.newGraphPathRequest(AccessToken.getCurrentAccessToken(), "/me/feed", new GraphRequest.Callback() {
+    @Override
+    public void onCompleted(GraphResponse response) {
+        // Gson
+        // Gson gson = new Gson();
+        // Posts posts = gson.fromJson(response.getJSONObject().toString(), Posts.class);
+        // or
+        // jackson
+        // ObjectMapper mapper = new ObjectMapper();
+        // Posts posts = mapper.readValue("{\"name\":\"Bob\", \"age\":13}", Posts.class);
+        // or
+        // LoganSquare
+        // Posts posts = LoganSquare.parse(response.getJSONObject().toString(), Posts.class);
+        // or manual
+        
+        // hasNext?  request = response.getRequestForPagedResults(GraphResponse.PagingDirection.NEXT); blah, blah
+    }
+});
+GraphRequest.executeBatchAsync(new GraphRequestBatch(request));
+```
+
+After:
+
 ```java
 Facebook facebook = Facebook.create(activity);
 
 Observable<Post> myPosts = facebook.getPosts();
-myPosts.forEach(post -> System.out.println(post.id()));
+myPosts.take(100).forEach(post -> System.out.println(post.id()));
 ```
 
 ```java
@@ -32,6 +58,8 @@ abstract class Facebook {
     abstract Observable<Post> getPosts();
 }
 ```
+
+That's it!
 
 Callback mode:
 
