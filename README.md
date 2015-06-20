@@ -33,6 +33,27 @@ abstract class Facebook {
 }
 ```
 
+Callback mode:
+
+```java
+facebook.getPosts(new Callback<>() {
+    @Override public void onCompleted(List<Post> posts) {
+        // ...
+    }
+    @Override public void onError(Throwable e) {
+        // ...
+    }
+});
+```
+
+```java
+@RetroFacebook
+abstract class Facebook {
+    @GET("/me/feed")
+    abstract void getPosts(Callback<Post> callback);
+}
+```
+
 ![Mark](https://graph.facebook.com/4/picture?width=160&height=160)Mark Elliot Zuckerberg's posts:
 
 ```java
@@ -120,27 +141,6 @@ public abstract class Post {
     public abstract Boolean isHidden();
 
     // ...
-}
-```
-
-Callback mode (in progress):
-
-```java
-facebook.getPosts(new Callback<>() {
-    @Override public void onCompleted(List<Post> posts) {
-        // ...
-    }
-    @Override public void onError(Throwable e) {
-        // ...
-    }
-});
-```
-
-```java
-@RetroFacebook
-abstract class Facebook {
-    @GET("/me/feed")
-    void getPosts(Callback<Post> callback);
 }
 ```
 
