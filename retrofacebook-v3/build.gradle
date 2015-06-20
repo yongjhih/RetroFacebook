@@ -44,3 +44,5 @@ dependencies {
 
   compile 'com.facebook.android:facebook-android-sdk:3.20.0'
 }
+
+apply from: file('deploy.gradle')
