@@ -215,6 +215,13 @@ dependencies {
 }
 ```
 
+## Test
+
+Login Facebook as Test User:
+
+user: retro_rgaqpkf_facebook@tfbnw.net
+password: retrofacebook
+
 ## TODO
 
 Missing Models:
