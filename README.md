@@ -2,10 +2,13 @@
 
 ![RetroFacebook.png](art/retrofacebook.png)
 
-OGM, Object Graph Mapping, Graph to POJO. Support V3 and V4.
+Using RxJava to wrap original Facebook SDK.
+
+RetroFacebook turns Facebook API into a Java interface.
+
+Easy to add API and model.
 
 Inspired by retrofit.
-
 
 ![photos.png](art/screenshot-photos.png)
 ![photos.png](art/screenshot-friends.png)
@@ -132,7 +135,8 @@ repositories {
 }
 
 dependencies {
-    compile 'com.github.yongjhih:RetroFacebook:1.0.1'
+    compile 'com.github.yongjhih.RetroFacebook:retrofacebook:1.0.1' // v4
+    compile 'com.github.yongjhih.RetroFacebook:retrofacebook-v3:1.0.1' // v3
 }
 ```
 
