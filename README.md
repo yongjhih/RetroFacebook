@@ -29,7 +29,7 @@ myPosts.forEach(post -> System.out.println(post.id()));
 @RetroFacebook
 abstract class Facebook {
     @GET("/me/feed")
-    Observable<Post> getPosts();
+    abstract Observable<Post> getPosts();
 }
 ```
 
