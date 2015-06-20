@@ -125,6 +125,18 @@ public abstract class Post {
 
 ## Installation
 
+via jcenter:
+
+```
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile 'com.infstory:retrofacebook:1.0.0' // v4
+}
+```
+
 via jitpack.io:
 
 ```
@@ -135,8 +147,8 @@ repositories {
 }
 
 dependencies {
-    compile 'com.github.yongjhih.RetroFacebook:retrofacebook:1.0.1' // v4
-    compile 'com.github.yongjhih.RetroFacebook:retrofacebook-v3:1.0.1' // v3
+    compile 'com.github.yongjhih.RetroFacebook:retrofacebook:1.0.0' // v4
+    compile 'com.github.yongjhih.RetroFacebook:retrofacebook-v3:1.0.0' // v3
 }
 ```
 
