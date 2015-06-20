@@ -72,17 +72,8 @@ public abstract class Facebook {
     @RetroFacebook.GET(value = "/{user-id}/feed", permissions = "user_posts")
     public abstract Observable<Post> getPosts(@RetroFacebook.Path("user-id") String userId);
 
-    public void getPosts(final Callback<Post> callback) {
-        getPosts().toList().subscribe(new Action1<List<Post>>() {
-            @Override public void call(List<Post> posts) {
-                callback.onCompleted(posts);
-            }
-        }, new Action1<Throwable>() {
-            @Override public void call(Throwable e) {
-                callback.onError(e);
-            }
-        });
-    }
+    @RetroFacebook.GET(value = "/{user-id}/feed", permissions = "user_posts")
+    public abstract void getPosts(@RetroFacebook.Path("user-id") String userId, final Callback<Post> callback);
 
     public static interface Callback<T> extends RetroFacebook.Callback<T> {
     }
