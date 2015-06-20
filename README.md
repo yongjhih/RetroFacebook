@@ -1,5 +1,7 @@
 # RetroFacebook
 
+[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-RetroFacebook-green.svg?style=flat)](https://android-arsenal.com/details/1/2007)
+
 ![RetroFacebook.png](art/retrofacebook.png)
 
 Retrofit Facebook SDK.
