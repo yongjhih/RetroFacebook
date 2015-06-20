@@ -1,6 +1,7 @@
 # RetroFacebook
 
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-RetroFacebook-green.svg?style=flat)](https://android-arsenal.com/details/1/2007)
+[![Join the chat at https://gitter.im/yongjhih/RetroFacebook](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/yongjhih/RetroFacebook?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ![RetroFacebook.png](art/retrofacebook.png)
 
