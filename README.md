@@ -116,7 +116,7 @@ abstract class Facebook {
 }
 ```
 
-My UploadedPhotos:
+My uploaded photos:
 
 ```java
 Observable<Photo> myUploadedPhotos = facebook.getPhotosTypeOf("uploaded");
