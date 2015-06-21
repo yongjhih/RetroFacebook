@@ -1,5 +1,5 @@
 include 'auto-json', 'auto-json-processor', ':auto-json-sample'
-include 'retrofacebook-annotation', 'retrofacebook-processor-v3', 'retrofacebook-processor', 'retrofacebook-v3', 'retrofacebook', 'retrofacebook-sample'
+include 'retrofacebook-annotation', 'retrofacebook-processor-v3', 'retrofacebook-processor', 'retrofacebook-v3', 'retrofacebook'
 include 'retrofacebook-app'
 //include ':logansquare'
 //project(':logansquare').projectDir = new File(settingsDir, '../LoganSquare/logansquare')
