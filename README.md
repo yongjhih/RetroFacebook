@@ -33,7 +33,7 @@ GraphRequest request = GraphRequest.newGraphPathRequest(AccessToken.getCurrentAc
         // or
         // jackson
         // ObjectMapper mapper = new ObjectMapper();
-        // Posts posts = mapper.readValue("{\"name\":\"Bob\", \"age\":13}", Posts.class);
+        // Posts posts = mapper.readValue(response.getJSONObject().toString(), Posts.class);
         // or
         // LoganSquare
         // Posts posts = LoganSquare.parse(response.getJSONObject().toString(), Posts.class);
