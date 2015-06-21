@@ -217,16 +217,13 @@ dependencies {
 
 ## Demo App
 
-v4 appetize: in progress
+* v4 appetize: in progress
+* v3 appetize: https://appetize.io/app/d9hgx8na5r9eq33zd6td1w8w3r
 
-v3 appetize: https://appetize.io/app/d9hgx8na5r9eq33zd6td1w8w3r
+Test User if needed::
 
-Test user if needed:
-
-Login Facebook as Test User:
-
-user: retro_rgaqpkf_facebook@tfbnw.net
-password: retrofacebook
+* user: retro_rgaqpkf_facebook@tfbnw.net
+* password: retrofacebook
 
 Compile:
 
