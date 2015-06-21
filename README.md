@@ -217,7 +217,9 @@ dependencies {
 
 ## Demo App
 
-https://appetize.io/app/d9hgx8na5r9eq33zd6td1w8w3r
+v4 appetize: in progress
+
+v3 appetize: https://appetize.io/app/d9hgx8na5r9eq33zd6td1w8w3r
 
 Test user if needed:
 
