@@ -278,58 +278,92 @@ public abstract class Facebook {
         return null;
     }
 
-    public Observable<Session> logInWithReadPermissions(final Collection<String> permissions) {
-        return logInWithPermissions(permissions, false);
+    public Observable<Session> logInWithPublishPermissions(Collection<String> permissions) {
+        return logInWithPublishPermissions(null, permissions);
     }
 
-    public Observable<Session> logInWithPublishPermissions(final Collection<String> permissions) {
-        return logInWithPermissions(permissions, true);
+    public Observable<Session> logInWithPublishPermissions(final Collection<String> readPermissions, final Collection<String> publishPermissions) {
+        Observable<Session> logInWithReadPermissions = readPermissions == null ? logInWithReadPermissions() : logInWithReadPermissions(readPermissions);
+        return logInWithReadPermissions.flatMap(new Func1<Session, Observable<Session>>() {
+            @Override public Observable<Session> call(Session session) {
+                return requestNewPublishPermissions(publishPermissions);
+                //return requestNewPublishPermissions(publishPermissions, session);
+            }
+        });
     }
 
-    public Observable<Session> logInWithPermissions(final Collection<String> permissions, final boolean publishable) {
+    public Observable<Session> requestNewPublishPermissions(final Collection<String> permissions) {
+        return requestNewPublishPermissions(permissions, Session.getActiveSession());
+    }
+
+    public Observable<Session> requestNewPublishPermissions(final Collection<String> permissions, final Session activeSession) {
         return Observable.create(new Observable.OnSubscribe<Session>() {
             @Override
             public void call(final Subscriber<? super Session> sub) {
+                Session.OpenRequest openRequest = new Session.OpenRequest(activity);
+
+                sessionSubject.asObservable() // FIXME unsubscribe
+                    .take(1)
+                    .doOnNext(new Action1<Session>() {
+                        @Override public void call(Session session) {
+                            if (session.getState().equals(SessionState.OPENED_TOKEN_UPDATED)) {
+                                sub.onNext(session);
+                            }
+                            sub.onCompleted();
+                        }
+                    })
+                    .subscribe();
+                activeSession.requestNewPublishPermissions(new Session.NewPermissionsRequest(activity, new ArrayList(permissions)));
+            }
+        });
+    }
+
+    public Observable<Session> logInWithReadPermissions(final Collection<String> permissions) {
+        return Observable.create(new Observable.OnSubscribe<Session>() {
+            @Override
+            public void call(final Subscriber<? super Session> sub) {
+                Session activeSession = Session.getActiveSession();
+
+                if (activeSession == null || activeSession.isClosed()) {
+                    activeSession = new Session.Builder(activity.getApplicationContext()).setApplicationId(getFacebookAppId(activity)).build();
+                    Session.setActiveSession(activeSession);
+                }
+
+                if (SessionState.OPENED.equals(activeSession.getState()) || activeSession.isOpened()) {
+                    sub.onNext(activeSession);
+                    sub.onCompleted();
+                    return;
+                }
+
                 Session.OpenRequest request = new Session.OpenRequest(activity);
                 if (request != null) {
                     //request.setDefaultAudience(configuration.getSessionDefaultAudience());
                     //request.setLoginBehavior(configuration.getSessionLoginBehavior());
 
-                    //if (isRead) {
-                        request.setPermissions(new ArrayList(permissions));
+                    request.setPermissions(new ArrayList(permissions));
 
-                        /*
-                         * In case there are also PUBLISH permissions, then we would ask
-                         * for these permissions second time (after, user accepted the
-                         * read permissions)
-                         */
-                        //if (configuration.hasPublishPermissions() && configuration.isAllPermissionsAtOnce()) {
-                            //mSessionStatusCallback.setAskPublishPermissions(true);
-                        //}
-
-                        Session activeSession = Session.getActiveSession();
-                        if (activeSession == null || activeSession.isClosed()) {
-                            activeSession = new Session.Builder(activity.getApplicationContext()).setApplicationId(getFacebookAppId(activity)).build();
-                            Session.setActiveSession(activeSession);
-                        }
-                        activeSession.addCallback(sessionStatusCallback);
-                        sessionSubject.asObservable() // FIXME unsubscribe
-                            .take(1)
-                            .doOnNext(new Action1<Session>() {
-                                @Override public void call(Session session) {
-                                    if (session.getState().equals(SessionState.OPENED)) {
-                                        sub.onNext(session);
-                                    }
-                                    sub.onCompleted();
-                                }
-                            })
-                            .subscribe();
-                        if (publishable) {
-                            activeSession.openForPublish(request);
-                        } else {
-                            activeSession.openForRead(request);
-                        }
+                    /*
+                     * In case there are also PUBLISH permissions, then we would ask
+                     * for these permissions second time (after, user accepted the
+                     * read permissions)
+                     */
+                    //if (configuration.hasPublishPermissions() && configuration.isAllPermissionsAtOnce()) {
+                        //mSessionStatusCallback.setAskPublishPermissions(true);
                     //}
+
+                    activeSession.addCallback(sessionStatusCallback);
+                    sessionSubject.asObservable() // FIXME unsubscribe
+                        .take(1)
+                        .doOnNext(new Action1<Session>() {
+                            @Override public void call(Session session) {
+                                if (session.getState().equals(SessionState.OPENED)) {
+                                    sub.onNext(session);
+                                }
+                                sub.onCompleted();
+                            }
+                        })
+                        .subscribe();
+                    activeSession.openForRead(request);
                 }
             }
         });
