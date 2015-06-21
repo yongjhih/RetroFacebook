@@ -236,6 +236,8 @@ v3 apk:
 adb install -r ./retrofacebook-app/build/outputs/apk/retrofacebook-app-v3-debug.apk
 ```
 
+[Sample code](retrofacebook-app/src/main/java/retrofacebook/app/MainActivity.java#L118)
+
 ## TODO
 
 Missing Models:
