@@ -222,6 +222,20 @@ Login Facebook as Test User:
 user: retro_rgaqpkf_facebook@tfbnw.net
 password: retrofacebook
 
+v4 apk:
+
+```sh
+./gradlew assembleV4Debug
+adb install -r ./retrofacebook-app/build/outputs/apk/retrofacebook-app-v4-debug.apk
+```
+
+v3 apk:
+
+```sh
+./gradlew assembleV3Debug
+adb install -r ./retrofacebook-app/build/outputs/apk/retrofacebook-app-v3-debug.apk
+```
+
 ## TODO
 
 Missing Models:
