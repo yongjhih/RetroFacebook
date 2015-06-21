@@ -218,7 +218,7 @@ dependencies {
 ## Demo App
 
 * v4 appetize: in progress
-* v3 appetize: https://appetize.io/app/d9hgx8na5r9eq33zd6td1w8w3r
+* v3 appetize: [![v3 appetize](art/appetize_iphone5_inner.jpg)](https://appetize.io/app/d9hgx8na5r9eq33zd6td1w8w3r)
 
 Test User if needed::
 
