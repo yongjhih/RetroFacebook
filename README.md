@@ -119,7 +119,7 @@ abstract class Facebook {
 My uploaded photos:
 
 ```java
-Observable<Photo> myUploadedPhotos = facebook.getPhotosTypeOf("uploaded");
+Observable<Photo> myUploadedPhotos = facebook.getPhotosOfType("uploaded");
 myPhotos.forEach(photo -> System.out.println(photo.id()));
 ```
 
@@ -127,7 +127,7 @@ myPhotos.forEach(photo -> System.out.println(photo.id()));
 @RetroFacebook
 abstract class Facebook {
     @GET("/me/photos")
-    abstract Observable<Post> getPhotosTypeOf(@Query("type") String type); // getPhotosTypeOf("uploaded") -> /me/photos?type=uploaded
+    abstract Observable<Post> getPhotosOfType(@Query("type") String type); // getPhotosOfType("uploaded") -> /me/photos?type=uploaded
 }
 ```
 
