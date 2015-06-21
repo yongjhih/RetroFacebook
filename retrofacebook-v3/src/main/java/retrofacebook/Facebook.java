@@ -38,12 +38,19 @@ import java.util.Map;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 
+/**
+ * @see <a href="https://developers.facebook.com/docs/graph-api/using-graph-api/v2.3">Graph API - Facebook Developers</a>
+ */
 @RetroFacebook
 public abstract class Facebook {
     @RetroFacebook.GET("/{post-id}")
     public abstract Observable<Post> getPost(@RetroFacebook.Path("post-id") String postId);
 
-    @RetroFacebook.GET("/{user-id}/photos")
+    // TODO @RetroFacebook.GET("/{userId}/photos?type=uploaded")
+    /**
+     * @see <a href="https://developers.facebook.com/docs/graph-api/reference/user/photos/">Graph API User Photo Edge - Facebook Developers</a>
+     */
+    @RetroFacebook.GET(value = "/{user-id}/photos", permissions = "user_photos")
     public abstract Observable<Photo> getPhotos(@RetroFacebook.Path("user-id") String userId);
 
     //@RetroFacebook.GET("/{user-id}/photos")
@@ -55,26 +62,153 @@ public abstract class Facebook {
     //@RetroFacebook.GET("/{user-id}/photos")
     //public abstract Observable<Photo> getPhotos(@RetroFacebook.Path("user-id") String userId, @RetroFacebook.QueryBundle Bundle queries);
 
-    @RetroFacebook.GET("/{user-id}/photos?type=uploaded")
+    @RetroFacebook.GET(value = "/{user-id}/photos?type=uploaded", permissions = "user_photos")
     public abstract Observable<Photo> getUploadedPhotos(@RetroFacebook.Path("user-id") String userId);
+
+    @RetroFacebook.GET("/search?type=topic&fields=id,name,page")
+    public abstract Observable<Page> searchTopic(@RetroFacebook.Query("q") String query);
 
     public Observable<Photo> getPhotos() {
         return getPhotos("me");
     }
 
-    @RetroFacebook.GET("/{user-id}/feed")
+    /**
+     * @see <a href="https://developers.facebook.com/docs/graph-api/reference/v2.3/user/feed">{user-id}/feed - Facebook Developers</a>
+     */
+    @RetroFacebook.GET(value = "/{user-id}/feed", permissions = "user_posts")
     public abstract Observable<Post> getPosts(@RetroFacebook.Path("user-id") String userId);
+
+    @RetroFacebook.GET(value = "/{user-id}/feed", permissions = "user_posts")
+    public abstract void getPosts(@RetroFacebook.Path("user-id") String userId, final Callback<Post> callback);
+
+    public static interface Callback<T> extends RetroFacebook.Callback<T> {
+    }
 
     public Observable<Post> getPosts() {
         return getPosts("me");
     }
 
-    @RetroFacebook.GET("/{user-id}/friends")
+    /**
+     * @see <a href="https://developers.facebook.com/docs/graph-api/reference/v2.3/user/friends">Graph API /user/friends - Facebook Developers</a>
+     */
+    @RetroFacebook.GET(value = "/{user-id}/friends", permissions = "user_friends")
     public abstract Observable<User> getFriends(@RetroFacebook.Path("user-id") String userId);
 
     public Observable<User> getFriends() {
         return getFriends("me");
     }
+
+    /**
+     * @see <a href="https://developers.facebook.com/docs/graph-api/reference/user/friendlists">User friendlists - Facebook Developers</a>
+     */
+    @RetroFacebook.GET("/{user-id}/friendlists")
+    public abstract Observable<FriendList> getFriendLists(@RetroFacebook.Path("user-id") String userId);
+
+    /**
+     * Single.
+     *
+     * @see <a href="https://developers.facebook.com/docs/graph-api/reference/friend-list/">Friend List - Facebook Developers</a>
+     */
+    @RetroFacebook.GET(value = "/{friend-list-id}", permissions = "read_custom_friendlists")
+    public abstract Observable<FriendList> getFriendList(@RetroFacebook.Path("friend-list-id") String friendListId);
+
+    /**
+     * @see <a href="https://developers.facebook.com/docs/graph-api/reference/photo">Graph API Photo Node - Facebook Developers</a>
+     */
+    @RetroFacebook.POST(value = "/{page_id}/photos", permissions = "publish_actions")
+    public abstract Observable<Struct> publishPage(@RetroFacebook.Body Photo photo, @RetroFacebook.Path("page_id") String pageId);
+
+    /**
+     * @see <a href="https://developers.facebook.com/docs/graph-api/reference/photo">Graph API Photo Node - Facebook Developers</a>
+     */
+    @RetroFacebook.POST(value = "/{user_id}/photos", permissions = "publish_actions")
+    public abstract Observable<Struct> publishUser(@RetroFacebook.Body Photo photo, @RetroFacebook.Path("user_id") String userId);
+
+    /**
+     * @see <a href="https://developers.facebook.com/docs/graph-api/reference/photo">Graph API Photo Node - Facebook Developers</a>
+     */
+    @RetroFacebook.POST(value = "/{album_id}/photos", permissions = "publish_actions")
+    public abstract Observable<Struct> publishAlbum(@RetroFacebook.Body Photo photo, @RetroFacebook.Path("album_id") String albumId);
+
+    /**
+     * @see <a href="https://developers.facebook.com/docs/graph-api/reference/photo">Graph API Photo Node - Facebook Developers</a>
+     */
+    @RetroFacebook.POST(value = "/{event_id}/photos", permissions = "publish_actions")
+    public abstract Observable<Struct> publishEvent(@RetroFacebook.Body Photo photo, @RetroFacebook.Path("event_id") String eventId);
+
+    /**
+     * @see <a href="https://developers.facebook.com/docs/graph-api/reference/photo">Graph API Photo Node - Facebook Developers</a>
+     */
+    @RetroFacebook.POST(value = "/{group_id}/photos", permissions = "publish_actions")
+    public abstract Observable<Struct> publishGroup(@RetroFacebook.Body Photo photo, @RetroFacebook.Path("group_id") String groupId);
+
+    /**
+     * @see <a href="https://developers.facebook.com/docs/graph-api/reference/post">Graph API Post Node - Facebook Developers</a>
+     */
+    @RetroFacebook.POST(value = "/{user-id}/feed", permissions = "publish_actions")
+    public abstract Observable<Struct> publish(@RetroFacebook.Body Post post, @RetroFacebook.Path("user-id") String userId);
+
+    public Observable<Struct> publish(Post post) {
+        return publish(post, "me");
+    }
+
+    /**
+     * @see <a href="https://developers.facebook.com/docs/graph-api/reference/v2.3/object/comments">Comments - Facebook Developers</a>
+     */
+    @RetroFacebook.POST(value = "/{object-id}/comments", permissions = "publish_actions")
+    public abstract Observable<Struct> comment(@RetroFacebook.Body Comment comment, @RetroFacebook.Path("object-id") String id);
+
+    /**
+     * @see <a href="https://developers.facebook.com/docs/graph-api/reference/v2.3/object/comments">Comments - Facebook Developers</a>
+     */
+    @RetroFacebook.POST(value = "/{comment-id}", permissions = "publish_actions")
+    public abstract Observable<Struct> updateComment(@RetroFacebook.Body Comment comment, @RetroFacebook.Path("comment-id") String id);
+
+    /**
+     * @see <a href="https://developers.facebook.com/docs/graph-api/reference/v2.3/object/comments">Comments - Facebook Developers</a>
+     */
+    @RetroFacebook.POST(value = "/{comment-id}", permissions = "publish_pages")
+    public abstract Observable<Struct> updatePageComment(@RetroFacebook.Body Comment comment, @RetroFacebook.Path("comment-id") String id);
+
+    /**
+     * @see <a href="https://developers.facebook.com/docs/graph-api/reference/v2.3/object/comments">Comments - Facebook Developers</a>
+     */
+    @RetroFacebook.POST(value = "/{object-id}/comments", permissions = "publish_pages")
+    public abstract Observable<Struct> commentPage(@RetroFacebook.Body Comment comment, @RetroFacebook.Path("object-id") String id);
+
+    public Observable<Struct> commentPage(String message, String id) {
+        return comment(Comment.builder().message(message).build(), id);
+    }
+
+    /**
+     * @see <a href="https://developers.facebook.com/docs/graph-api/reference/post">Graph API Post Node - Facebook Developers</a>
+     */
+    @RetroFacebook.DELETE(value = "{id}", permissions = "publish_actions")
+    public abstract Observable<Struct> deletePost(@RetroFacebook.Path("id") String id);
+
+    /**
+     * @see <a href="https://developers.facebook.com/docs/graph-api/reference/post">Graph API Post Node - Facebook Developers</a>
+     */
+    @RetroFacebook.DELETE(value = "{id}", permissions = "publish_pages")
+    public abstract Observable<Struct> deletePage(@RetroFacebook.Path("id") String id);
+
+    /**
+     * @see <a href="https://developers.facebook.com/docs/graph-api/reference/photo">Graph API Photo Node - Facebook Developers</a>
+     */
+    @RetroFacebook.DELETE(value = "{id}", permissions = "publish_actions")
+    public abstract Observable<Struct> deletePhoto(@RetroFacebook.Path("id") String id);
+
+    /**
+     * @see <a href="https://developers.facebook.com/docs/graph-api/reference/photo">Graph API Photo Node - Facebook Developers</a>
+     */
+    @RetroFacebook.DELETE(value = "{id}", permissions = {"publish_pages", "manage_pages"})
+    public abstract Observable<Struct> deletePagePhoto(@RetroFacebook.Path("id") String id);
+
+    /**
+     * @see <a href="https://developers.facebook.com/docs/graph-api/reference/v2.3/object/comments">Comments - Facebook Developers</a>
+     */
+    @RetroFacebook.DELETE(value = "/{comment-id}")
+    public abstract Observable<Struct> deleteComment(@RetroFacebook.Path("comment-id") String id);
 
     public static Facebook create() {
         return new RetroFacebook_Facebook();
@@ -116,7 +250,15 @@ public abstract class Facebook {
     }
 
     public Observable<Session> logIn() {
+        return logInWithReadPermissions();
+    }
+
+    public Observable<Session> logInWithReadPermissions() {
         return logInWithReadPermissions(Arrays.asList("public_profile", "user_friends", "user_photos", "user_posts"));
+    }
+
+    public Observable<Session> logInWithPublishPermissions() {
+        return logInWithPublishPermissions(Arrays.asList("publish_actions"));
     }
 
     public static String getFacebookAppId(Context context) {
@@ -137,6 +279,14 @@ public abstract class Facebook {
     }
 
     public Observable<Session> logInWithReadPermissions(final Collection<String> permissions) {
+        return logInWithPermissions(permissions, false);
+    }
+
+    public Observable<Session> logInWithPublishPermissions(final Collection<String> permissions) {
+        return logInWithPermissions(permissions, true);
+    }
+
+    public Observable<Session> logInWithPermissions(final Collection<String> permissions, final boolean publishable) {
         return Observable.create(new Observable.OnSubscribe<Session>() {
             @Override
             public void call(final Subscriber<? super Session> sub) {
@@ -174,7 +324,11 @@ public abstract class Facebook {
                                 }
                             })
                             .subscribe();
-                        activeSession.openForRead(request);
+                        if (publishable) {
+                            activeSession.openForPublish(request);
+                        } else {
+                            activeSession.openForRead(request);
+                        }
                     //}
                 }
             }

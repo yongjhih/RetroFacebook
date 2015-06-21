@@ -29,6 +29,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import java.util.Map;
+import java.util.List;
 
 ${gwtCompatibleAnnotation}
 public final class $subclass$formalTypes extends $origClass$actualTypes {
@@ -39,55 +40,122 @@ public final class $subclass$formalTypes extends $origClass$actualTypes {
 
     @Override
     ${p.access}${p.type} ${p.getter}(${p.args}) {
-        return Observable.just(this).map(new Func1<$subclass$formalTypes, Bundle>() {
+#if ($p.callback)
+        Observable<$p.callbackType> obs =
+#else
+        ${p.type} obs =
+#end
+        Observable.just(this).map(new Func1<$subclass$formalTypes, Bundle>() {
             @Override public Bundle call($subclass$formalTypes t) {
 #set ($map = ${p.queries})
 #set ($maps = ${p.queryMaps})
 #set ($bundles = ${p.queryBundles})
 #if (!$map.isEmpty() || !$maps.isEmpty() || !$bundles.isEmpty())
+
                 Bundle bundle = new Bundle();
+
 #foreach ($query in $map.entrySet())
+
                 bundle.putString($query.key, $query.value);
+
 #end
 #foreach ($queryMap in $maps)
+
                 addMapToBubdle(bundle, ${queryMap});
+
 #end
 #foreach ($queryBundle in $bundles)
+
                 bundle.putAll(${queryBundle});
+
 #end
+
                 return bundle;
+
+#elseif ($p.post)
+
+                return ${p.body}.toBundle();
+
 #else
+
                 return null;
 #end
             }
         }).flatMap(new Func1<Bundle, Observable<Response>>() {
             @Override public Observable<Response> call(Bundle queries) {
+
+#if ($p.get)
+
                 Request request = new Request(
                         Session.getActiveSession(),
                         ${p.path},
                         queries,
                         HttpMethod.GET);
                 return Observable.create(new OnSubscribeResponse(request));
+
+#elseif ($p.post)
+
+                Request request = new Request(
+                        Session.getActiveSession(),
+                        ${p.path},
+                        queries,
+                        HttpMethod.POST);
+                return Observable.create(new OnSubscribeResponse(request));
+
+#elseif ($p.delete)
+
+                Request request = new Request(
+                        Session.getActiveSession(),
+                        ${p.path},
+                        queries,
+                        HttpMethod.DELETE);
+                return Observable.create(new OnSubscribeResponse(request));
+
+#end
+
             }
-        }).map(new Func1<Response, ${p.typeArgs}s>() {
-            @Override public ${p.typeArgs}s call(Response response) {
+        }).flatMap(new Func1<Response, Observable<$p.typeArgs>>() {
+            @Override public Observable<${p.typeArgs}> call(Response response) {
+                // TODO check "data" field to determine parse group or item.
+                ${p.typeArgs}s group = null;
                 try {
                     Log.d("RetroFacebook", "${p.typeArgs}s: " + response.getGraphObject().getInnerJSONObject().toString());
-                    return LoganSquare.parse(response.getGraphObject().getInnerJSONObject().toString(), AutoJson_${p.typeArgs}s.class);
+                    group = LoganSquare.parse(response.getGraphObject().getInnerJSONObject().toString(), AutoJson_${p.typeArgs}s.class);
                 } catch (java.io.IOException e) {
                     e.printStackTrace();
-                    return null;
+                    return Observable.empty();
+                }
+
+                if (group != null && group.data() != null) return Observable.from(group.data());
+
+                try {
+                return Observable.<${p.typeArgs}>just(LoganSquare.parse(response.getGraphObject().getInnerJSONObject().toString(), AutoJson_${p.typeArgs}.class));
+                } catch (java.io.IOException e) {
+                    return Observable.empty();
                 }
             }
-        }).filter(new Func1<${p.typeArgs}s, Boolean>() {
-            @Override public Boolean call(${p.typeArgs}s data) {
-                return data != null;
-            }
-        }).flatMap(new Func1<${p.typeArgs}s, Observable<$p.typeArgs>>() {
-            @Override public Observable<${p.typeArgs}> call(${p.typeArgs}s data) {
-                return Observable.from(data.data());
+        }).filter(new Func1<${p.typeArgs}, Boolean>() {
+            @Override public Boolean call(${p.typeArgs} item) {
+                return item != null;
             }
         });
+
+#if ($p.callback)
+
+        obs.toList().subscribe(new Action1<List<$p.callbackType>>() {
+                @Override public void call(List<$p.callbackType> list) {
+                    ${p.callbackArg}.onCompleted(list);
+                }
+            }, new Action1<Throwable>() {
+                @Override public void call(Throwable e) {
+                    ${p.callbackArg}.onError(e);
+                }
+            });
+#else
+
+        return obs;
+
+#end
     }
 
 #end

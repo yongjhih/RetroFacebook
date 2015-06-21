@@ -193,24 +193,36 @@ public class RetroFacebookProcessor extends AbstractProcessor {
     private final String identifier;
     private final ExecutableElement method;
     private final String type;
-    private final String typeArgs;
+    private String typeArgs;
     private final ImmutableList<String> annotations;
     private final String args;
     private final String path;
     private final Map<String, String> queries;
     private final List<String> queryMaps;
     private final List<String> queryBundles;
+    private final boolean isGet;
+    private final boolean isPost;
+    private final boolean isDelete;
+    private final String body;
+    private final String callbackType;
+    private final String callbackArg;
+    private final Types typeUtils;
+    private final TypeSimplifier typeSimplifier;
 
     Property(
         String name,
         String identifier,
         ExecutableElement method,
         String type,
-        TypeSimplifier typeSimplifier) {
+        TypeSimplifier typeSimplifier,
+        Types typeUtils
+        ) {
       this.name = name;
       this.identifier = identifier;
       this.method = method;
       this.type = type;
+      this.typeSimplifier = typeSimplifier;
+      this.typeUtils = typeUtils;
       this.annotations = buildAnnotations(typeSimplifier);
       this.args = formalTypeArgsString(method);
       this.path = buildPath(method);
@@ -218,13 +230,76 @@ public class RetroFacebookProcessor extends AbstractProcessor {
       this.queries = buildQueries(method);
       this.queryMaps = buildQueryMaps(method);
       this.queryBundles = buildQueryBundles(method);
+      this.isGet = buildIsGet(method);
+      this.isPost = buildIsPost(method);
+      this.isDelete = buildIsDelete(method);
+      this.body = buildBody(method);
+      this.callbackType = buildCallbackType(method);
+      this.callbackArg = buildCallbackArg(method);
+      if ("".equals(typeArgs)) typeArgs = callbackType;
     }
 
     private String buildTypeArguments(String type) {
       Pattern pattern = Pattern.compile( "<(.*?)>" );
       Matcher m = pattern.matcher(type);
       if (m.find()) return m.group(1);
-      return null;
+      return "";
+    }
+
+
+    public String buildCallbackArg(ExecutableElement method) {
+        return "callback"; // TODO
+    }
+
+    public String buildCallbackType(ExecutableElement method) {
+      List<? extends VariableElement> parameters = method.getParameters();
+      for (VariableElement parameter : parameters) {
+
+        //if (typeUtils.isAssignable(parameter.asType(), retrofacebook.RetroFacebook.Callback.class)) { // FIXME hardcode
+        //if ("retrofacebook.RetroFacebook.Callback".equals(parameter.asType().toString())) {
+        TypeElement type = (TypeElement) typeUtils.asElement(parameter.asType());
+        //if (parameter.asType().toString().endsWith("Callback")) {
+        if (type.getQualifiedName().toString().endsWith("Callback")) {
+            String simpleType = typeSimplifier.simplify(parameter.asType());
+
+            simpleType = simpleType.replaceAll("[^<]*<", "").replace(" ", "").replace("<", "").replace(">", ""); // FIXME hardcode
+            //if (true) throw new RuntimeException("yo: " + simpleType);
+            return simpleType;
+        }
+      }
+      return "";
+    }
+
+    public boolean buildIsGet(ExecutableElement method) {
+        // TODO duplicated routine
+        return method.getAnnotation(retrofacebook.RetroFacebook.GET.class) != null;
+    }
+
+    public boolean buildIsPost(ExecutableElement method) {
+        // TODO duplicated routine
+        return method.getAnnotation(retrofacebook.RetroFacebook.POST.class) != null;
+    }
+
+    public boolean buildIsDelete(ExecutableElement method) {
+        // TODO duplicated routine
+        return method.getAnnotation(retrofacebook.RetroFacebook.DELETE.class) != null;
+    }
+
+    public String buildBody(ExecutableElement method) {
+      String body = "";
+
+      // TODO duplicated routine
+      retrofacebook.RetroFacebook.POST post = method.getAnnotation(retrofacebook.RetroFacebook.POST.class);
+      if (post == null) return body;
+
+      // TODO duplicated code
+      List<? extends VariableElement> parameters = method.getParameters();
+      for (VariableElement parameter : parameters) {
+        if (parameter.getAnnotation(retrofacebook.RetroFacebook.Body.class) != null) {
+          body = parameter.getSimpleName().toString();
+        }
+      }
+      return body;
     }
 
     // /{postId}
@@ -232,8 +307,14 @@ public class RetroFacebookProcessor extends AbstractProcessor {
     // "/" + userIdA + "/friends/" + userIdB
     // "/" + userIdA + "/friends/" + userIdB + ""
     public String buildPath(ExecutableElement method) {
+      // TODO duplicated routine
       retrofacebook.RetroFacebook.GET get = method.getAnnotation(retrofacebook.RetroFacebook.GET.class);
-      String fullPath = get.value();
+      retrofacebook.RetroFacebook.POST post = method.getAnnotation(retrofacebook.RetroFacebook.POST.class);
+      retrofacebook.RetroFacebook.DELETE delete = method.getAnnotation(retrofacebook.RetroFacebook.DELETE.class);
+      String fullPath = null;
+      if (get != null) fullPath = get.value();
+      if (post != null) fullPath = post.value();
+      if (delete != null) fullPath = delete.value();
 
       List<? extends VariableElement> parameters = method.getParameters();
       for (VariableElement parameter : parameters) {
@@ -254,8 +335,15 @@ public class RetroFacebookProcessor extends AbstractProcessor {
     public Map<String, String> buildQueries(ExecutableElement method) {
       Map<String, String> map = new HashMap<String, String>();
 
+      // TODO duplicated routine
       retrofacebook.RetroFacebook.GET get = method.getAnnotation(retrofacebook.RetroFacebook.GET.class);
-      String fullPath = get.value();
+      retrofacebook.RetroFacebook.POST post = method.getAnnotation(retrofacebook.RetroFacebook.POST.class);
+      retrofacebook.RetroFacebook.DELETE delete = method.getAnnotation(retrofacebook.RetroFacebook.DELETE.class);
+      String fullPath = null;
+      if (get != null) fullPath = get.value();
+      if (post != null) fullPath = post.value();
+      if (delete != null) fullPath = delete.value();
+
       if (fullPath.indexOf("?") != -1) {
         fullPath = fullPath.replaceAll("^.*\\?", "");
         String[] queries = fullPath.split("&");
@@ -411,6 +499,34 @@ public class RetroFacebookProcessor extends AbstractProcessor {
 
     public boolean primitive() {
       return method.getReturnType().getKind().isPrimitive();
+    }
+
+    public boolean isCallback() {
+      return (callbackType != null && !"".equals(callbackType));
+    }
+
+    public String getCallbackType() {
+      return callbackType;
+    }
+
+    public String getCallbackArg() {
+      return callbackArg;
+    }
+
+    public String getBody() {
+      return body;
+    }
+
+    public boolean isGet() {
+      return isGet;
+    }
+
+    public boolean isPost() {
+      return isPost;
+    }
+
+    public boolean isDelete() {
+      return isDelete;
     }
 
     public List<String> getAnnotations() {
@@ -618,7 +734,7 @@ public class RetroFacebookProcessor extends AbstractProcessor {
       String propertyName = methodToPropertyName.get(method);
       String identifier = methodToIdentifier.get(method);
       List<String> args = new ArrayList<String>();
-      props.add(new Property(propertyName, identifier, method, propertyType, typeSimplifier));
+      props.add(new Property(propertyName, identifier, method, propertyType, typeSimplifier, typeUtils));
     }
     // If we are running from Eclipse, undo the work of its compiler which sorts methods.
     eclipseHack().reorderProperties(props);
@@ -679,6 +795,7 @@ public class RetroFacebookProcessor extends AbstractProcessor {
   }
 
   private void checkDuplicateGetters(Map<ExecutableElement, String> methodToIdentifier) {
+      if (true) return;
     Set<String> seen = Sets.newHashSet();
     for (Map.Entry<ExecutableElement, String> entry : methodToIdentifier.entrySet()) {
       if (!seen.add(entry.getValue())) {

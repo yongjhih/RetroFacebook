@@ -53,20 +53,33 @@ public final class $subclass$formalTypes extends $origClass$actualTypes {
 #set ($maps = ${p.queryMaps})
 #set ($bundles = ${p.queryBundles})
 #if (!$map.isEmpty() || !$maps.isEmpty() || !$bundles.isEmpty())
+
                 Bundle bundle = new Bundle();
+
 #foreach ($query in $map.entrySet())
+
                 bundle.putString($query.key, $query.value);
+
 #end
 #foreach ($queryMap in $maps)
+
                 addMapToBubdle(bundle, ${queryMap});
+
 #end
 #foreach ($queryBundle in $bundles)
+
                 bundle.putAll(${queryBundle});
+
 #end
+
                 return bundle;
+
 #elseif ($p.post)
+
                 return ${p.body}.toBundle();
+
 #else
+
                 return null;
 #end
             }
@@ -118,7 +131,9 @@ public final class $subclass$formalTypes extends $origClass$actualTypes {
                 return item != null;
             }
         });
+
 #if ($p.callback)
+
         obs.toList().subscribe(new Action1<List<$p.callbackType>>() {
                 @Override public void call(List<$p.callbackType> list) {
                     ${p.callbackArg}.onCompleted(list);
@@ -129,7 +144,9 @@ public final class $subclass$formalTypes extends $origClass$actualTypes {
                 }
             });
 #else
+
         return obs;
+
 #end
     }
 
