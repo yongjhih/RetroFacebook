@@ -185,36 +185,36 @@ public abstract class Post {
  - publish(Story story)
  - publish(Story album)
  - publish(Photo photo)
- - publish(video)
- - publish(score)
- - publish(comment)
- - publish(like)
+ - publish(Video video)
+ - publish(Score score)
+ - publish(Comment comment)
+ - publish(Like like)
 * Requests/Invite
- - Send request/invite
- - Delete request/invite
+ - invite()
+ - uninvite(Invite invite)
 * Get
- - Get accounts
- - Get album/s
- - Get requests
- - Get books
- - Get comment/s
- - Get events
- - Get family
- - Get friends
- - Get games
- - Get groups
- - Get likes
- - Get movies
- - Get music
- - Get notifications
- - Get objects
- - Get page
- - Get photos
- - Get posts
- - Get profile
- - Get scores
- - Get television
- - Get videos
+ - getAccounts()
+ - getAlbum/s()
+ - getRequests()
+ - getBooks()
+ - getComment/s()
+ - getEvents()
+ - getFamily()
+ - getFriends()
+ - getGames()
+ - getGroups()
+ - getLikes()
+ - getMovies()
+ - getMusic()
+ - getNotifications()
+ - getObjects()
+ - getPage()
+ - getPhotos()
+ - getPosts()
+ - getProfile()
+ - getScores()
+ - getTelevision()
+ - getVideos()
 
 ## Installation
 
