@@ -159,20 +159,19 @@ public class MainActivity extends AppCompatActivity {
         }));
         adapter.fragments.add(FragmentPage.create().title("Publish").fragment(() -> {
             return CardsFragment.create()
-                .items(facebook.logInWithPublishPermissions().flatMap(login -> {
-                        return facebook.publish(Post.builder()
+                .items(facebook.publish(Post.builder()
                             .message("yo")
                             .name("RetroFacebook")
                             .caption("RetroFacebook")
                             .description("Retrofit Facebook Android SDK")
                             .picture("https://raw.githubusercontent.com/yongjhih/RetroFacebook/master/art/retrofacebook.png")
                             .link("https://github.com/yongjhih/RetroFacebook")
-                            .build());
-                    }).map(response -> {
-                        return Card.builder()
-                            .text1(response.id())
-                            .message(response.id())
-                            .build();
+                            .build())
+                        .map(response -> {
+                            return Card.builder()
+                                .text1(response.id())
+                                .message(response.id())
+                                .build();
                 }));
         }));
         /* {FacebookServiceException: httpResponseCode: 400, facebookErrorCode: 15, facebookErrorType: OAuthException, message: (#15) This method must be called with an app access_token.}

@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -208,6 +209,7 @@ public class RetroFacebookProcessor extends AbstractProcessor {
     private final String callbackArg;
     private final Types typeUtils;
     private final TypeSimplifier typeSimplifier;
+    private final List<String> permissions;
 
     Property(
         String name,
@@ -237,6 +239,7 @@ public class RetroFacebookProcessor extends AbstractProcessor {
       this.callbackType = buildCallbackType(method);
       this.callbackArg = buildCallbackArg(method);
       if ("".equals(typeArgs)) typeArgs = callbackType;
+      this.permissions = buildPermissions(method);
     }
 
     private String buildTypeArguments(String type) {
@@ -300,6 +303,16 @@ public class RetroFacebookProcessor extends AbstractProcessor {
         }
       }
       return body;
+    }
+
+    public List<String> buildPermissions(ExecutableElement method) {
+      retrofacebook.RetroFacebook.GET get = method.getAnnotation(retrofacebook.RetroFacebook.GET.class);
+      retrofacebook.RetroFacebook.POST post = method.getAnnotation(retrofacebook.RetroFacebook.POST.class);
+      retrofacebook.RetroFacebook.DELETE delete = method.getAnnotation(retrofacebook.RetroFacebook.DELETE.class);
+      if (get != null) return Arrays.asList(get.permissions());
+      if (post != null) return Arrays.asList(post.permissions());
+      if (delete != null) return Arrays.asList(delete.permissions());
+      return Collections.emptyList();
     }
 
     // /{postId}
@@ -515,6 +528,10 @@ public class RetroFacebookProcessor extends AbstractProcessor {
 
     public String getBody() {
       return body;
+    }
+
+    public List<String> getPermissions() {
+      return permissions;
     }
 
     public boolean isGet() {

@@ -43,7 +43,7 @@ import android.content.pm.PackageManager;
  */
 @RetroFacebook
 public abstract class Facebook {
-    @RetroFacebook.GET("/{post-id}")
+    @RetroFacebook.GET(value = "/{post-id}", permissions = "user_photos")
     public abstract Observable<Post> getPost(@RetroFacebook.Path("post-id") String postId);
 
     // TODO @RetroFacebook.GET("/{userId}/photos?type=uploaded")
@@ -65,7 +65,7 @@ public abstract class Facebook {
     @RetroFacebook.GET(value = "/{user-id}/photos?type=uploaded", permissions = "user_photos")
     public abstract Observable<Photo> getUploadedPhotos(@RetroFacebook.Path("user-id") String userId);
 
-    @RetroFacebook.GET("/search?type=topic&fields=id,name,page")
+    @RetroFacebook.GET("/search?type=topic&fields=id,name,page"/* permissions = ? */)
     public abstract Observable<Page> searchTopic(@RetroFacebook.Query("q") String query);
 
     public Observable<Photo> getPhotos() {
@@ -101,7 +101,7 @@ public abstract class Facebook {
     /**
      * @see <a href="https://developers.facebook.com/docs/graph-api/reference/user/friendlists">User friendlists - Facebook Developers</a>
      */
-    @RetroFacebook.GET("/{user-id}/friendlists")
+    @RetroFacebook.GET(value = "/{user-id}/friendlists", permissions = "read_custom_friendlists"/* ? */)
     public abstract Observable<FriendList> getFriendLists(@RetroFacebook.Path("user-id") String userId);
 
     /**
@@ -207,12 +207,8 @@ public abstract class Facebook {
     /**
      * @see <a href="https://developers.facebook.com/docs/graph-api/reference/v2.3/object/comments">Comments - Facebook Developers</a>
      */
-    @RetroFacebook.DELETE(value = "/{comment-id}")
+    @RetroFacebook.DELETE(value = "/{comment-id}"/* permissions = ? */)
     public abstract Observable<Struct> deleteComment(@RetroFacebook.Path("comment-id") String id);
-
-    public static Facebook create() {
-        return new RetroFacebook_Facebook();
-    }
 
     Activity activity;
     Session.StatusCallback sessionStatusCallback;
@@ -238,7 +234,7 @@ public abstract class Facebook {
     }
 
     public static Facebook create(Activity activity) {
-        return create().initialize(activity);
+        return new RetroFacebook_Facebook(activity).initialize(activity);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -254,7 +250,8 @@ public abstract class Facebook {
     }
 
     public Observable<Session> logInWithReadPermissions() {
-        return logInWithReadPermissions(Arrays.asList("public_profile", "user_friends", "user_photos", "user_posts"));
+        //return logInWithReadPermissions(Arrays.asList("public_profile", "user_friends", "user_photos", "user_posts"));
+        return logInWithReadPermissions(Arrays.asList("public_profile"));
     }
 
     public Observable<Session> logInWithPublishPermissions() {
