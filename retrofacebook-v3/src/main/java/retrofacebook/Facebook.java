@@ -303,12 +303,14 @@ public abstract class Facebook {
                 Session.OpenRequest openRequest = new Session.OpenRequest(activity);
 
                 sessionSubject.asObservable() // FIXME unsubscribe
-                    .take(1)
+                    .filter(new Func1<Session, Boolean>() {
+                        @Override public Boolean call(Session session) {
+                            return SessionState.OPENED_TOKEN_UPDATED.equals(session.getState());
+                        }
+                    })
                     .doOnNext(new Action1<Session>() {
                         @Override public void call(Session session) {
-                            if (session.getState().equals(SessionState.OPENED_TOKEN_UPDATED)) {
-                                sub.onNext(session);
-                            }
+                            sub.onNext(session);
                             sub.onCompleted();
                         }
                     })
@@ -337,34 +339,63 @@ public abstract class Facebook {
 
                 Session.OpenRequest request = new Session.OpenRequest(activity);
                 if (request != null) {
-                    //request.setDefaultAudience(configuration.getSessionDefaultAudience());
-                    //request.setLoginBehavior(configuration.getSessionLoginBehavior());
+                    //request.setDefaultAudience(x);
+                    //request.setLoginBehavior(x);
 
                     request.setPermissions(new ArrayList(permissions));
 
-                    /*
-                     * In case there are also PUBLISH permissions, then we would ask
-                     * for these permissions second time (after, user accepted the
-                     * read permissions)
-                     */
-                    //if (configuration.hasPublishPermissions() && configuration.isAllPermissionsAtOnce()) {
-                        //mSessionStatusCallback.setAskPublishPermissions(true);
-                    //}
+                    //sessionStatusCallback.setAskPublishPermissions(true);
 
                     activeSession.addCallback(sessionStatusCallback);
                     sessionSubject.asObservable() // FIXME unsubscribe
-                        .take(1)
+                        .filter(new Func1<Session, Boolean>() {
+                            @Override public Boolean call(Session session) {
+                                return SessionState.OPENED.equals(session.getState());
+                            }
+                        })
                         .doOnNext(new Action1<Session>() {
                             @Override public void call(Session session) {
-                                if (session.getState().equals(SessionState.OPENED)) {
-                                    sub.onNext(session);
-                                }
+                                sub.onNext(session);
                                 sub.onCompleted();
                             }
                         })
                         .subscribe();
                     activeSession.openForRead(request);
                 }
+            }
+        });
+    }
+
+    public Observable<Session> logOut() {
+        return Observable.create(new Observable.OnSubscribe<Session>() {
+            @Override
+            public void call(final Subscriber<? super Session> sub) {
+                Session activeSession = Session.getActiveSession();
+                if (activeSession == null) {
+                    //sub.onNext(session);
+                    sub.onCompleted();
+                    return;
+                }
+                if (activeSession.isClosed()) {
+                    sub.onNext(activeSession);
+                    sub.onCompleted();
+                    return;
+                }
+                sessionSubject.asObservable() // FIXME unsubscribe
+                    .filter(new Func1<Session, Boolean>() {
+                        @Override public Boolean call(Session session) {
+                            return SessionState.CLOSED.equals(session.getState());
+                        }
+                    })
+                    .doOnNext(new Action1<Session>() {
+                        @Override public void call(Session session) {
+                            sub.onNext(session);
+                            sub.onCompleted();
+                        }
+                    })
+                    .subscribe();
+                activeSession.closeAndClearTokenInformation();
+                //session.removeCallback(sessionStatusCallback);
             }
         });
     }

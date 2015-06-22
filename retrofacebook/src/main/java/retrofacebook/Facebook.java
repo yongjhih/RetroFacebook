@@ -288,6 +288,10 @@ public abstract class Facebook {
         });
     }
 
+    public static void logOut() {
+        LoginManager.getInstance().logOut();
+    }
+
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
