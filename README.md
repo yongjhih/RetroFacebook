@@ -4,6 +4,14 @@
 [![Join the chat at https://gitter.im/yongjhih/RetroFacebook](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/yongjhih/RetroFacebook?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![](https://fbstatic-a.akamaihd.net/rsrc.php/yl/r/H3nktOa7ZMg.ico) page: retrothis ](https://www.facebook.com/retrothis)
 
+[![](https://avatars0.githubusercontent.com/u/5761889?v=3&s=48)](https://github.com/Wendly)
+[![](https://avatars3.githubusercontent.com/u/213736?v=3&s=48)](https://github.com/yongjhih)
+Contributors..
+[![](https://avatars1.githubusercontent.com/u/583039?v=3&s=48)](https://github.com/sromku)
+[![](https://avatars0.githubusercontent.com/u/1476561?v=3&s=48)](https://github.com/frankiesardo)
+[![](https://avatars3.githubusercontent.com/u/2039026?v=3&s=48)](https://github.com/EricKuck)
+Credit..
+
 ![RetroFacebook.png](art/retrofacebook.png)
 
 Retrofit Facebook SDK for v3, v4.
