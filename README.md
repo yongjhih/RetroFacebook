@@ -175,6 +175,47 @@ public abstract class Post {
 }
 ```
 
+## Features
+
+* Login/Logout
+ - logIn()
+ - logOut()
+* Publish
+ - publish(Feed feed)
+ - publish(Story story)
+ - publish(Story album)
+ - publish(Photo photo)
+ - publish(video)
+ - publish(score)
+ - publish(comment)
+ - publish(like)
+* Requests/Invite
+ - Send request/invite
+ - Delete request/invite
+* Get
+ - Get accounts
+ - Get album/s
+ - Get requests
+ - Get books
+ - Get comment/s
+ - Get events
+ - Get family
+ - Get friends
+ - Get games
+ - Get groups
+ - Get likes
+ - Get movies
+ - Get music
+ - Get notifications
+ - Get objects
+ - Get page
+ - Get photos
+ - Get posts
+ - Get profile
+ - Get scores
+ - Get television
+ - Get videos
+
 ## Installation
 
 via jcenter:
