@@ -889,7 +889,7 @@ public class AutoJsonProcessor extends AbstractProcessor {
   }
 
   private TypeMirror getTypeMirror(Class<?> c) {
-    return processingEnv.getElementUtils().getTypeElement(c.getName()).asType();
+    return processingEnv.getElementUtils().getTypeElement(c.getCanonicalName()).asType();
   }
 
   // The @AutoJson type, with a ? for every type.
