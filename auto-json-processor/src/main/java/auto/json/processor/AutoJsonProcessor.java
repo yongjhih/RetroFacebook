@@ -198,6 +198,7 @@ public class AutoJsonProcessor extends AbstractProcessor {
     private final List<String> annotatedNames;
     private final TypeSimplifier typeSimplifier;
     private final ProcessingEnvironment processingEnv;
+    private final boolean stringable;
 
     Property(
         String name,
@@ -227,6 +228,7 @@ public class AutoJsonProcessor extends AbstractProcessor {
       this.typeSimplifier = typeSimplifier;
       this.processingEnv = processingEnv;
       this.annotations = buildAnnotations(typeSimplifier);
+      this.stringable = buildStringable();
     }
 
     private ImmutableList<String> buildAnnotations(TypeSimplifier typeSimplifier) {
@@ -281,6 +283,12 @@ public class AutoJsonProcessor extends AbstractProcessor {
       }
 
       return builder.build();
+    }
+
+    private boolean buildStringable() {
+      TypeMirror stringType = processingEnv.getElementUtils().getTypeElement("java.lang.String").asType();
+      TypeMirror returnType = method.getReturnType();
+      return processingEnv.getTypeUtils().isSameType(stringType, returnType);
     }
 
     /**
@@ -345,7 +353,7 @@ public class AutoJsonProcessor extends AbstractProcessor {
     }
 
     public boolean getStringable() {
-        return "String".equals(typeSimplifier.simplify(getTypeMirror())); // FIXME hardcode
+      return stringable;
     }
 
     private String box(TypeKind kind) {
