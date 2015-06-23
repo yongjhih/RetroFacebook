@@ -286,7 +286,7 @@ public class AutoJsonProcessor extends AbstractProcessor {
     }
 
     private boolean buildStringable() {
-      TypeMirror stringType = processingEnv.getElementUtils().getTypeElement("java.lang.String").asType();
+      TypeMirror stringType = getTypeMirror(processingEnv, String.class);
       TypeMirror returnType = method.getReturnType();
       return processingEnv.getTypeUtils().isSameType(stringType, returnType);
     }
@@ -835,7 +835,7 @@ public class AutoJsonProcessor extends AbstractProcessor {
   }
 
   private static boolean isAutoJsonField(ProcessingEnvironment processingEnv, AnnotationMirror annotation) {
-    TypeMirror autoJsonField = processingEnv.getElementUtils().getTypeElement("auto.json.AutoJson.Field").asType();
+    TypeMirror autoJsonField = getTypeMirror(processingEnv, AutoJson.Field.class);
     TypeMirror field = annotation.getAnnotationType();
     return processingEnv.getTypeUtils().isSameType(field, autoJsonField);
   }
