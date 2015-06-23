@@ -304,6 +304,14 @@ public final class $subclass$formalTypes extends $origClass$actualTypes {
         return !isPublishPermission(permission);
     }
 
+    public static boolean isActivePermission(String permission) {
+        return Session.getActiveSession().getPermissions().contains(permission);
+    }
+
+    public static boolean isActivePermissions(Collection<String> permissions) {
+        return Session.getActiveSession().getPermissions().containsAll(permissions);
+    }
+
     public static List<String> filterActivePermissions(Collection<String> permissions) {
         List<String> newPermissions = new ArrayList<String>(permissions);
         if (newPermissions == null) return newPermissions;
@@ -428,6 +436,10 @@ public final class $subclass$formalTypes extends $origClass$actualTypes {
             @Override public Boolean call(final Session session) {
                 android.util.Log.d("RetroFacebook", "requested new permissions, state: " + session.getState());
                 return SessionState.OPENED_TOKEN_UPDATED.equals(session.getState());
+            }
+        }).filter(new Func1<Session, Boolean>() {
+            @Override public Boolean call(final Session session) {
+                return isActivePermissions(newPermissions);
             }
         });
     }
