@@ -192,9 +192,12 @@ public class AutoJsonProcessor extends AbstractProcessor {
     private final String identifier;
     private final ExecutableElement method;
     private final String type;
+    private final String simpleName;
+    private final String packageName;
     private final ImmutableList<String> annotations;
     private final List<String> annotatedNames;
     private final TypeSimplifier typeSimplifier;
+    private final ProcessingEnvironment processingEnv;
 
     Property(
         String name,
@@ -202,21 +205,34 @@ public class AutoJsonProcessor extends AbstractProcessor {
         ExecutableElement method,
         String type,
         TypeSimplifier typeSimplifier,
-        List<String> annotatedNames
+        List<String> annotatedNames,
+        ProcessingEnvironment processingEnv
         ) {
       this.name = name;
       this.key = name;
       this.identifier = identifier;
       this.method = method;
       this.type = type;
+
+      int index = type.lastIndexOf('.');
+      if (index != -1) {
+        this.simpleName = type.substring(index + 1, type.length());
+        this.packageName = type.substring(0, index);
+      } else {
+        this.simpleName = type;
+        this.packageName = "";
+      }
+
       this.annotatedNames = annotatedNames;
       this.typeSimplifier = typeSimplifier;
+      this.processingEnv = processingEnv;
       this.annotations = buildAnnotations(typeSimplifier);
     }
 
     private ImmutableList<String> buildAnnotations(TypeSimplifier typeSimplifier) {
-      ImmutableList.Builder<String> builder = ImmutableList.builder();
+      Types typeUtils = processingEnv.getTypeUtils();
 
+      ImmutableList.Builder<String> builder = ImmutableList.builder();
       for (AnnotationMirror annotationMirror : method.getAnnotationMirrors()) {
         TypeElement annotationElement =
             (TypeElement) annotationMirror.getAnnotationType().asElement();
@@ -227,21 +243,28 @@ public class AutoJsonProcessor extends AbstractProcessor {
         }
 
         // annoatioan: Auto.Field -> JsonField
-        if (annotationElement.getQualifiedName().toString().endsWith("auto.json.AutoJson.Field")) { // FIXME hardcode
-        //if (annotationElement.getQualifiedName().toString().endsWith(AutoJson.Field.class.getName())) {
+        if (isAutoJsonField(processingEnv, annotationMirror)) {
           //TypeMirror jsonField = getTypeMirror(JsonField.class);
           AnnotationOutput annotationOutput = new AnnotationOutput(typeSimplifier);
           //String annotation = annotationOutput.sourceFormForAnnotation(annotationMirror, "com.bluelinelabs.logansquare.annotation.JsonField");
           String annotation = annotationOutput.sourceFormForAnnotation(annotationMirror);
-          String args[] = type.split(",");
-          if (args.length > 0) {
-              // List<Post> -> Post
-              String arg = args[0].replaceAll("[^<]*<", "").replace(" ", "").replace("<", "").replace(">", "");
-              if (annotatedNames.contains("retrofacebook." + arg)) { // FIXME hardcode
-                  //autoType = autoType.replace(arg, "AutoJson_" + arg); // List<Post> -> List<AutoJson_Post>
-                  annotation = annotation + "(" + "typeConverter" + " = " + arg + "Converter.class" + ")"; // FIXME hardcode
+
+          TypeMirror returnType = method.getReturnType();
+          if (TypeKind.DECLARED.equals(returnType.getKind())) {
+            if (isAutoJson((TypeElement) typeUtils.asElement(returnType))) {
+              annotation = annotation + "(" + "typeConverter" + " = " +
+                  toClassName(returnType.toString()) + "Converter.class" + ")";
+            } else {
+              for (TypeMirror genericType : ((DeclaredType) returnType).getTypeArguments()) {
+                if (isAutoJson((TypeElement) typeUtils.asElement(genericType))) {
+                  annotation = annotation + "(" + "typeConverter" + " = " +
+                      toClassName(genericType.toString()) + "Converter.class" + ")";
+                  break;
+                }
               }
+            }
           }
+
           annotation = annotation.replace("auto.json.AutoJson.Field", "com.bluelinelabs.logansquare.annotation.JsonField");
           annotation = annotation.replace(")(", ", ");
           builder.add(annotation);
@@ -303,6 +326,14 @@ public class AutoJsonProcessor extends AbstractProcessor {
 
     public String getType() {
       return type;
+    }
+
+    public String getSimpleName() {
+      return simpleName;
+    }
+
+    public String getPackageName() {
+      return packageName;
     }
 
     public TypeKind getKind() {
@@ -525,23 +556,30 @@ public class AutoJsonProcessor extends AbstractProcessor {
     List<Property> props = new ArrayList<Property>();
     Map<String, Property> jprops = new HashMap<>();
     for (ExecutableElement method : propertyMethods) {
-      TypeElement typeElement = (TypeElement) typeUtils.asElement(method.getReturnType());
       String propertyType = typeSimplifier.simplify(method.getReturnType());
       String propertyName = methodToPropertyName.get(method);
       String identifier = methodToIdentifier.get(method);
 
-      String autoType = propertyType;
-      String args[] = propertyType.split(",");
-      if (args.length > 0) {
-          // List<Post> -> Post
-          String arg = args[0].replaceAll("[^<]*<", "").replace(" ", "").replace("<", "").replace(">", ""); // FIXME hardcode
-          if (annotatedNames.contains("retrofacebook." + arg)) {
-              //autoType = autoType.replace(arg, "AutoJson_" + arg); // List<Post> -> List<AutoJson_Post>
-              jprops.put(arg, new Property(propertyName, identifier, method, arg, typeSimplifier, annotatedNames));
+      TypeMirror returnType = method.getReturnType();
+      if (TypeKind.DECLARED.equals(returnType.getKind())) {
+        if (isAutoJson((TypeElement) typeUtils.asElement(returnType))) {
+          String name = returnType.toString();
+          jprops.put(name, new Property(toClassName(name), identifier, method, name,
+              typeSimplifier, annotatedNames, processingEnv));
+        } else {
+          for (TypeMirror genericType : ((DeclaredType) returnType).getTypeArguments()) {
+            if (isAutoJson((TypeElement) typeUtils.asElement(genericType))) {
+              String name = genericType.toString();
+              jprops.put(name, new Property(toClassName(name), identifier, method, name,
+                  typeSimplifier, annotatedNames, processingEnv));
+              break;
+            }
           }
+        }
       }
 
-      props.add(new Property(propertyName, identifier, method, propertyType, typeSimplifier, annotatedNames));
+      props.add(new Property(propertyName, identifier, method, propertyType, typeSimplifier,
+          annotatedNames, processingEnv));
     }
     // If we are running from Eclipse, undo the work of its compiler which sorts methods.
     eclipseHack().reorderProperties(props);
@@ -780,6 +818,24 @@ public class AutoJsonProcessor extends AbstractProcessor {
     }
   }
 
+  private static boolean isAutoJson(TypeElement type) {
+    return type.getAnnotation(AutoJson.class) != null;
+  }
+
+  private static boolean isAutoJsonField(TypeElement type) {
+    return type.getAnnotation(AutoJson.Field.class) != null;
+  }
+
+  private boolean isAutoJsonField(AnnotationMirror annotation) {
+    return isAutoJsonField(processingEnv, annotation);
+  }
+
+  private static boolean isAutoJsonField(ProcessingEnvironment processingEnv, AnnotationMirror annotation) {
+    TypeMirror autoJsonField = processingEnv.getElementUtils().getTypeElement("auto.json.AutoJson.Field").asType();
+    TypeMirror field = annotation.getAnnotationType();
+    return processingEnv.getTypeUtils().isSameType(field, autoJsonField);
+  }
+
   private boolean implementsAnnotation(TypeElement type) {
     Types typeUtils = processingEnv.getTypeUtils();
     return typeUtils.isAssignable(type.asType(), getTypeMirror(Annotation.class));
@@ -808,6 +864,15 @@ public class AutoJsonProcessor extends AbstractProcessor {
       }
     }
     return "";
+  }
+
+  private static String toClassName(String type) {
+    String[] ss = type.split("\\.");
+    String className = "";
+    for (String s : ss) {
+      className += s.substring(0, 1).toUpperCase() + s.substring(1);
+    }
+    return className;
   }
 
   private TypeMirror getTypeMirror(Class<?> c) {
