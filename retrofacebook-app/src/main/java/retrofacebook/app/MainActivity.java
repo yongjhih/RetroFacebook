@@ -117,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
         Adapter adapter = new Adapter(getSupportFragmentManager());
         adapter.fragments.add(FragmentPage.create().title("Photos").fragment(() -> {
             return CardsFragment.create()
-                .items(facebook.getPhotos().take(32)
+                .items(facebook.getUploadedPhotos().take(32)
                     .doOnNext(photo -> {
                         android.util.Log.d("RetroFacebook", "user: " + photo.from());
                         android.util.Log.d("RetroFacebook", "photo.caption: " + photo.caption());

@@ -65,6 +65,10 @@ public abstract class Facebook {
     @RetroFacebook.GET(value = "/{user-id}/photos?type=uploaded", permissions = "user_photos")
     public abstract Observable<Photo> getUploadedPhotos(@RetroFacebook.Path("user-id") String userId);
 
+    public Observable<Photo> getUploadedPhotos() {
+        return getUploadedPhotos("me");
+    }
+
     @RetroFacebook.GET("/search?type=topic&fields=id,name,page"/* permissions = ? */)
     public abstract Observable<Page> searchTopic(@RetroFacebook.Query("q") String query);
 
