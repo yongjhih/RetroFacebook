@@ -27,7 +27,7 @@ import com.fasterxml.jackson.core.*;
 
 ${gwtCompatibleAnnotation}
 @JsonObject
-final class $subclass$formalTypes extends $origClass$actualTypes {
+final public class $subclass$formalTypes extends $origClass$actualTypes {
 
 ## Fields
 
@@ -395,17 +395,17 @@ final class $subclass$formalTypes extends $origClass$actualTypes {
 
 #set( $D = '$' )
 #foreach ($j in $jprops)
-    public static class ${j.type}Converter implements TypeConverter<${j.type}> {
+    public static class ${j.name}Converter implements TypeConverter<${j.type}> {
         @Override
         public ${j.type} parse(JsonParser jsonParser) throws IOException {
-            return AutoJson_${j.type}${D}${D}JsonObjectMapper._parse(jsonParser);
+            return ${j.packageName}.AutoJson_${j.simpleName}${D}${D}JsonObjectMapper._parse(jsonParser);
         }
 
         @Override
         public void serialize(${j.type} object, String fieldName, boolean writeFieldNameForObject, JsonGenerator jsonGenerator) throws IOException {
             //if (writeFieldNameForObject) { }
             jsonGenerator.writeFieldName(fieldName);
-            AutoJson_${j.type}${D}${D}JsonObjectMapper._serialize((AutoJson_${j.type}) object, jsonGenerator, true);
+            ${j.packageName}.AutoJson_${j.simpleName}${D}${D}JsonObjectMapper._serialize((${j.packageName}.AutoJson_${j.simpleName}) object, jsonGenerator, true);
         }
     }
 #end
