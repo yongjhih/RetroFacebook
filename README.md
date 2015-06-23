@@ -167,12 +167,12 @@ Auto login if needed while any API calling.
 
 ## Auto Permission
 
-auto request needed permission while api calling:
+Auto request needed permission while API calling:
 
 ```java
 @RetroFacebook
 abstract class Facebook {
-    @POST(value = "/me/feed", permissions = "publish_actions") // <- request needed permissions while `publish(post)`.
+    @POST(value = "/me/feed", permissions = "publish_actions") // <- request `publish_actions` permission while `publish(post)`.
     abstract Observable<Struct> publish(@Body Post post);
 }
 ```
