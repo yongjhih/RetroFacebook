@@ -37,7 +37,7 @@ import java.util.Map;
  */
 @RetroFacebook
 public abstract class Facebook {
-    @RetroFacebook.GET("/{post-id}")
+    @RetroFacebook.GET(value = "/{post-id}", permissions = "user_posts")
     public abstract Observable<Post> getPost(@RetroFacebook.Path("post-id") String postId);
 
     // TODO @RetroFacebook.GET("/{userId}/photos?type=uploaded")
@@ -204,11 +204,11 @@ public abstract class Facebook {
     @RetroFacebook.DELETE(value = "/{comment-id}")
     public abstract Observable<Struct> deleteComment(@RetroFacebook.Path("comment-id") String id);
 
-    public static Facebook create() {
-        return new RetroFacebook_Facebook();
-    }
-
     // LifeCycle management
+
+    public static Facebook create(Activity activity) {
+        return new RetroFacebook_Facebook(activity).initialize(activity);
+    }
 
     CallbackManager callbackManager;
     Activity activity;
@@ -222,16 +222,13 @@ public abstract class Facebook {
         return this;
     }
 
-    public static Facebook create(Activity activity) {
-        return create().initialize(activity);
-    }
-
     public Observable<LoginResult> logIn() {
         return logInWithReadPermissions();
     }
 
     public Observable<LoginResult> logInWithReadPermissions() {
-        return logInWithReadPermissions(Arrays.asList("public_profile", "user_friends", "user_photos", "user_posts"));
+        //return logInWithReadPermissions(Arrays.asList("public_profile", "user_friends", "user_photos", "user_posts"));
+        return logInWithReadPermissions(Arrays.asList("public_profile"));
     }
 
     public Observable<LoginResult> logInWithPublishPermissions() {

@@ -18,7 +18,11 @@ import $i;
 #end
 
 import org.json.JSONObject;
+import org.json.JSONException;
+
 import com.facebook.*;
+import com.facebook.login.*;
+
 import rx.Observable;
 import rx.Subscriber;
 import rx.functions.*;
@@ -27,14 +31,36 @@ import com.bluelinelabs.logansquare.LoganSquare;
 
 import android.os.Bundle;
 import android.util.Log;
-import org.json.JSONObject;
-import org.json.JSONException;
 
 import java.util.Map;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Set;
+import java.util.HashSet;
+import android.app.Activity;
 
 ${gwtCompatibleAnnotation}
 public final class $subclass$formalTypes extends $origClass$actualTypes {
+
+## Constructor
+
+  public $subclass() {
+    super();
+  }
+
+  public $subclass(Activity activity) {
+    this();
+    this.activity = activity;
+
+    FacebookSdk.sdkInitialize(activity.getApplicationContext());
+    callbackManager = CallbackManager.Factory.create();
+  }
+
+  Activity activity;
+  CallbackManager callbackManager;
 
 ## Property getters
 
@@ -42,13 +68,32 @@ public final class $subclass$formalTypes extends $origClass$actualTypes {
 
     @Override
     ${p.access}${p.type} ${p.getter}(${p.args}) {
+
+#if ($p.permissions.isEmpty())
+
+        List<String> permissions = Collections.emptyList();
+
+#else
+
+        List<String> permissions = Arrays.asList(
+#foreach ($permission in $p.permissions)
+
+            "$permission" #if ($foreach.hasNext) , #end
+#end      );
+#end
+
 #if ($p.callback)
+
         Observable<$p.callbackType> obs =
+
 #else
         ${p.type} obs =
+
 #end
-        Observable.just(this).map(new Func1<$subclass$formalTypes, Bundle>() {
-            @Override public Bundle call($subclass$formalTypes t) {
+
+        logInWithPermissions(permissions).map(new Func1<LoginResult, Bundle>() {
+            @Override public Bundle call(LoginResult s) {
+            android.util.Log.d("RetroFacebook", "bundle");
 #set ($map = ${p.queries})
 #set ($maps = ${p.queryMaps})
 #set ($bundles = ${p.queryBundles})
@@ -63,7 +108,7 @@ public final class $subclass$formalTypes extends $origClass$actualTypes {
 #end
 #foreach ($queryMap in $maps)
 
-                addMapToBubdle(bundle, ${queryMap});
+                addMapToBundle(bundle, ${queryMap});
 
 #end
 #foreach ($queryBundle in $bundles)
@@ -88,6 +133,7 @@ public final class $subclass$formalTypes extends $origClass$actualTypes {
 
 #if ($p.get)
 
+                android.util.Log.d("RetroFacebook", "graphRequest GET");
                 GraphRequest request = GraphRequest.newGraphPathRequest(
                         AccessToken.getCurrentAccessToken(), ${p.path}, null);
 
@@ -207,9 +253,197 @@ public final class $subclass$formalTypes extends $origClass$actualTypes {
         }
     }
 
-    private static void addMapToBubdle(Bundle bundle, Map<String, String> map) {
+    private static void addMapToBundle(Bundle bundle, Map<String, String> map) {
         for (Map.Entry<String, String> entry : map.entrySet()) {
             bundle.putString(entry.getKey(), entry.getValue());
         }
+    }
+
+    public static final String PUBLISH_PERMISSION_PREFIX = "publish";
+    public static final String MANAGE_PERMISSION_PREFIX = "manage";
+
+    @SuppressWarnings("serial")
+    private static final Set<String> OTHER_PUBLISH_PERMISSIONS = new HashSet<String>() {{
+        add("ads_management");
+        add("create_event");
+        add("rsvp_event");
+    }};
+
+    public static boolean hasPublishPermission() {
+        return hasPublishPermission(AccessToken.getCurrentAccessToken() != null ? AccessToken.getCurrentAccessToken().getPermissions() : Collections.<String>emptyList());
+    }
+
+    public static boolean hasPublishPermission(Collection<String> permissions) {
+        for (String permission : permissions) {
+            if (isPublishPermission(permission)) return true;
+        }
+
+        return false;
+    }
+
+    public static boolean isPublishPermission(String permission) {
+        return (permission.startsWith(PUBLISH_PERMISSION_PREFIX) ||
+             permission.startsWith(MANAGE_PERMISSION_PREFIX) ||
+             OTHER_PUBLISH_PERMISSIONS.contains(permission));
+    }
+
+    public static boolean hasReadPermission() {
+        if (AccessToken.getCurrentAccessToken() == null) return false;
+        if (AccessToken.getCurrentAccessToken().getPermissions() == null) return false;
+        if (AccessToken.getCurrentAccessToken().getPermissions().isEmpty()) return false;
+
+        return !hasPublishPermission();
+    }
+
+    public static boolean hasReadPermission(Collection<String> permissions) {
+        if (AccessToken.getCurrentAccessToken() == null) return false;
+        if (AccessToken.getCurrentAccessToken().getPermissions() == null) return false;
+        if (AccessToken.getCurrentAccessToken().getPermissions().isEmpty()) return false;
+
+        return !hasPublishPermission(permissions);
+    }
+
+    public static boolean isReadPermission(String permission) {
+        return !isPublishPermission(permission);
+    }
+
+    public static List<String> filterActivePermissions(Collection<String> permissions) {
+        List<String> newPermissions = new ArrayList<String>(permissions);
+        if (newPermissions == null) return newPermissions;
+        if (newPermissions.isEmpty()) return newPermissions;
+        if (AccessToken.getCurrentAccessToken() == null) return newPermissions;
+
+        List<String> activePermissions = new ArrayList<String>(AccessToken.getCurrentAccessToken().getPermissions());
+        newPermissions.removeAll(activePermissions);
+        for (String permission : newPermissions) {
+            android.util.Log.d("RetroFacebook", "new: " +  permission);
+        }
+        return newPermissions;
+    }
+
+    public static List<String> filterReadPermissions(final Collection<String> permissions) {
+        List<String> readPermissions = new ArrayList<String>(permissions);
+        for (String permission : readPermissions) {
+            android.util.Log.d("RetroFacebook", "before read: " + permission);
+            if (!isReadPermission(permission)) readPermissions.remove(permission);
+        }
+        for (String permission : readPermissions) {
+            android.util.Log.d("RetroFacebook", "after read: " + permission);
+        }
+        return readPermissions;
+    }
+
+    public static List<String> filterPublishPermissions(final Collection<String> permissions) {
+        List<String> publishPermissions = new ArrayList<String>(permissions);
+        for (String permission : publishPermissions) {
+            android.util.Log.d("RetroFacebook", "before pub: " + permission);
+            if (!isPublishPermission(permission)) publishPermissions.remove(permission);
+        }
+
+        for (String permission : publishPermissions) {
+            android.util.Log.d("RetroFacebook", "after pub: " + permission);
+        }
+        return publishPermissions;
+    }
+
+    public Observable<LoginResult> logInWithPermissions(final Collection<String> permissions) {
+        for (String permission : permissions) {
+            android.util.Log.d("RetroFacebook", "request: " + permission);
+        }
+        return logInWithReadPermissions(permissions)
+            .flatMap(new Func1<LoginResult, Observable<LoginResult>>() {
+                @Override public Observable<LoginResult> call(LoginResult login) {
+                    return logInWithPublishPermissions(permissions);
+                }
+            });
+    }
+
+    /** @param non-filtered permissions */
+    public Observable<LoginResult> logInWithReadPermissions(final Collection<String> permissions) {
+        return Observable.from(permissions).filter(new Func1<String, Boolean>() {
+                @Override public Boolean call(final String permission) {
+                    return isReadPermission(permission);
+                }
+            }).toList().map(new Func1<List<String>, List<String>>() {
+                @Override public List<String> call(final List<String> readPermissions) {
+                    return filterActivePermissions(readPermissions);
+                }
+            }).flatMap(new Func1<List<String>, Observable<LoginResult>>() {
+                @Override public Observable<LoginResult> call(final List<String> readPermissions) {
+                    return logInWithPermissions(readPermissions, true);
+                }
+            });
+    }
+
+    /** @param non-filtered permissions */
+    public Observable<LoginResult> logInWithPublishPermissions(final Collection<String> permissions) {
+        if (AccessToken.getCurrentAccessToken() == null) {
+            return logInWithReadPermissions(Arrays.asList("public_profile"))
+                .flatMap(new Func1<LoginResult, Observable<LoginResult>>() {
+                    @Override public Observable<LoginResult> call(LoginResult login) {
+                        return logInWithPublishPermissions(permissions);
+                    }
+                });
+        }
+        return Observable.from(permissions).filter(new Func1<String, Boolean>() {
+                @Override public Boolean call(final String permission) {
+                    return isPublishPermission(permission);
+                }
+            }).toList().map(new Func1<List<String>, List<String>>() {
+                @Override public List<String> call(final List<String> publishPermissions) {
+                    return filterActivePermissions(publishPermissions);
+                }
+            }).flatMap(new Func1<List<String>, Observable<LoginResult>>() {
+                @Override public Observable<LoginResult> call(final List<String> publishPermissions) {
+                    return logInWithPermissions(publishPermissions, false);
+                }
+            });
+    }
+
+    /** @param filtered permissions */
+    public Observable<LoginResult> logInWithPermissions(final Collection<String> permissions, final boolean readable) {
+        for (String permission : permissions) {
+            android.util.Log.d("RetroFacebook", "request new: " + permission);
+        }
+        return Observable.create(new Observable.OnSubscribe<LoginResult>() {
+            @Override public void call(final Subscriber<? super LoginResult> sub) {
+                if (permissions == null || permissions.isEmpty()) {
+                    if (AccessToken.getCurrentAccessToken() != null) {
+                        android.util.Log.d("RetroFacebook", "no new permissions");
+                        sub.onNext(new LoginResult(AccessToken.getCurrentAccessToken(), AccessToken.getCurrentAccessToken().getPermissions(), AccessToken.getCurrentAccessToken().getDeclinedPermissions()));
+                        sub.onCompleted();
+                        return;
+                    } else {
+                        android.util.Log.d("RetroFacebook", "logIn: null");
+                        sub.onNext(null);
+                        sub.onCompleted();
+                        return;
+                    }
+                }
+                LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+                    @Override
+                    public void onSuccess(LoginResult loginResult) {
+                        android.util.Log.d("RetroFacebook", "onSuccess");
+                        sub.onNext(loginResult);
+                        sub.onCompleted();
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        android.util.Log.d("RetroFacebook", "onCancel");
+                        sub.onCompleted();
+                    }
+
+                    @Override
+                    public void onError(FacebookException error) {
+                        android.util.Log.d("RetroFacebook", "error");
+                        sub.onError(error);
+                    }
+                });
+
+                if (readable) LoginManager.getInstance().logInWithReadPermissions(activity, permissions);
+                else LoginManager.getInstance().logInWithPublishPermissions(activity, permissions);
+            }
+        });
     }
 }

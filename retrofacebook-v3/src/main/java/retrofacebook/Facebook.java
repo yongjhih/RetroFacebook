@@ -251,7 +251,7 @@ public abstract class Facebook {
 
     public Observable<Session> logInWithReadPermissions() {
         //return logInWithReadPermissions(Arrays.asList("public_profile", "user_friends", "user_photos", "user_posts"));
-        return logInWithReadPermissions(Arrays.asList("public_profile"));
+        return logInWithReadPermissions(Arrays.asList("public_profile")); // Try auto requestNewPermisions
     }
 
     public Observable<Session> logInWithPublishPermissions() {

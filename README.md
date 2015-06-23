@@ -47,7 +47,7 @@ GraphRequest request = GraphRequest.newGraphPathRequest(AccessToken.getCurrentAc
         // LoganSquare
         // Posts posts = LoganSquare.parse(response.getJSONObject().toString(), Posts.class);
         // or manual
-        
+
         // hasNext?  request = response.getRequestForPagedResults(GraphResponse.PagingDirection.NEXT); blah, blah
     }
 });
