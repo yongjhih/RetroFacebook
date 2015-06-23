@@ -161,6 +161,17 @@ abstract class Facebook {
 }
 ```
 
+Permission, auto request needed permission while api calling:
+
+```java
+@RetroFacebook
+abstract class Facebook {
+    @POST(value = "/me/feed", permissions = "publish_actions") // <- request needed permissions while `publish(post)`.
+    abstract Observable<Struct> publish(@Body Post post);
+}
+```
+
+
 Easy to add API:
 
 [retrofacebook/src/main/java/retrofacebook/Facebook.java](retrofacebook/src/main/java/retrofacebook/Facebook.java):
