@@ -200,7 +200,7 @@ public abstract class Post {
 }
 ```
 
-## Features
+## Ready API
 
 * Login/Logout
  - logIn()
