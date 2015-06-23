@@ -328,7 +328,7 @@ public class AutoJsonProcessor extends AbstractProcessor {
       return (TypeElement) method.getEnclosingElement();
     }
 
-    TypeMirror getTypeMirror() {
+    TypeMirror getReturnType() {
       return method.getReturnType();
     }
 

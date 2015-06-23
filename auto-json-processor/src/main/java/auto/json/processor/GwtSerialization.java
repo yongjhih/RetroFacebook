@@ -106,7 +106,7 @@ class GwtSerialization {
 
     Property(AutoJsonProcessor.Property property) {
       this.property = property;
-      this.isCastingUnchecked = TypeSimplifier.isCastingUnchecked(property.getTypeMirror());
+      this.isCastingUnchecked = TypeSimplifier.isCastingUnchecked(property.getReturnType());
     }
 
     @Override public String toString() {
