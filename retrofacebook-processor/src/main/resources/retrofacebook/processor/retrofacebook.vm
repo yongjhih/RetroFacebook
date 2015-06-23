@@ -71,11 +71,11 @@ public final class $subclass$formalTypes extends $origClass$actualTypes {
 
 #if ($p.permissions.isEmpty())
 
-        List<String> permissions = Collections.emptyList();
+        final List<String> permissions = Collections.emptyList();
 
 #else
 
-        List<String> permissions = Arrays.asList(
+        final List<String> permissions = Arrays.asList(
 #foreach ($permission in $p.permissions)
 
             "$permission" #if ($foreach.hasNext) , #end
@@ -91,7 +91,11 @@ public final class $subclass$formalTypes extends $origClass$actualTypes {
 
 #end
 
-        logInWithPermissions(permissions).map(new Func1<LoginResult, Bundle>() {
+        Observable.defer(new Func0<Observable<LoginResult>>() {
+            @Override public Observable<LoginResult> call() {
+                return logInWithPermissions(permissions);
+            }
+        }).map(new Func1<LoginResult, Bundle>() {
             @Override public Bundle call(LoginResult s) {
             android.util.Log.d("RetroFacebook", "bundle");
 #set ($map = ${p.queries})
