@@ -362,7 +362,6 @@ public final class $subclass$formalTypes extends $origClass$actualTypes {
             });
     }
 
-    /** @param non-filtered permissions */
     public Observable<LoginResult> logInWithReadPermissions(final Collection<String> permissions) {
         return Observable.from(permissions).filter(new Func1<String, Boolean>() {
                 @Override public Boolean call(final String permission) {
@@ -379,7 +378,6 @@ public final class $subclass$formalTypes extends $origClass$actualTypes {
             });
     }
 
-    /** @param non-filtered permissions */
     public Observable<LoginResult> logInWithPublishPermissions(final Collection<String> permissions) {
         if (AccessToken.getCurrentAccessToken() == null) {
             return logInWithReadPermissions(Arrays.asList("public_profile"))
@@ -404,7 +402,6 @@ public final class $subclass$formalTypes extends $origClass$actualTypes {
             });
     }
 
-    /** @param filtered permissions */
     public Observable<LoginResult> logInWithPermissions(final Collection<String> permissions, final boolean readable) {
         for (String permission : permissions) {
             android.util.Log.d("RetroFacebook", "request new: " + permission);

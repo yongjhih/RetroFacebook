@@ -63,11 +63,11 @@ public final class $subclass$formalTypes extends $origClass$actualTypes {
 
 #if ($p.permissions.isEmpty())
 
-        List<String> permissions = Collections.emptyList();
+        final List<String> permissions = Collections.emptyList();
 
 #else
 
-        List<String> permissions = Arrays.asList(
+        final List<String> permissions = Arrays.asList(
 #foreach ($permission in $p.permissions)
 
             "$permission" #if ($foreach.hasNext) , #end
@@ -83,7 +83,11 @@ public final class $subclass$formalTypes extends $origClass$actualTypes {
 
 #end
 
-        requestNewPermissions(permissions).map(new Func1<Session, Bundle>() {
+        Observable.defer(new Func0<Observable<Session>>() {
+            @Override public Observable<Session> call() {
+                return _requestNewPermissions(permissions);
+            }
+        }).map(new Func1<Session, Bundle>() {
             @Override public Bundle call(Session s) {
 #set ($map = ${p.queries})
 #set ($maps = ${p.queryMaps})
@@ -300,31 +304,111 @@ public final class $subclass$formalTypes extends $origClass$actualTypes {
         return !isPublishPermission(permission);
     }
 
-    public static List<String> filter(Collection<String> permissions) {
+    public static List<String> filterActivePermissions(Collection<String> permissions) {
         List<String> newPermissions = new ArrayList<String>(permissions);
         if (newPermissions == null) return newPermissions;
         if (newPermissions.isEmpty()) return newPermissions;
+        if (Session.getActiveSession() == null) return newPermissions;
 
         List<String> activePermissions = Session.getActiveSession().getPermissions();
         newPermissions.removeAll(activePermissions);
         return newPermissions;
     }
 
-    public Observable<Session> requestNewPermissions(final Collection<String> permissions) {
+    public static List<String> filterReadPermissions(final Collection<String> permissions) {
+        List<String> readPermissions = new ArrayList<String>(permissions);
+        for (String permission : readPermissions) {
+            android.util.Log.d("RetroFacebook", "before read: " + permission);
+            if (!isReadPermission(permission)) readPermissions.remove(permission);
+        }
+        for (String permission : readPermissions) {
+            android.util.Log.d("RetroFacebook", "after read: " + permission);
+        }
+        return readPermissions;
+    }
+
+    public static List<String> filterPublishPermissions(final Collection<String> permissions) {
+        List<String> publishPermissions = new ArrayList<String>(permissions);
+        for (String permission : publishPermissions) {
+            android.util.Log.d("RetroFacebook", "before pub: " + permission);
+            if (!isPublishPermission(permission)) publishPermissions.remove(permission);
+        }
+
+        for (String permission : publishPermissions) {
+            android.util.Log.d("RetroFacebook", "after pub: " + permission);
+        }
+        return publishPermissions;
+    }
+
+    public Observable<Session> _requestNewPermissions(final Collection<String> permissions) {
+        for (String permission : permissions) {
+            android.util.Log.d("RetroFacebook", "requestNew: " + permission);
+        }
+        return _requestNewReadPermissions(permissions)
+            .flatMap(new Func1<Session, Observable<Session>>() {
+                @Override public Observable<Session> call(Session login) {
+                    return _requestNewPublishPermissions(permissions);
+                }
+            });
+    }
+
+    private Observable<Session> _requestNewReadPermissions(final Collection<String> permissions) {
+        return Observable.from(permissions).filter(new Func1<String, Boolean>() {
+                @Override public Boolean call(final String permission) {
+                    return isReadPermission(permission);
+                }
+            }).toList().map(new Func1<List<String>, List<String>>() {
+                @Override public List<String> call(final List<String> readPermissions) {
+                    return filterActivePermissions(readPermissions);
+                }
+            }).flatMap(new Func1<List<String>, Observable<Session>>() {
+                @Override public Observable<Session> call(final List<String> readPermissions) {
+                    return _requestNewPermissions(readPermissions, true);
+                }
+            });
+    }
+
+    private Observable<Session> _requestNewPublishPermissions(final Collection<String> permissions) {
+        return Observable.from(permissions).filter(new Func1<String, Boolean>() {
+                @Override public Boolean call(final String permission) {
+                    return isPublishPermission(permission);
+                }
+            }).toList().map(new Func1<List<String>, List<String>>() {
+                @Override public List<String> call(final List<String> publishPermissions) {
+                    return filterActivePermissions(publishPermissions);
+                }
+            }).flatMap(new Func1<List<String>, Observable<Session>>() {
+                @Override public Observable<Session> call(final List<String> publishPermissions) {
+                    return _requestNewPermissions(publishPermissions, false);
+                }
+            });
+    }
+
+    public Observable<Session> _requestNewPermissions(final Collection<String> permissions, final boolean readable) {
+        if (readable) {
+            if (Session.getActiveSession() == null) {
+                return logInWithReadPermissions(permissions);
+            }
+        } else {
+            if (Session.getActiveSession() == null) {
+                return logInWithReadPermissions(Arrays.asList("public_profile"))
+                    .flatMap(new Func1<Session, Observable<Session>>() {
+                        @Override public Observable<Session> call(Session login) {
+                            return _requestNewPermissions(permissions, readable);
+                        }
+                    });
+            }
+        }
+        if (permissions == null || permissions.isEmpty()) {
+            return Observable.just(Session.getActiveSession());
+        }
+        final List<String> newPermissions = filterActivePermissions(permissions);
+        if (newPermissions == null || newPermissions.isEmpty()) {
+            return Observable.just(Session.getActiveSession());
+        }
         return Observable.create(new Observable.OnSubscribe<Session>() {
             @Override
             public void call(final Subscriber<? super Session> sub) {
-                if (permissions == null || permissions.isEmpty()) {
-                    sub.onNext(null);
-                    sub.onCompleted();
-                    return;
-                }
-                List<String> newPermissions = filter(permissions);
-                if (newPermissions == null || newPermissions.isEmpty()) {
-                    sub.onNext(null);
-                    sub.onCompleted();
-                    return;
-                }
                 Session activeSession = Session.getActiveSession();
                 activeSession.addCallback(new Session.StatusCallback() {
                     @Override
@@ -332,14 +416,66 @@ public final class $subclass$formalTypes extends $origClass$actualTypes {
                         if (exception != null) {
                             sub.onError(exception);
                         } else {
-                            if (SessionState.OPENED_TOKEN_UPDATED.equals(session.getState())) {
-                                sub.onNext(session);
-                            }
+                            sub.onNext(session);
                             sub.onCompleted();
                         }
                     }
                 });
-                activeSession.requestNewPublishPermissions(new Session.NewPermissionsRequest(activity, newPermissions));
+                if (readable) activeSession.requestNewReadPermissions(new Session.NewPermissionsRequest(activity, newPermissions));
+                else activeSession.requestNewPublishPermissions(new Session.NewPermissionsRequest(activity, newPermissions));
+            }
+        }).filter(new Func1<Session, Boolean>() {
+            @Override public Boolean call(final Session session) {
+                android.util.Log.d("RetroFacebook", "requested new permissions, state: " + session.getState());
+                return SessionState.OPENED_TOKEN_UPDATED.equals(session.getState());
+            }
+        });
+    }
+
+    public Observable<Session> logInWithReadPermissions(final Collection<String> permissions) {
+        return Observable.create(new Observable.OnSubscribe<Session>() {
+            @Override
+            public void call(final Subscriber<? super Session> sub) {
+                Session activeSession = Session.getActiveSession();
+
+                if (activeSession == null || activeSession.isClosed()) {
+                    activeSession = new Session.Builder(activity.getApplicationContext()).setApplicationId(getFacebookAppId(activity)).build();
+                    Session.setActiveSession(activeSession);
+                }
+
+                if (SessionState.OPENED.equals(activeSession.getState()) || activeSession.isOpened()) {
+                    sub.onNext(activeSession);
+                    sub.onCompleted();
+                    return;
+                }
+
+                Session.OpenRequest request = new Session.OpenRequest(activity);
+                if (request != null) {
+                    //request.setDefaultAudience(x);
+                    //request.setLoginBehavior(x);
+
+                    request.setPermissions(new ArrayList(permissions));
+
+                    //sessionStatusCallback.setAskPublishPermissions(true);
+
+                    activeSession.addCallback(new Session.StatusCallback() {
+                        @Override
+                        public void call(Session session, SessionState state, Exception exception) {
+                            if (exception != null) {
+                                sub.onError(exception);
+                            } else {
+                                sub.onNext(session);
+                                sub.onCompleted();
+                            }
+                        }
+                    });
+
+                    activeSession.openForRead(request);
+                }
+            }
+        }).filter(new Func1<Session, Boolean>() {
+            @Override public Boolean call(final Session session) {
+                return SessionState.OPENED.equals(session.getState()) || session.isOpened();
             }
         });
     }
