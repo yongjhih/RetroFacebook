@@ -161,7 +161,13 @@ abstract class Facebook {
 }
 ```
 
-Permission, auto request needed permission while api calling:
+## Auto Login
+
+Auto login if needed while any API calling.
+
+## Auto Permission
+
+auto request needed permission while api calling:
 
 ```java
 @RetroFacebook
@@ -170,7 +176,6 @@ abstract class Facebook {
     abstract Observable<Struct> publish(@Body Post post);
 }
 ```
-
 
 Easy to add API:
 
