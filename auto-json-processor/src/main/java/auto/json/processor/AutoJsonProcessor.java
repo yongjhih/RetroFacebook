@@ -611,13 +611,9 @@ public class AutoJsonProcessor extends AbstractProcessor {
     ImmutableSet.Builder<ExecutableElement> methods = ImmutableSet.builder();
     StringBuilder sb = new StringBuilder();
     for (ExecutableElement method : abstractMethods) {
-        try {
-        TypeElement typeElement = (TypeElement) typeUtils.asElement(method.getReturnType());
-        if (typeElement.getQualifiedName().toString().endsWith("Bundle")) { // FIXME hardcode
-            methods.add(method);
-        }
-        } catch (NullPointerException e) {
-        }
+      if (isBundle(method.getReturnType())) {
+        methods.add(method);
+      }
     }
     ImmutableSet<ExecutableElement> builderMethods = methods.build();
     return builderMethods;
@@ -842,6 +838,15 @@ public class AutoJsonProcessor extends AbstractProcessor {
     TypeMirror autoJsonField = processingEnv.getElementUtils().getTypeElement("auto.json.AutoJson.Field").asType();
     TypeMirror field = annotation.getAnnotationType();
     return processingEnv.getTypeUtils().isSameType(field, autoJsonField);
+  }
+
+  private boolean isBundle(TypeMirror type) {
+    return isBundle(processingEnv, type);
+  }
+
+  private static boolean isBundle(ProcessingEnvironment processingEnv, TypeMirror type) {
+    TypeMirror bundleType = processingEnv.getElementUtils().getTypeElement("android.os.Bundle").asType();
+    return processingEnv.getTypeUtils().isSameType(type, bundleType);
   }
 
   private boolean implementsAnnotation(TypeElement type) {
