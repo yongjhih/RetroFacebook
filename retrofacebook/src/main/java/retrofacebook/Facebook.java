@@ -230,7 +230,7 @@ public abstract class Facebook {
      * @see https://developers.facebook.com/docs/graph-api/reference/v2.3/album/
      */
     @RetroFacebook.GET(value = "/{album-id}", permissions = "user_photos")
-    public abstract Observable<Album>getAlbum(@RetroFacebook.Path("album-id") String albumId);
+    public abstract Observable<Album> getAlbum(@RetroFacebook.Path("album-id") String albumId);
 
     @RetroFacebook.GET(value = "/{user-id}/albums", permissions = "user_photos")
     public abstract Observable<Album> getAlbums(@RetroFacebook.Path("user-id") String userId);
