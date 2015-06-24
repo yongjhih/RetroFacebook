@@ -26,10 +26,15 @@ public abstract class User {
     @Nullable
     @AutoJson.Field
     public abstract String name();
+    @Nullable
+    @AutoJson.Field
+    public abstract String relationship();
+
     @AutoJson.Builder
     public abstract static class Builder {
         public abstract Builder id(String id);
         public abstract Builder name(String caption);
+        public abstract Builder relationship(String x);
 
         public abstract User build();
     }

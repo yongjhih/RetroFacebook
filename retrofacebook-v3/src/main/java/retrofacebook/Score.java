@@ -20,48 +20,31 @@ import android.support.annotation.Nullable;
 import android.os.Bundle;
 
 /**
- * <pre>
- * {
- *   "id": "10152728596854xxx",
- *   "can_upload": true,
- *   "count": 2,
- *   "cover_photo": 10152728596979xxx,
- *   "created_time": 2014-12-31T10:39:08+0000,
- *   "from": {
- *     "id": "10152246635994118",
- *     "name": Andrew Chen
- *   },
- *   "link": https://www.facebook.com/album.php?fbid=10152728596854xxx&id=10152246635994xxx&aid=1073741xxx,
- *   "name": 2014/12/31 TICC,
- *   "privacy": custom,
- *   "type": normal,
- *   "updated_time": 2014-12-31T11:14:07+0000
- * }
- * </pre>
- * @see https://developers.facebook.com/docs/graph-api/reference/v2.3/album
+ * @see https://developers.facebook.com/docs/graph-api/reference/v2.3/user/scores
  */
 @AutoJson
-public abstract class Album {
+public abstract class Score {
     @Nullable
     @AutoJson.Field
-    public abstract String id();
+    public abstract User user();
     @Nullable
     @AutoJson.Field
-    public abstract String name();
+    public abstract int score();
     @Nullable
     @AutoJson.Field
-    public abstract User from();
+    public abstract App application();
 
     @AutoJson.Builder
     public abstract static class Builder {
-        public abstract Builder id(String x);
-        public abstract Builder name(String x);
-        public abstract Builder from(User x);
-        public abstract Album build();
+        public abstract Builder user(User x);
+        public abstract Builder score(int x);
+        public abstract Builder application(App x);
+
+        public abstract Score build();
     }
 
     public static Builder builder() {
-        return new AutoJson_Album.Builder();
+        return new AutoJson_Score.Builder();
     }
 
     public abstract Bundle toBundle();

@@ -17,23 +17,23 @@ package retrofacebook;
 
 import auto.json.AutoJson;
 import android.support.annotation.Nullable;
-import android.os.Bundle;
+
+import java.util.List;
 
 @AutoJson
-public abstract class Like {
+public abstract class Accounts {
     @Nullable
     @AutoJson.Field
-    public abstract User user();
+    public abstract List<Account> data();
 
     @AutoJson.Builder
     public abstract static class Builder {
-        public abstract Builder user(User x);
-        public abstract Like build();
+        public abstract Builder data(List<Account> data);
+
+        public abstract Accounts build();
     }
 
     public static Builder builder() {
-        return new AutoJson_Like.Builder();
+        return new AutoJson_Accounts.Builder();
     }
-
-    public abstract Bundle toBundle();
 }

@@ -19,21 +19,30 @@ import auto.json.AutoJson;
 import android.support.annotation.Nullable;
 import android.os.Bundle;
 
+/**
+ * <pre>
+ * {
+ *   "data": {
+ *     "is_silhouette": false,
+ *     "url": https://fbcdn-sphotos-e-a.akamaihd.net/hphotos-ak-xta1/v/t1.0-9/s180x540/10406xxx_10152728596979xxx_221607749089636xxx_n.jpg?oh=ea84e94275abd4d76623d899cb868xxx&oe=56321xxx&__gda__=1441311xxx_d88751c4686d307397be1a44ee21exxx
+ *   }
+ * }
+ * </pre>
+ */
 @AutoJson
-public abstract class Like {
+public abstract class EdgePicture {
     @Nullable
-    @AutoJson.Field
-    public abstract User user();
+    @AutoJson.Field(name = "data")
+    public abstract Picture data();
 
     @AutoJson.Builder
     public abstract static class Builder {
-        public abstract Builder user(User x);
-        public abstract Like build();
+        public abstract Builder data(Picture x);
+
+        public abstract EdgePicture build();
     }
 
     public static Builder builder() {
-        return new AutoJson_Like.Builder();
+        return new AutoJson_EdgePicture.Builder();
     }
-
-    public abstract Bundle toBundle();
 }

@@ -22,46 +22,32 @@ import android.os.Bundle;
 /**
  * <pre>
  * {
- *   "id": "10152728596854xxx",
- *   "can_upload": true,
- *   "count": 2,
- *   "cover_photo": 10152728596979xxx,
- *   "created_time": 2014-12-31T10:39:08+0000,
- *   "from": {
- *     "id": "10152246635994118",
- *     "name": Andrew Chen
- *   },
- *   "link": https://www.facebook.com/album.php?fbid=10152728596854xxx&id=10152246635994xxx&aid=1073741xxx,
- *   "name": 2014/12/31 TICC,
- *   "privacy": custom,
- *   "type": normal,
- *   "updated_time": 2014-12-31T11:14:07+0000
+ *   "data": {
+ *     "is_silhouette": false,
+ *     "url": https://fbcdn-sphotos-e-a.akamaihd.net/hphotos-ak-xta1/v/t1.0-9/s180x540/10406xxx_10152728596979xxx_221607749089636xxx_n.jpg?oh=ea84e94275abd4d76623d899cb868xxx&oe=56321xxx&__gda__=1441311xxx_d88751c4686d307397be1a44ee21exxx
+ *   }
  * }
  * </pre>
- * @see https://developers.facebook.com/docs/graph-api/reference/v2.3/album
  */
 @AutoJson
-public abstract class Album {
+public abstract class Picture {
+    @Nullable
+    @AutoJson.Field(name = "is_silhouette")
+    public abstract boolean isSilhouette();
     @Nullable
     @AutoJson.Field
-    public abstract String id();
-    @Nullable
-    @AutoJson.Field
-    public abstract String name();
-    @Nullable
-    @AutoJson.Field
-    public abstract User from();
+    public abstract String url();
 
     @AutoJson.Builder
     public abstract static class Builder {
-        public abstract Builder id(String x);
-        public abstract Builder name(String x);
-        public abstract Builder from(User x);
-        public abstract Album build();
+        public abstract Builder url(String x);
+        public abstract Builder isSilhouette(boolean x);
+
+        public abstract Picture build();
     }
 
     public static Builder builder() {
-        return new AutoJson_Album.Builder();
+        return new AutoJson_Picture.Builder();
     }
 
     public abstract Bundle toBundle();
