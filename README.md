@@ -215,15 +215,15 @@ public abstract class Post {
  - publish(Comment comment)
  - publish(Like like)
 * Requests/Invite
- - invite()
- - uninvite(Invite invite)
+ - -invite()-
+ - -uninvite(Invite invite)-
 * Get
  - getAccounts()
  - getAlbum/s()
  - getRequests()
  - getBooks()
  - getComment/s()
- - getEvents()
+ - -getEvents()-
  - getFamily()
  - getFriends()
  - getGames()
@@ -232,13 +232,13 @@ public abstract class Post {
  - getMovies()
  - getMusic()
  - getNotifications()
- - getObjects()
+ - -getObjects()-
  - getPage()
  - getPhotos()
  - getPosts()
  - getProfile()
  - getScores()
- - getTelevision()
+ - -getTelevision()-
  - getVideos()
 
 ## Installation
@@ -309,30 +309,17 @@ adb install -r ./retrofacebook-app/build/outputs/apk/retrofacebook-app-v3-debug.
 
 [Sample code: MainActivity.java](retrofacebook-app/src/main/java/retrofacebook/app/MainActivity.java#L121)
 
-## TODO
+## Development
 
-Missing Models:
-
-* Account
-* AppRequest
-* Checkin
-* Event
-* FamilyUser
-* Feed
-* Group
-* Notification
-* Page
-* Parking
-* RestaurantService
-* RestaurantSpecialties
-* Score
-* Story
-* Video
+* AutoJson Processor: @AutoJson: setter/getter/builder + json parser
+* RetroFacebook Processor: @RetroFacebook: Facebook API -> JavaInterface
+* RetroFacebook: A implementation for API definition and life cycle management. (You can replace this).
 
 ## Credit
 
 * https://github.com/frankiesardo/auto-parcel
 * https://github.com/bluelinelabs/LoganSquare
+* https://github.com/sromku/android-simple-facebook
 
 ## License
 
