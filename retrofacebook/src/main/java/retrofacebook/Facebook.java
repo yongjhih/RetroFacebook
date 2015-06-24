@@ -86,6 +86,12 @@ public abstract class Facebook {
         return getPosts("me");
     }
 
+    //@RetroFacebook.GET("/{user-id}/")
+    //public abstract Observable<Post> getPosts(PostType postType);
+
+    //@RetroFacebook.GET("/{user-id}/")
+    //public abstract Observable<Post> getPosts(@RetroFacebook.Path("user-id") String userId, PostType postType);
+
     /**
      * @see <a href="https://developers.facebook.com/docs/graph-api/reference/v2.3/user/friends">Graph API /user/friends - Facebook Developers</a>
      */
@@ -95,6 +101,8 @@ public abstract class Facebook {
     public Observable<User> getFriends() {
         return getFriends("me");
     }
+
+    //@RetroFacebook.GET("/{user-id}/") public abstract Observable<Friend> getFriends(Properties properties);
 
     /**
      * @see <a href="https://developers.facebook.com/docs/graph-api/reference/user/friendlists">User friendlists - Facebook Developers</a>
@@ -207,6 +215,268 @@ public abstract class Facebook {
      */
     @RetroFacebook.DELETE(value = "/{comment-id}")
     public abstract Observable<Struct> deleteComment(@RetroFacebook.Path("comment-id") String id);
+
+    /**
+     * @see <a href="https://developers.facebook.com/docs/graph-api/reference/user/accounts/">Accounts - Facebook Developers</a>
+     */
+    @RetroFacebook.GET("/{user-id}/accounts")
+    public abstract Observable<Account> getAccounts(@RetroFacebook.Path("user-id") String userId);
+
+    public Observable<Account> getAccounts() {
+        return getAccounts("me");
+    }
+
+    /**
+     * @see https://developers.facebook.com/docs/graph-api/reference/v2.3/album/
+     */
+    @RetroFacebook.GET(value = "/{album-id}", permissions = "user_photos")
+    public abstract Observable<Album>getAlbum(@RetroFacebook.Path("album-id") String albumId);
+
+    @RetroFacebook.GET(value = "/{user-id}/albums", permissions = "user_photos")
+    public abstract Observable<Album> getAlbums(@RetroFacebook.Path("user-id") String userId);
+
+    /**
+     * @see https://developers.facebook.com/docs/graph-api/reference/user/albums/
+     */
+    public Observable<Album> getAlbums() {
+        return getAlbums("me");
+    }
+
+    /**
+     * @see https://developers.facebook.com/docs/graph-api/reference/user/apprequests/
+     */
+    @RetroFacebook.GET("/{user-id}/apprequests")
+    public abstract Observable<AppRequest> getAppRequests(@RetroFacebook.Path("user-id") String userId);
+
+    public Observable<AppRequest> getAppRequests() {
+        return getAppRequests("me");
+    }
+
+    @RetroFacebook.GET("/{user-id}/attachments")
+    public abstract Observable<Attachment> getAttachments(String userId);
+
+    public Observable<Attachment> getAttachments() {
+        return getAttachments("me");
+    }
+
+    /**
+     * @see https://developers.facebook.com/docs/graph-api/reference/user/books/
+     */
+    //public abstract Observable<Book> getBooks(Page.Properties properties);
+    @RetroFacebook.GET("/{user-id}/books")
+    public abstract Observable<Book> getBooks(@RetroFacebook.Path("user-id") String userId);
+
+    public Observable<Book> getBooks() {
+        return getBooks("me");
+    }
+
+    //public abstract Observable<Book> getBooks(@RetroFacebook.Path("user-id") String userId, Page.Properties properties);
+
+    /**
+     * @see https://developers.facebook.com/docs/graph-api/reference/v2.3/comment
+     */
+    @RetroFacebook.GET("/{comment-id}")
+    public abstract Observable<Comment> getComment(@RetroFacebook.Path("comment-id") String commentId);
+
+    /**
+     * @see https://developers.facebook.com/docs/graph-api/reference/v2.3/object/comments/
+     */
+    @RetroFacebook.GET("/{object-id}/comments")
+    public abstract Observable<Comment> getComments(@RetroFacebook.Path("object-id") String objectId);
+
+    //@RetroFacebook.GET("/{user-id}/")
+    //public abstract Observable<Event> getEvents(EventDecision eventDecision);
+    //@RetroFacebook.GET("/{user-id}/")
+    //public abstract Observable<Event> getEvents(@RetroFacebook.Path("user-id") String userId, EventDecision eventDecision);
+
+    /**
+     * @see https://developers.facebook.com/docs/graph-api/reference/v2.3/user/family/
+     */
+    @RetroFacebook.GET("/{user-id}/family")
+    public abstract Observable<Family> getFamily(@RetroFacebook.Path("user-id") String userId);
+
+    public Observable<Family> getFamily() {
+        return getFamily("me");
+    }
+
+    /**
+     * @see https://developers.facebook.com/docs/graph-api/reference/user/games
+     */
+    @RetroFacebook.GET("/{user-id}/games")
+    public abstract Observable<Game> getGames(@RetroFacebook.Path("user-id") String userId);
+
+    public Observable<Game> getGames() {
+        return getGames("me");
+    }
+
+    //@RetroFacebook.GET("/{user-id}/") public abstract Observable<Game> getGames(Page.Properties properties);
+    //@RetroFacebook.GET("/{user-id}/") public abstract Observable<Game> getGames(@RetroFacebook.Path("user-id") String userId, Page.Properties properties);
+
+    @RetroFacebook.GET("/{user-id}/groups")
+    public abstract Observable<Group> getGroups(@RetroFacebook.Path("user-id") String userId);
+
+    public Observable<Group> getGroups() {
+        return getGroups("me");
+    }
+
+    @RetroFacebook.GET("/{user-id}/invitable_friends")
+    public abstract Observable<User> getInvitableFriends(@RetroFacebook.Path("user-id") String userId);
+
+    public Observable<User> getInvitableFriends() {
+        return getInvitableFriends("me");
+    }
+
+    //@RetroFacebook.GET("/{user-id}/") public abstract Observable<InvitableFriend> getInvitableFriends(Properties properties);
+
+    /**
+     * @see https://developers.facebook.com/docs/graph-api/reference/user/likes/
+     */
+    @RetroFacebook.GET("/{user-id}/likes")
+    public abstract Observable<Like> getLikes(@RetroFacebook.Path("user-id") String userId);
+
+    public Observable<Like> getLikes() {
+        return getLikes("me");
+    }
+
+    //@RetroFacebook.GET("/{user-id}/") public abstract Observable<Movie> getMovies(Page.Properties properties);
+
+    @RetroFacebook.GET("/{user-id}/movies")
+    public abstract Observable<Movie> getMovies(@RetroFacebook.Path("user-id") String userId);
+
+    //@RetroFacebook.GET("/{user-id}/") public abstract Observable<Movie> getMovies(@RetroFacebook.Path("user-id") String userId, Page.Properties properties);
+
+    public Observable<Movie> getMovies() {
+        return getMovies("me");
+    }
+
+    public Observable<Music> getMusics() {
+        return getMusics("me");
+    }
+
+    //@RetroFacebook.GET("/{user-id}/") public abstract Observable<Music> getMusic(Page.Properties properties);
+
+    @RetroFacebook.GET("/{user-id}/musics")
+    public abstract Observable<Music> getMusics(@RetroFacebook.Path("user-id") String userId);
+
+    //@RetroFacebook.GET("/{user-id}/") public abstract Observable<Music> getMusic(@RetroFacebook.Path("user-id") String userId, Page.Properties properties);
+
+    /**
+     * @see https://developers.facebook.com/docs/graph-api/reference/v2.3/user/notifications/
+     */
+    @RetroFacebook.GET(value = "/{user-id}/notifications", permissions = "manage_notifications")
+    public abstract Observable<Notification> getNotifications(@RetroFacebook.Path("user-id") String userId);
+
+    public Observable<Notification> getNotifications() {
+        return getNotifications("me");
+    }
+
+    @RetroFacebook.GET("/{page-id}")
+    public abstract Observable<Page> getPage(@RetroFacebook.Path("page-id") String pageId);
+
+    //@RetroFacebook.GET("/{user-id}/") public abstract Observable<Page> getPage(@RetroFacebook.Path("user-id") String userId, Page.Properties properties);
+
+    //public abstract Observable<Page> getPages();
+
+    public Observable<Profile> getProfile() {
+        return getProfile("me");
+    }
+
+    /**
+     * @see https://developers.facebook.com/docs/graph-api/reference/v2.3/profile
+     */
+    @RetroFacebook.GET("/{profile-id}")
+    public abstract Observable<Profile> getProfile(@RetroFacebook.Path("profile-id") String profileId);
+
+    //@RetroFacebook.GET("/{user-id}/") public abstract Observable<Profile> getProfile(Profile.Properties properties);
+    //@RetroFacebook.GET("/{user-id}/") public abstract Observable<Profile> getProfile(String profileId, Profile.Properties properties);
+
+    @RetroFacebook.GET("/{user-id}/scores")
+    public abstract Observable<Score> getScores(@RetroFacebook.Path("user-id") String userId);
+
+    public Observable<Score> getScores() {
+        return getScores("me");
+    }
+
+    //@RetroFacebook.GET("/{user-id}/")
+    //public abstract Observable<StoryObject> getStoryObjects(String objectName);
+
+    @RetroFacebook.GET("/{user-id}/taggable_friends")
+    public abstract Observable<User> getTaggableFriends(@RetroFacebook.Path("user-id") String userId);
+
+    //@RetroFacebook.GET("/{user-id}/") public abstract Observable<TaggableFriend> getTaggableFriends(Properties properties);
+
+    public Observable<User> getTaggableFriends() {
+        return getTaggableFriends("me");
+    }
+
+    //@RetroFacebook.GET("/{user-id}/")
+    //public abstract Observable<Television> getTelevision();
+    ////@RetroFacebook.GET("/{user-id}/") public abstract Observable<Television> getTelevision(Page.Properties properties);
+
+    //@RetroFacebook.GET("/{user-id}/")
+    //public abstract Observable<Television> getTelevision(@RetroFacebook.Path("user-id") String userId);
+    ////@RetroFacebook.GET("/{user-id}/") public abstract Observable<Television> getTelevision(@RetroFacebook.Path("user-id") String userId, Page.Properties properties);
+
+    public Observable<Video> getVideos() {
+        return getVideos("me");
+    }
+
+    @RetroFacebook.GET("/{user-id}/videos")
+    public abstract Observable<Video> getVideos(@RetroFacebook.Path("user-id") String userId);
+
+    @RetroFacebook.POST(value = "/{object-id}/likes", permissions = "publish_actions"/* ? */)
+    public abstract Observable<Struct> like(@RetroFacebook.Body Like like, @RetroFacebook.Path("object-id") String id);
+
+    public Observable<Struct> score(Score score) {
+        return score(score, "me");
+    }
+
+    @RetroFacebook.POST(value = "/{object-id}/scores", permissions = "publish_actions"/* ? */)
+    public abstract Observable<Struct> score(@RetroFacebook.Body Score score, @RetroFacebook.Path("object-id") String id);
+
+    //public abstract Observable<Struct> story(Story story);
+
+    public Observable<Struct> album(Album album) {
+        return album(album, "me");
+    }
+
+    @RetroFacebook.POST(value = "/{object-id}/albums", permissions = "publish_actions"/* ? */)
+    public abstract Observable<Struct> album(@RetroFacebook.Body Album album, @RetroFacebook.Path("object-id") String id);
+
+    @RetroFacebook.POST(value = "/{object-id}/photos", permissions = "publish_actions"/* ? */)
+    public abstract Observable<Struct> photo(@RetroFacebook.Body Photo photo, @RetroFacebook.Path("object-id") String objectId);
+
+    public Observable<Struct> photo(Photo photo) {
+        return photo(photo, "me");
+    }
+
+    //public abstract Observable<Struct> photos(List<Photo> photos);
+
+    @RetroFacebook.POST(value = "/{object-id}/videos", permissions = "publish_actions"/* ? */)
+    public abstract Observable<Struct> video(@RetroFacebook.Body Video video, @RetroFacebook.Path("object-id") String id);
+
+    public Observable<Struct> video(Video video) {
+        return video(video, "me");
+    }
+
+    //public abstract publish(Feed feed, boolean withDialog);
+    //public abstract publish(Story story, boolean withDialog);
+    //public abstract publish(Photo photo, boolean withDialog);
+    //public abstract publish(String entityId, Publishable publishable);
+
+    //public abstract invite(String message, final OnInviteListener onInviteListener, String data);
+    //public abstract invite(String to, String message, final OnInviteListener onInviteListener, String data);
+    //public abstract invite(String[] suggestedFriends, String message, final OnInviteListener onInviteListener, String data);
+
+    //public abstract getConfiguration();
+    //public abstract requestNewPermissions(Permission[] permissions, OnNewPermissionsListener onNewPermissionsListener);
+    //public abstract isAllPermissionsGranted();
+    //public abstract isLogin();
+
+    //public abstract getAccessToken();
+
+    //public abstract getGrantedPermission();
+
 
     // LifeCycle management
 

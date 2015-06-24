@@ -20,7 +20,7 @@ import android.support.annotation.Nullable;
 import android.os.Bundle;
 
 @AutoJson
-public abstract class Album {
+public abstract class Game {
     @Nullable
     @AutoJson.Field
     public abstract String id();
@@ -28,11 +28,12 @@ public abstract class Album {
     @AutoJson.Builder
     public abstract static class Builder {
         public abstract Builder id(String x);
-        public abstract Album build();
+
+        public abstract Game build();
     }
 
     public static Builder builder() {
-        return new AutoJson_Album.Builder();
+        return new AutoJson_Game.Builder();
     }
 
     public abstract Bundle toBundle();

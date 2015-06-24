@@ -17,6 +17,7 @@ package retrofacebook;
 
 import auto.json.AutoJson;
 import android.support.annotation.Nullable;
+import android.os.Bundle;
 
 @AutoJson
 public abstract class Like {
@@ -33,4 +34,6 @@ public abstract class Like {
     public static Builder builder() {
         return new AutoJson_Like.Builder();
     }
+
+    public abstract Bundle toBundle();
 }
