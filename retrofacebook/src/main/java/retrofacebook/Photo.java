@@ -20,7 +20,6 @@ import android.support.annotation.Nullable;
 import android.os.Bundle;
 import java.util.List;
 import java.util.Date;
-import com.bluelinelabs.logansquare.typeconverters.*;
 
 @AutoJson
 public abstract class Photo {
@@ -34,8 +33,8 @@ public abstract class Photo {
     @AutoJson.Field(name = "backdated_time")
     public abstract Date backDateTime();
     @Nullable
-    @AutoJson.Field(name = "backdated_time_granularity", typeConverter = BackdatedTimeGranularityConverter.class)
-    public abstract BackdatedTimeGranularity backdatedTimeGranularity();
+    @AutoJson.Field(name = "backdated_time_granularity", typeConverter = AccuracyConverter.class)
+    public abstract Accuracy backdatedTimeGranularity();
     @Nullable
     @AutoJson.Field(name = "created_time")
     public abstract Date createdTime();
@@ -186,7 +185,7 @@ public abstract class Photo {
     /**
      * enum{year, month, day, hour, min, none}
      */
-    //public abstract BackdatedTimeGranularity backdatedTimeGranularity();
+    //public abstract Accuracy backdatedTimeGranularity();
     /**
      * unsigned int32
      */
@@ -259,7 +258,7 @@ public abstract class Photo {
         public abstract Builder id(String x);
         public abstract Builder album(Album x);
         public abstract Builder backDateTime(Date x);
-        public abstract Builder backdatedTimeGranularity(BackdatedTimeGranularity x);
+        public abstract Builder backdatedTimeGranularity(Accuracy x);
         public abstract Builder createdTime(Date x);
         public abstract Builder from(User x);
         public abstract Builder height(Integer x);
@@ -309,43 +308,4 @@ public abstract class Photo {
 
     //public abstract Builder toBuilder();
     public abstract Bundle toBundle();
-
-    public static enum BackdatedTimeGranularity {
-        YEAR("year"),
-        MONTH("month"),
-        DAY("day"),
-        HOUR("hour"),
-        MIN("min"),
-        NONE("none");
-
-        private String mValue;
-
-        private BackdatedTimeGranularity(String value) {
-            mValue = value;
-        }
-
-        public String getValue() {
-            return mValue;
-        }
-
-        public static BackdatedTimeGranularity fromValue(String value) {
-            for (BackdatedTimeGranularity granularityEnum : values()) {
-                if (granularityEnum.mValue.equals(value)) {
-                    return granularityEnum;
-                }
-            }
-            return BackdatedTimeGranularity.NONE;
-        }
-    }
-
-    public static class BackdatedTimeGranularityConverter extends StringBasedTypeConverter<BackdatedTimeGranularity> {
-        @Override
-        public BackdatedTimeGranularity getFromString(String s) {
-            return BackdatedTimeGranularity.fromValue(s);
-        }
-
-        public String convertToString(BackdatedTimeGranularity object) {
-            return object.getValue();
-        }
-    }
 }

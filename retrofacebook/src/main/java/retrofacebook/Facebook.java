@@ -412,10 +412,16 @@ public abstract class Facebook {
     @RetroFacebook.GET("/{profile-id}")
     public abstract Observable<Profile> getProfile(@RetroFacebook.Path("profile-id") String profileId);
 
+    @RetroFacebook.DELETE("/{page_id}/blocked")
+    public abstract Observable<Struct> deleteTestUser(@RetroFacebook.Body Page page, @RetroFacebook.Path("page_id") String pageId);
+
+    @RetroFacebook.DELETE("/{user_id}")
+    public abstract Observable<Struct> deleteUser(@RetroFacebook.Body User user, @RetroFacebook.Path("user_id") String userId);
+
     //@RetroFacebook.GET("/{user-id}/") public abstract Observable<Profile> getProfile(Profile.Properties properties);
     //@RetroFacebook.GET("/{user-id}/") public abstract Observable<Profile> getProfile(String profileId, Profile.Properties properties);
 
-    @RetroFacebook.GET("/{user-id}/scores")
+    @RetroFacebook.GET(value = "/{user-id}/scores", permissions = "user_games_activity")
     public abstract Observable<Score> getScores(@RetroFacebook.Path("user-id") String userId);
 
     public Observable<Score> getScores() {
@@ -442,12 +448,33 @@ public abstract class Facebook {
     //public abstract Observable<Television> getTelevision(@RetroFacebook.Path("user-id") String userId);
     ////@RetroFacebook.GET("/{user-id}/") public abstract Observable<Television> getTelevision(@RetroFacebook.Path("user-id") String userId, Page.Properties properties);
 
+    /**
+     * @see https://developers.facebook.com/docs/graph-api/reference/user/videos
+     * @see https://developers.facebook.com/docs/graph-api/reference/video
+     */
+    @RetroFacebook.GET(value = "/{user-id}/videos", permissions = "user_videos")
+    public abstract Observable<Video> getVideos(@RetroFacebook.Path("user-id") String userId);
+
     public Observable<Video> getVideos() {
         return getVideos("me");
     }
 
-    @RetroFacebook.GET("/{user-id}/videos")
-    public abstract Observable<Video> getVideos(@RetroFacebook.Path("user-id") String userId);
+    @RetroFacebook.GET(value = "/{user-id}/videos?type=uploaded", permissions = "user_videos")
+    public abstract Observable<Video> getUploadedVideos(@RetroFacebook.Path("user-id") String userId);
+
+    public Observable<Video> getUploadedVideos() {
+        return getUploadedVideos("me");
+    }
+
+    @RetroFacebook.GET(value = "/{user-id}/videos?type=tagged", permissions = "user_videos")
+    public abstract Observable<Video> getTaggedVideos(@RetroFacebook.Path("user-id") String userId);
+
+    public Observable<Video> getTaggedVideos() {
+        return getTaggedVideos("me");
+    }
+
+    @RetroFacebook.GET(value = "/{video-id}", permissions = "user_videos")
+    public abstract Observable<Video> getVideo(@RetroFacebook.Path("video-id") String videoId);
 
     @RetroFacebook.POST(value = "/{object-id}/likes", permissions = "publish_actions"/* ? */)
     public abstract Observable<Struct> like(@RetroFacebook.Body Like like, @RetroFacebook.Path("object-id") String id);

@@ -211,6 +211,27 @@ public class MainActivity extends AppCompatActivity {
                     return card;
                 }));
         }));
+        adapter.fragments.add(FragmentPage.create().title("Scores").fragment(() -> {
+            return RxCardsFragment.create()
+                .items(facebook.getScores().take(32).map(score -> {
+                    RxCard card = new RxCard();
+                    card.icon = Observable.just("http://graph.facebook.com/" + score.user().id() + "/picture?width=400&height=400");
+                    card.text1 = Observable.just(score.application().name());
+                    card.message = Observable.just("" + score.score());
+                    return card;
+                }));
+        }));
+        adapter.fragments.add(FragmentPage.create().title("Videos").fragment(() -> {
+            return RxCardsFragment.create()
+                .items(facebook.getUploadedVideos().take(32).map(video -> {
+                    RxCard card = new RxCard();
+                    card.icon = Observable.just("http://graph.facebook.com/" + video.from().id() + "/picture?width=400&height=400");
+                    card.text1 = Observable.just(video.name());
+                    card.message = Observable.just(video.description() + video.source());
+                    card.image = Observable.just(video.picture());
+                    return card;
+                }));
+        }));
         /* {FacebookServiceException: httpResponseCode: 400, facebookErrorCode: 15, facebookErrorType: OAuthException, message: (#15) This method must be called with an app access_token.}
         adapter.fragments.add(FragmentPage.create().fragment(() -> {
             return CardsFragment.create()

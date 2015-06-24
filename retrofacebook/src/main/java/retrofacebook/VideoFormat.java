@@ -18,34 +18,28 @@ package retrofacebook;
 import auto.json.AutoJson;
 import android.support.annotation.Nullable;
 import android.os.Bundle;
+import java.util.Date;
 
 /**
- * @see https://developers.facebook.com/docs/graph-api/reference/v2.3/user/scores
+ * @see https://developers.facebook.com/docs/graph-api/reference/video
  */
 @AutoJson
-public abstract class Score {
+public abstract class VideoFormat {
     @Nullable
     @AutoJson.Field
-    public abstract User user();
-    @Nullable
-    @AutoJson.Field
-    public abstract int score();
-    @Nullable
-    @AutoJson.Field
-    public abstract App application();
+    public abstract String id();
 
     @AutoJson.Builder
     public abstract static class Builder {
-        public abstract Builder user(User x);
-        public abstract Builder score(int x);
-        public abstract Builder application(App x);
+        public abstract Builder id(String x);
 
-        public abstract Score build();
+        public abstract VideoFormat build();
     }
 
     public static Builder builder() {
-        return new AutoJson_Score.Builder();
+        return new AutoJson_VideoFormat.Builder();
     }
 
     public abstract Bundle toBundle();
 }
+
