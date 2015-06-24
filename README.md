@@ -251,13 +251,13 @@ repositories {
 }
 
 dependencies {
-    compile 'com.infstory:retrofacebook:1.0.0' // v4
+    compile 'com.infstory:retrofacebook:1.0.1' // v4
 }
 ```
 
 ```gradle
 dependencies {
-    compile 'com.infstory:retrofacebook-v3:1.0.0' // v3
+    compile 'com.infstory:retrofacebook-v3:1.0.1' // v3
 }
 ```
 
@@ -271,13 +271,13 @@ repositories {
 }
 
 dependencies {
-    compile 'com.github.yongjhih.RetroFacebook:retrofacebook:1.0.0' // v4
+    compile 'com.github.yongjhih.RetroFacebook:retrofacebook:1.0.1' // v4
 }
 ```
 
 ```gradle
 dependencies {
-    compile 'com.github.yongjhih.RetroFacebook:retrofacebook-v3:1.0.0' // v3
+    compile 'com.github.yongjhih.RetroFacebook:retrofacebook-v3:1.0.1' // v3
 }
 ```
 
