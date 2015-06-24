@@ -3,6 +3,7 @@
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-RetroFacebook-green.svg?style=flat)](https://android-arsenal.com/details/1/2007)
 [![Join the chat at https://gitter.im/yongjhih/RetroFacebook](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/yongjhih/RetroFacebook?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![javadoc.io](https://javadocio-badges.herokuapp.com/com.infstory/retrofacebook/badge.svg)](http://www.javadoc.io/doc/com.infstory/retrofacebook/)
+[![Build Status](https://travis-ci.org/yongjhih/RetroFacebook.svg)](https://travis-ci.org/yongjhih/RetroFacebook)
 [![](https://fbstatic-a.akamaihd.net/rsrc.php/yl/r/H3nktOa7ZMg.ico) page: retrothis ](https://www.facebook.com/retrothis)
 
 [![](https://avatars0.githubusercontent.com/u/5761889?v=3&s=48)](https://github.com/Wendly)
@@ -285,7 +286,9 @@ dependencies {
 ## Demo App
 
 * v4 appetize: [![v4 appetize](art/appetize_iphone5_inner.jpg)](https://appetize.io/app/rvgdd2zfat913rq9b7ue9zhnhm)
+* v4 apk: https://github.com/yongjhih/RetroFacebook/releases/download/1.0.1/retrofacebook-app-v4-debug.apk
 * v3 appetize: [![v3 appetize](art/appetize_iphone5_inner.jpg)](https://appetize.io/app/d9hgx8na5r9eq33zd6td1w8w3r)
+* v3 apk: https://github.com/yongjhih/RetroFacebook/releases/download/1.0.1/retrofacebook-app-v3-debug.apk
 
 Here is one of test users for all permissions:
 
