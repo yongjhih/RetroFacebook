@@ -95,6 +95,7 @@ afterEvaluate { project ->
     task androidJavadocs(type: Javadoc) {
         source = android.sourceSets.main.java.srcDirs
         classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+        classpath += configurations.compile // http://stackoverflow.com/questions/10895032/javadoc-with-gradle-dont-get-the-libraries-while-running-javadoc-task
     }
 
     task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
