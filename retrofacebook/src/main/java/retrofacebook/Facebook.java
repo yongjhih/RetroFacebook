@@ -236,6 +236,25 @@ public abstract class Facebook {
     public abstract Observable<Album> getAlbums(@RetroFacebook.Path("user-id") String userId);
 
     /**
+     * @param type You use this to get a pre-specified size of picture.
+     * enum{thumbnail,small,album}
+     *
+     * @see https://developers.facebook.com/docs/graph-api/reference/v2.3/album/picture
+     */
+    // FACEBOOK_NON_JSON_RESULT
+    //@RetroFacebook.GET(value = "/{album-id}/picture", permissions = "user_photos")
+    //public abstract Observable<EdgePicture> getAlbumPicture(@RetroFacebook.Path("album-id") String albumId);
+
+    //@RetroFacebook.GET(value = "/{album-id}/picture?type=thumbnail", permissions = "user_photos")
+    //public abstract Observable<EdgePicture> getAlbumThumbnail(@RetroFacebook.Path("album-id") String albumId);
+
+    //@RetroFacebook.GET(value = "/{album-id}/picture?type=small", permissions = "user_photos")
+    //public abstract Observable<EdgePicture> getAlbumSmallPicture(@RetroFacebook.Path("album-id") String albumId);
+
+    //@RetroFacebook.GET(value = "/{album-id}/picture?type=album", permissions = "user_photos")
+    //public abstract Observable<EdgePicture> getAlbumAlbumPicture(@RetroFacebook.Path("album-id") String albumId);
+
+    /**
      * @see https://developers.facebook.com/docs/graph-api/reference/user/albums/
      */
     public Observable<Album> getAlbums() {
