@@ -220,9 +220,9 @@ public abstract class Facebook {
      * @see <a href="https://developers.facebook.com/docs/graph-api/reference/user/accounts/">Accounts - Facebook Developers</a>
      */
     @RetroFacebook.GET("/{user-id}/accounts")
-    public abstract Observable<Account> getAccounts(@RetroFacebook.Path("user-id") String userId);
+    public abstract Observable<Page> getAccounts(@RetroFacebook.Path("user-id") String userId);
 
-    public Observable<Account> getAccounts() {
+    public Observable<Page> getAccounts() {
         return getAccounts("me");
     }
 
@@ -271,21 +271,17 @@ public abstract class Facebook {
         return getAppRequests("me");
     }
 
-    @RetroFacebook.GET("/{user-id}/attachments")
-    public abstract Observable<Attachment> getAttachments(String userId);
-
-    public Observable<Attachment> getAttachments() {
-        return getAttachments("me");
-    }
+    @RetroFacebook.GET("/{object-id}/attachments")
+    public abstract Observable<Attachment> getAttachments(@RetroFacebook.Path("object-id") String objectId);
 
     /**
      * @see https://developers.facebook.com/docs/graph-api/reference/user/books/
      */
     //public abstract Observable<Book> getBooks(Page.Properties properties);
     @RetroFacebook.GET("/{user-id}/books")
-    public abstract Observable<Book> getBooks(@RetroFacebook.Path("user-id") String userId);
+    public abstract Observable<Page> getBooks(@RetroFacebook.Path("user-id") String userId);
 
-    public Observable<Book> getBooks() {
+    public Observable<Page> getBooks() {
         return getBooks("me");
     }
 
@@ -311,10 +307,10 @@ public abstract class Facebook {
     /**
      * @see https://developers.facebook.com/docs/graph-api/reference/v2.3/user/family/
      */
-    @RetroFacebook.GET("/{user-id}/family")
-    public abstract Observable<Family> getFamily(@RetroFacebook.Path("user-id") String userId);
+    @RetroFacebook.GET(value = "/{user-id}/family", permissions = "user_relationships")
+    public abstract Observable<User> getFamily(@RetroFacebook.Path("user-id") String userId);
 
-    public Observable<Family> getFamily() {
+    public Observable<User> getFamily() {
         return getFamily("me");
     }
 
@@ -322,16 +318,19 @@ public abstract class Facebook {
      * @see https://developers.facebook.com/docs/graph-api/reference/user/games
      */
     @RetroFacebook.GET("/{user-id}/games")
-    public abstract Observable<Game> getGames(@RetroFacebook.Path("user-id") String userId);
+    public abstract Observable<Page> getGames(@RetroFacebook.Path("user-id") String userId);
 
-    public Observable<Game> getGames() {
+    public Observable<Page> getGames() {
         return getGames("me");
     }
 
     //@RetroFacebook.GET("/{user-id}/") public abstract Observable<Game> getGames(Page.Properties properties);
     //@RetroFacebook.GET("/{user-id}/") public abstract Observable<Game> getGames(@RetroFacebook.Path("user-id") String userId, Page.Properties properties);
 
-    @RetroFacebook.GET("/{user-id}/groups")
+    /**
+     * @see https://developers.facebook.com/docs/graph-api/reference/v2.3/group
+     */
+    @RetroFacebook.GET(value = "/{user-id}/groups", permissions = "user_groups")
     public abstract Observable<Group> getGroups(@RetroFacebook.Path("user-id") String userId);
 
     public Observable<Group> getGroups() {
@@ -351,36 +350,43 @@ public abstract class Facebook {
      * @see https://developers.facebook.com/docs/graph-api/reference/user/likes/
      */
     @RetroFacebook.GET("/{user-id}/likes")
-    public abstract Observable<Like> getLikes(@RetroFacebook.Path("user-id") String userId);
+    public abstract Observable<Page> getLikes(@RetroFacebook.Path("user-id") String userId);
 
-    public Observable<Like> getLikes() {
+    public Observable<Page> getLikes() {
         return getLikes("me");
     }
 
-    //@RetroFacebook.GET("/{user-id}/") public abstract Observable<Movie> getMovies(Page.Properties properties);
+    //@RetroFacebook.GET("/{user-id}/") public abstract Observable<Page> getMovies(Page.Properties properties);
 
+    /**
+     * @see https://developers.facebook.com/docs/graph-api/reference/v2.3/user/movies
+     */
     @RetroFacebook.GET("/{user-id}/movies")
-    public abstract Observable<Movie> getMovies(@RetroFacebook.Path("user-id") String userId);
+    public abstract Observable<Page> getMovies(@RetroFacebook.Path("user-id") String userId);
 
-    //@RetroFacebook.GET("/{user-id}/") public abstract Observable<Movie> getMovies(@RetroFacebook.Path("user-id") String userId, Page.Properties properties);
+    //@RetroFacebook.GET("/{user-id}/") public abstract Observable<Page> getMovies(@RetroFacebook.Path("user-id") String userId, Page.Properties properties);
 
-    public Observable<Movie> getMovies() {
+    public Observable<Page> getMovies() {
         return getMovies("me");
     }
 
-    public Observable<Music> getMusics() {
-        return getMusics("me");
+    public Observable<Page> getMusic() {
+        return getMusic("me");
     }
 
-    //@RetroFacebook.GET("/{user-id}/") public abstract Observable<Music> getMusic(Page.Properties properties);
+    //@RetroFacebook.GET("/{user-id}/") public abstract Observable<Page> getMusic(Page.Properties properties);
 
-    @RetroFacebook.GET("/{user-id}/musics")
-    public abstract Observable<Music> getMusics(@RetroFacebook.Path("user-id") String userId);
+    /**
+     * @see https://developers.facebook.com/docs/graph-api/reference/v2.3/user/music
+     */
+    @RetroFacebook.GET("/{user-id}/music")
+    public abstract Observable<Page> getMusic(@RetroFacebook.Path("user-id") String userId);
 
-    //@RetroFacebook.GET("/{user-id}/") public abstract Observable<Music> getMusic(@RetroFacebook.Path("user-id") String userId, Page.Properties properties);
+    //@RetroFacebook.GET("/{user-id}/") public abstract Observable<Page> getMusic(@RetroFacebook.Path("user-id") String userId, Page.Properties properties);
 
     /**
      * @see https://developers.facebook.com/docs/graph-api/reference/v2.3/user/notifications/
+     * @see https://developers.facebook.com/docs/graph-api/reference/v2.3/notification/
      */
     @RetroFacebook.GET(value = "/{user-id}/notifications", permissions = "manage_notifications")
     public abstract Observable<Notification> getNotifications(@RetroFacebook.Path("user-id") String userId);

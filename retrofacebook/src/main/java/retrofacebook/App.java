@@ -19,7 +19,7 @@ import auto.json.AutoJson;
 import android.support.annotation.Nullable;
 
 @AutoJson
-public abstract class User {
+public abstract class App {
     @Nullable
     @AutoJson.Field
     public abstract String id();
@@ -28,19 +28,19 @@ public abstract class User {
     public abstract String name();
     @Nullable
     @AutoJson.Field
-    public abstract String relationship();
+    public abstract String namespace();
+    // TODO fields
 
     @AutoJson.Builder
     public abstract static class Builder {
-        public abstract Builder id(String id);
-        public abstract Builder name(String caption);
-        public abstract Builder relationship(String x);
+        public abstract Builder id(String x);
+        public abstract Builder name(String x);
+        public abstract Builder namespace(String x);
 
-        public abstract User build();
+        public abstract App build();
     }
 
     public static Builder builder() {
-        return new AutoJson_User.Builder();
+        return new AutoJson_App.Builder();
     }
 }
-

@@ -169,15 +169,6 @@ public class MainActivity extends AppCompatActivity {
                                 .build();
                 }));
         }));
-        adapter.fragments.add(FragmentPage.create().title("Accounts").fragment(() -> {
-            return CardsFragment.create()
-                .items(facebook.getAccounts().take(32).map(o -> {
-                    return Card.builder()
-                        .text1(o.id())
-                        .message(o.id())
-                        .build();
-                }));
-        }));
         adapter.fragments.add(FragmentPage.create().title("Albums").fragment(() -> {
             return RxCardsFragment.create()
                 .items(facebook.getAlbums().take(32).map(album -> {
@@ -186,6 +177,37 @@ public class MainActivity extends AppCompatActivity {
                     card.text1 = Observable.just(album.name());
                     card.message = Observable.just(album.id());
                     //card.image = facebook.getAlbumThumbnail(album.id()).map(pic -> pic.data().url()); // FACEBOOK_NON_JSON_RESULT
+                    return card;
+                }));
+        }));
+        adapter.fragments.add(FragmentPage.create().title("Family").fragment(() -> {
+            return RxCardsFragment.create()
+                .items(facebook.getFamily().take(32).map(user -> {
+                    RxCard card = new RxCard();
+                    card.icon = Observable.just("http://graph.facebook.com/" + user.id() + "/picture?width=400&height=400");
+                    card.text1 = Observable.just(user.name());
+                    card.message = Observable.just(user.relationship());
+                    return card;
+                }));
+        }));
+        adapter.fragments.add(FragmentPage.create().title("Groups").fragment(() -> {
+            return RxCardsFragment.create()
+                .items(facebook.getGroups().take(32).map(group -> {
+                    RxCard card = new RxCard();
+                    card.icon = Observable.just(group.icon());
+                    card.text1 = Observable.just(group.name());
+                    card.message = Observable.just(group.description());
+                    card.image = Observable.just(group.cover()).filter(c -> c != null).map(c -> c.source());
+                    return card;
+                }));
+        }));
+        adapter.fragments.add(FragmentPage.create().title("Notifications").fragment(() -> {
+            return RxCardsFragment.create()
+                .items(facebook.getNotifications().take(32).map(notification -> {
+                    RxCard card = new RxCard();
+                    card.icon = Observable.just("http://graph.facebook.com/" + notification.from().id() + "/picture?width=400&height=400");
+                    card.text1 = Observable.just(notification.title());
+                    card.message = Observable.just(notification.title());
                     return card;
                 }));
         }));

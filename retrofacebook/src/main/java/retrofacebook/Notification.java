@@ -18,16 +18,56 @@ package retrofacebook;
 import auto.json.AutoJson;
 import android.support.annotation.Nullable;
 import android.os.Bundle;
+import java.util.Date;
 
+/**
+ * @see https://developers.facebook.com/docs/graph-api/reference/v2.3/notification/
+ */
 @AutoJson
 public abstract class Notification {
     @Nullable
     @AutoJson.Field
     public abstract String id();
+    @Nullable
+    @AutoJson.Field
+    public abstract User from(); // TODO User|Page|App
+    @Nullable
+    @AutoJson.Field
+    public abstract User to();
+    @Nullable
+    @AutoJson.Field(name = "created_time")
+    public abstract Date createdTime();
+    @Nullable
+    @AutoJson.Field(name = "updated_time")
+    public abstract Date updatedTime();
+    @Nullable
+    @AutoJson.Field
+    public abstract String title();
+    @Nullable
+    @AutoJson.Field
+    public abstract String link();
+    @Nullable
+    @AutoJson.Field
+    public abstract App application();
+    @Nullable
+    @AutoJson.Field
+    public abstract int unread();
+    @Nullable
+    @AutoJson.Field
+    public abstract String object();
 
     @AutoJson.Builder
     public abstract static class Builder {
         public abstract Builder id(String x);
+        public abstract Builder from(User x);
+        public abstract Builder to(User x);
+        public abstract Builder createdTime(Date x);
+        public abstract Builder updatedTime(Date x);
+        public abstract Builder title(String x);
+        public abstract Builder link(String x);
+        public abstract Builder application(App x);
+        public abstract Builder unread(int x);
+        public abstract Builder object(String x);
 
         public abstract Notification build();
     }

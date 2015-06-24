@@ -17,30 +17,36 @@ package retrofacebook;
 
 import auto.json.AutoJson;
 import android.support.annotation.Nullable;
+import android.os.Bundle;
 
 @AutoJson
-public abstract class User {
+public abstract class Cover {
     @Nullable
     @AutoJson.Field
     public abstract String id();
     @Nullable
     @AutoJson.Field
-    public abstract String name();
+    public abstract String source();
     @Nullable
-    @AutoJson.Field
-    public abstract String relationship();
+    @AutoJson.Field(name = "offset_y")
+    public abstract int offsetY();
+    @Nullable
+    @AutoJson.Field(name = "offset_x")
+    public abstract int offsetX();
 
     @AutoJson.Builder
     public abstract static class Builder {
-        public abstract Builder id(String id);
-        public abstract Builder name(String caption);
-        public abstract Builder relationship(String x);
+        public abstract Builder id(String x);
+        public abstract Builder source(String x);
+        public abstract Builder offsetX(int x);
+        public abstract Builder offsetY(int x);
 
-        public abstract User build();
+        public abstract Cover build();
     }
 
     public static Builder builder() {
-        return new AutoJson_User.Builder();
+        return new AutoJson_Cover.Builder();
     }
-}
 
+    public abstract Bundle toBundle();
+}

@@ -24,10 +24,18 @@ public abstract class Family {
     @Nullable
     @AutoJson.Field
     public abstract String id();
+    @Nullable
+    @AutoJson.Field
+    public abstract String name();
+    @Nullable
+    @AutoJson.Field
+    public abstract String relationship();
 
     @AutoJson.Builder
     public abstract static class Builder {
         public abstract Builder id(String x);
+        public abstract Builder name(String x);
+        public abstract Builder relationship(String x);
 
         public abstract Family build();
     }
