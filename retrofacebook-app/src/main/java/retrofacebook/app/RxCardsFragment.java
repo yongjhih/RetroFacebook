@@ -115,6 +115,8 @@ public class RxCardsFragment extends Fragment {
         ImageView image;
         @InjectView(R.id.comments)
         RecyclerView commentsView;
+        @InjectView(R.id.likeCount)
+        TextView likeCountView;
         @InjectView(R.id.like)
         ImageView likeView;
         @InjectView(R.id.comment)
@@ -141,6 +143,7 @@ public class RxCardsFragment extends Fragment {
         }
 
         boolean liked;
+        int likeCount;
 
         @Override
         public void onBind(int position, RxCard item) {
@@ -182,6 +185,13 @@ public class RxCardsFragment extends Fragment {
                     .into(image);
             });
 
+            likeCount = 0;
+            likeCountView.setText("" + likeCount); // clear
+            ViewObservable.bindView(likeCountView, item.likeCount).subscribe(i -> {
+                likeCount = i;
+                likeCountView.setText("" + likeCount);
+            });
+
             liked = false;
             likeView.setOnClickListener(v -> {}); // clear
             ViewObservable.bindView(likeView, item.liked).subscribe(b -> {
@@ -203,18 +213,22 @@ public class RxCardsFragment extends Fragment {
                     liked = !liked;
 
                     if (liked) {
+                        likeCount += 1;
                         Glide.with(itemView.getContext())
                             .load(R.drawable.ic_thumb_up)
                             .fitCenter()
                             .into(likeView);
                         item.like.subscribe();
                     } else {
+                        likeCount -= 1;
                         Glide.with(itemView.getContext())
                             .load(R.drawable.ic_thumb_up_outline)
                             .fitCenter()
                             .into(likeView);
                         item.unlike.subscribe();
                     }
+
+                    likeCountView.setText("" + likeCount);
                 });
             });
 

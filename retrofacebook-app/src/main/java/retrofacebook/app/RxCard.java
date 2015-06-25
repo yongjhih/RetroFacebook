@@ -38,4 +38,6 @@ public class RxCard {
     public Observable<Struct> unlike = Observable.empty();
     @Nullable
     public Observable<Boolean> liked = Observable.empty();
+    @Nullable
+    public Observable<Integer> likeCount = Observable.empty();
 }

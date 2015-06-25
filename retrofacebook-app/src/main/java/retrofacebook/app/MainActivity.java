@@ -135,11 +135,13 @@ public class MainActivity extends AppCompatActivity {
                         card.message = Observable.just(photo.caption());
                         card.image = Observable.just(photo.images().get(0).source());
                         card.comments = facebook.getComments(photo.id());
+                        Observable<User> likedUsers = facebook.getLikedUsers(photo);
+                        card.likeCount = likedUsers.count();
                         card.like = facebook.like(photo);
                         card.unlike = facebook.unlike(photo);
                         card.liked = facebook.me().concatMap(me -> {
                             android.util.Log.d("RetroFacebook", "me: " + me.id());
-                            return facebook.getLikedUsers(photo).filter(user -> user.id().equals(me.id())).isEmpty().map(b -> !b);
+                            return likedUsers.filter(user -> user.id().equals(me.id())).isEmpty().map(b -> !b);
                         });
                         return card;
                     }));
