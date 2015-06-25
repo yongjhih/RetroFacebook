@@ -203,7 +203,7 @@ public abstract class Post {
 }
 ```
 
-## Ready API [![javadoc.io](https://javadocio-badges.herokuapp.com/com.infstory/retrofacebook/badge.svg)](http://static.javadoc.io/com.infstory/retrofacebook/1.0.0/retrofacebook/Facebook.html)
+## Ready API [![javadoc.io](https://javadocio-badges.herokuapp.com/com.infstory/retrofacebook/badge.svg)](http://static.javadoc.io/com.infstory/retrofacebook/1.0.1/retrofacebook/Facebook.html)
 
 * Login/Logout
  - logIn()
