@@ -61,24 +61,73 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="4dp"
+    android:orientation="vertical"
     android:background="#f3f3f3"
     >
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:layout_width="@dimen/list_item_avatar_size"
-        android:layout_height="@dimen/list_item_avatar_size"
-        android:layout_marginRight="16dp"
-        android:src="@drawable/ic_unknown_avatar"
-        android:id="@+id/icon"
-        android:padding="8dp"
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#3333"
         />
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:text="yo"
-        android:id="@+id/text1"
-        />
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:orientation="horizontal"
+        >
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="@dimen/list_item_avatar_size"
+            android:layout_height="@dimen/list_item_avatar_size"
+            android:src="@drawable/ic_unknown_avatar"
+            android:id="@+id/icon"
+            android:padding="8dp"
+            />
+
+        <Space
+            android:layout_width="16dp"
+            android:layout_height="wrap_content"
+            />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:text="yo"
+            android:id="@+id/text1"
+            />
+
+        <Space
+            android:layout_width="16dp"
+            android:layout_height="wrap_content"
+            />
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_thumb_up_outline"
+            android:id="@+id/like"
+            />
+
+        <Space
+            android:layout_width="8dp"
+            android:layout_height="wrap_content"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="0"
+            android:id="@+id/likes"
+            />
+
+    </LinearLayout>
 </LinearLayout>

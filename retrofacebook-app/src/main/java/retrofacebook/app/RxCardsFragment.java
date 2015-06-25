@@ -179,6 +179,10 @@ public class RxCardsFragment extends Fragment {
         ImageView icon;
         @InjectView(R.id.text1)
         TextView text1;
+        @InjectView(R.id.like)
+        ImageView like;
+        @InjectView(R.id.likes)
+        TextView likes;
 
         public CommentViewHolder(View itemView) {
             super(itemView);
@@ -194,6 +198,20 @@ public class RxCardsFragment extends Fragment {
                 .fitCenter()
                 .into(icon);
             text1.setText(item.message());
+            /*
+            if (item.userLikes()) {
+                Glide.with(itemView.getContext())
+                    .load(R.drawable.ic_thumb_up)
+                    .fitCenter()
+                    .into(like);
+            } else {
+                Glide.with(itemView.getContext())
+                    .load(R.drawable.ic_thumb_up_outline)
+                    .fitCenter()
+                    .into(like);
+            }
+            likes.setText(item.likeCount());
+            */
         }
     }
 }
