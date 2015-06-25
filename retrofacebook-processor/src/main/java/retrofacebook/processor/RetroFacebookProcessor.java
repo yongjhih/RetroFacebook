@@ -63,6 +63,7 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.ArrayType;
+import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
@@ -207,7 +208,7 @@ public class RetroFacebookProcessor extends AbstractProcessor {
     private final String body;
     private final String callbackType;
     private final String callbackArg;
-    private final Types typeUtils;
+    private final ProcessingEnvironment processingEnv;
     private final TypeSimplifier typeSimplifier;
     private final List<String> permissions;
 
@@ -217,14 +218,14 @@ public class RetroFacebookProcessor extends AbstractProcessor {
         ExecutableElement method,
         String type,
         TypeSimplifier typeSimplifier,
-        Types typeUtils
+        ProcessingEnvironment processingEnv
         ) {
       this.name = name;
       this.identifier = identifier;
       this.method = method;
       this.type = type;
       this.typeSimplifier = typeSimplifier;
-      this.typeUtils = typeUtils;
+      this.processingEnv = processingEnv;
       this.annotations = buildAnnotations(typeSimplifier);
       this.args = formalTypeArgsString(method);
       this.path = buildPath(method);
@@ -255,19 +256,22 @@ public class RetroFacebookProcessor extends AbstractProcessor {
     }
 
     public String buildCallbackType(ExecutableElement method) {
+      Types typeUtils = processingEnv.getTypeUtils();
+      TypeMirror callback = getTypeMirror(processingEnv, RetroFacebook.Callback.class);
+
       List<? extends VariableElement> parameters = method.getParameters();
       for (VariableElement parameter : parameters) {
+        TypeMirror type = parameter.asType();
+        if (type instanceof DeclaredType) {
+          List<? extends TypeMirror> params = ((DeclaredType) type).getTypeArguments();
+          if (params.size() == 1) {
+            callback = typeUtils.getDeclaredType((TypeElement) typeUtils
+                    .asElement(callback), new TypeMirror[] {params.get(0)});
 
-        //if (typeUtils.isAssignable(parameter.asType(), retrofacebook.RetroFacebook.Callback.class)) { // FIXME hardcode
-        //if ("retrofacebook.RetroFacebook.Callback".equals(parameter.asType().toString())) {
-        TypeElement type = (TypeElement) typeUtils.asElement(parameter.asType());
-        //if (parameter.asType().toString().endsWith("Callback")) {
-        if (type.getQualifiedName().toString().endsWith("Callback")) {
-            String simpleType = typeSimplifier.simplify(parameter.asType());
-
-            simpleType = simpleType.replaceAll("[^<]*<", "").replace(" ", "").replace("<", "").replace(">", ""); // FIXME hardcode
-            //if (true) throw new RuntimeException("yo: " + simpleType);
-            return simpleType;
+            if (typeUtils.isSubtype(type, callback)) {
+              return typeSimplifier.simplify(params.get(0));
+            }
+          }
         }
       }
       return "";
@@ -751,7 +755,7 @@ public class RetroFacebookProcessor extends AbstractProcessor {
       String propertyName = methodToPropertyName.get(method);
       String identifier = methodToIdentifier.get(method);
       List<String> args = new ArrayList<String>();
-      props.add(new Property(propertyName, identifier, method, propertyType, typeSimplifier, typeUtils));
+      props.add(new Property(propertyName, identifier, method, propertyType, typeSimplifier, processingEnv));
     }
     // If we are running from Eclipse, undo the work of its compiler which sorts methods.
     eclipseHack().reorderProperties(props);
