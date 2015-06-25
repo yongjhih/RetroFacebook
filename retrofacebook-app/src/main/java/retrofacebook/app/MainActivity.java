@@ -63,7 +63,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
-        facebook = Facebook.create(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -113,8 +112,15 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+
     private void setupViewPager(ViewPager viewPager) {
         Adapter adapter = new Adapter(getSupportFragmentManager());
+        setupAdapter(adapter);
+        viewPager.setAdapter(adapter);
+    }
+
+    private void setupAdapter(Adapter adapter) {
+        facebook = Facebook.create(this);
         adapter.fragments.add(FragmentPage.create().title("Photos").fragment(() -> {
             return CardsFragment.create()
                 .items(facebook.getUploadedPhotos().take(32)
@@ -282,7 +288,7 @@ public class MainActivity extends AppCompatActivity {
         //adapter.fragments.add(FragmentPage.create().fragment(() -> new CheeseListFragment()).title("Category 8"));
         //adapter.fragments.add(FragmentPage.create().fragment(() -> new CheeseListFragment()).title("Category 9"));
         //adapter.fragments.add(FragmentPage.create().fragment(() -> new CheeseListFragment()).title("Category 10"));
-        viewPager.setAdapter(adapter);
+        //adapter.notifyDataSetChanged();
     }
 
     private void setupDrawerContent(NavigationView navigationView) {
@@ -348,6 +354,11 @@ public class MainActivity extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             return fragments.get(position).title();
         }
+
+        //@Override
+        //public int getItemPosition(Object object) {
+            //return FragmentPagerAdapter.POSITION_NONE;
+        //}
     }
 
     @Override
