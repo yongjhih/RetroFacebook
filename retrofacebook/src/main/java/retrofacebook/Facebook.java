@@ -539,6 +539,10 @@ public abstract class Facebook {
     CallbackManager callbackManager;
     Activity activity;
 
+    public CallbackManager getCallbackManager() {
+        return callbackManager;
+    }
+
     public Facebook initialize(Activity activity) {
         this.activity = activity;
 
@@ -553,11 +557,13 @@ public abstract class Facebook {
     }
 
     public Observable<LoginResult> logInWithReadPermissions() {
+        // TODO logInWithReadPermissions(getDefaultPermissions().filterReadPermissions());
         //return logInWithReadPermissions(Arrays.asList("public_profile", "user_friends", "user_photos", "user_posts"));
         return logInWithReadPermissions(Arrays.asList("public_profile"));
     }
 
     public Observable<LoginResult> logInWithPublishPermissions() {
+        // TODO logInWithPublishPermissions(getDefaultPermissions().filterPublishPermissions())
         return logInWithPublishPermissions(Arrays.asList("publish_actions"));
     }
 
