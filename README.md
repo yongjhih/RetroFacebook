@@ -24,9 +24,7 @@ Easy to add API and model.
 
 Inspired by retrofit.
 
-![photos.png](art/screenshot-photos.png)
-![photos.png](art/screenshot-friends.png)
-![posts.png](art/screenshot-posts.png)
+![photos.png](art/screenshot-photos-200.png) ![photos.png](art/screenshot-friends-200.png) ![posts.png](art/screenshot-posts-200.png)
 
 ## Usage
 
