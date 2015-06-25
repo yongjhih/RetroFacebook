@@ -980,6 +980,10 @@ public class RetroFacebookProcessor extends AbstractProcessor {
   }
 
   private TypeMirror getTypeMirror(Class<?> c) {
+    return getTypeMirror(processingEnv, c);
+  }
+
+  private static TypeMirror getTypeMirror(ProcessingEnvironment processingEnv, Class<?> c) {
     return processingEnv.getElementUtils().getTypeElement(c.getCanonicalName()).asType();
   }
 
