@@ -111,9 +111,9 @@
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
+            android:id="@+id/like"
             android:layout_gravity="center_vertical"
             android:src="@drawable/ic_thumb_up_outline"
-            android:id="@+id/like"
             />
 
         <Space
@@ -124,9 +124,9 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/likes"
             android:layout_gravity="center_vertical"
             android:text="0"
-            android:id="@+id/likes"
             />
 
     </LinearLayout>

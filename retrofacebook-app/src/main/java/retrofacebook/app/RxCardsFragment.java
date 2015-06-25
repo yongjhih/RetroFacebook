@@ -138,26 +138,33 @@ public class RxCardsFragment extends Fragment {
 
         @Override
         public void onBind(int position, RxCard item) {
+            icon.setVisibility(View.GONE);
             ViewObservable.bindView(icon, item.icon).filter(url -> !android.text.TextUtils.isEmpty(url)).subscribe(url -> {
+                icon.setVisibility(View.VISIBLE);
                 Glide.with(itemView.getContext())
                     .load(url)
                     .fitCenter()
                     .into(icon);
             });
+
             ViewObservable.bindView(text1, item.text1)
                 .filter(s -> !android.text.TextUtils.isEmpty(s))
                 .subscribe(s -> text1.setText(s));
             ViewObservable.bindView(message, item.message)
                 .filter(s -> !android.text.TextUtils.isEmpty(s))
                 .subscribe(s -> message.setText(s));
+
+            image.setVisibility(View.GONE);
             ViewObservable.bindView(image, item.image).filter(url -> !android.text.TextUtils.isEmpty(url)).subscribe(url -> {
+                image.setVisibility(View.VISIBLE);
                 Glide.with(itemView.getContext())
                     .load(url)
                     .fitCenter()
                     .into(image);
             });
-            ViewObservable.clicks(itemView).take(1).subscribe(ev -> {
-                Context context = ev.view().getContext();
+
+            itemView.setOnClickListener(v -> {
+                Context context = v.getContext();
                 Intent intent = new Intent(context, CheeseDetailActivity.class);
 
                 String name = item.text1.toBlocking().singleOrDefault(null);
@@ -166,10 +173,12 @@ public class RxCardsFragment extends Fragment {
                 context.startActivity(intent);
             });
 
+            commentsView.setVisibility(View.GONE);
+            commentsAdapter.getList().clear();
             ViewObservable.bindView(commentsView, item.comments).toList().subscribe(list -> {
-                    commentsAdapter.getList().clear();
                     commentsAdapter.getList().addAll(list);
                     commentsAdapter.notifyDataSetChanged();
+                    commentsView.setVisibility(View.VISIBLE);
                 });
         }
     }
@@ -198,7 +207,6 @@ public class RxCardsFragment extends Fragment {
                 .fitCenter()
                 .into(icon);
             text1.setText(item.message());
-            /*
             if (item.userLikes()) {
                 Glide.with(itemView.getContext())
                     .load(R.drawable.ic_thumb_up)
@@ -210,8 +218,7 @@ public class RxCardsFragment extends Fragment {
                     .fitCenter()
                     .into(like);
             }
-            likes.setText(item.likeCount());
-            */
+            likes.setText("" + item.likeCount());
         }
     }
 }
