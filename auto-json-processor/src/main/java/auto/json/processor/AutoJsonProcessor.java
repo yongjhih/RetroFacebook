@@ -271,10 +271,13 @@ public class AutoJsonProcessor extends AbstractProcessor {
           annotation = annotation.replace(")(", ", ");
           builder.add(annotation);
 
-          if (annotation.contains("name")) {
-              key = annotation.replaceAll(".*name\\s*=[^\"]*\"([^\"]*)\".*", "$1"); // FIXME hardcode
+          AutoJson.Field field = method.getAnnotation(AutoJson.Field.class);
+          String[] names = field.name();
+
+          key = name;
+          if (names.length > 0) {
+            key = names[0];
           }
-          if (key == null || "".equals(key)) key = name;
         } else {
           // TODO(user): we should import this type if it is not already imported
           AnnotationOutput annotationOutput = new AnnotationOutput(typeSimplifier);
