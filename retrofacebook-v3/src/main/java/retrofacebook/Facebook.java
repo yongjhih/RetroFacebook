@@ -355,12 +355,18 @@ public abstract class Facebook {
     /**
      * @see https://developers.facebook.com/docs/graph-api/reference/user/likes/
      */
-    @RetroFacebook.GET("/{user-id}/likes")
-    public abstract Observable<Page> getLikes(@RetroFacebook.Path("user-id") String userId);
+    @RetroFacebook.GET(value = "/{user-id}/likes", permissions = "user_likes")
+    public abstract Observable<Page> getLikedPages(@RetroFacebook.Path("user-id") String userId);
 
-    public Observable<Page> getLikes() {
-        return getLikes("me");
+    public Observable<Page> getLikedPages() {
+        return getLikedPages("me");
     }
+
+    /**
+     * @see https://developers.facebook.com/docs/graph-api/reference/v2.3/object/likes
+     */
+    @RetroFacebook.GET("/{object-id}/likes")
+    public abstract Observable<User> getLikedUsers(@RetroFacebook.Path("object-id") String objectId);
 
     //@RetroFacebook.GET("/{user-id}/") public abstract Observable<Page> getMovies(Page.Properties properties);
 
@@ -482,8 +488,17 @@ public abstract class Facebook {
     @RetroFacebook.GET(value = "/{video-id}", permissions = "user_videos")
     public abstract Observable<Video> getVideo(@RetroFacebook.Path("video-id") String videoId);
 
-    @RetroFacebook.POST(value = "/{object-id}/likes", permissions = "publish_actions"/* ? */)
-    public abstract Observable<Struct> like(@RetroFacebook.Body Like like, @RetroFacebook.Path("object-id") String id);
+    /**
+     * @see https://developers.facebook.com/docs/graph-api/reference/v2.3/object/likes
+     */
+    @RetroFacebook.POST(value = "/{object-id}/likes", permissions = "publish_actions"/* ? */) // as User
+    public abstract Observable<Struct> like(@RetroFacebook.Path("object-id") String id);
+
+    /**
+     * @see https://developers.facebook.com/docs/graph-api/reference/v2.3/object/likes
+     */
+    @RetroFacebook.POST(value = "/{object-id}/likes", permissions = "publish_pages"/* ? */)
+    public abstract Observable<Struct> likeAsPage(@RetroFacebook.Body Like like, @RetroFacebook.Path("object-id") String id);
 
     public Observable<Struct> score(Score score) {
         return score(score, "me");

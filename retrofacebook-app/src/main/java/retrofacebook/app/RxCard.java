@@ -32,4 +32,10 @@ public class RxCard {
     public Observable<String> image = Observable.empty();
     @Nullable
     public Observable<Comment> comments = Observable.empty();
+    @Nullable
+    public Observable<Struct> like = Observable.empty();
+    @Nullable
+    public Observable<Struct> unlike = Observable.empty();
+    @Nullable
+    public Observable<Boolean> liked = Observable.empty();
 }

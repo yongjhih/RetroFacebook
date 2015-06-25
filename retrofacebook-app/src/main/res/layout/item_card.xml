@@ -86,16 +86,38 @@
                 android:layout_marginTop="2dp"
                 android:layout_marginBottom="2dp"
                 >
-                <TextView
-                    android:layout_width="wrap_content"
+                <ImageView
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:src="@drawable/ic_thumb_up"
+                    />
+                <Space
+                    android:layout_width="2dp"
                     android:layout_height="wrap_content"
-                    android:text="3,123 likes   "
-                    android:textSize="11sp"
                     />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="132 comments"
+                    android:text="0"
+                    android:textSize="11sp"
+                    />
+                <Space
+                    android:layout_width="12dp"
+                    android:layout_height="wrap_content"
+                    />
+                <ImageView
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:src="@drawable/ic_comment_outline"
+                    />
+                <Space
+                    android:layout_width="2dp"
+                    android:layout_height="wrap_content"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="132"
                     android:textSize="11sp"
                     />
             </LinearLayout>
@@ -122,13 +144,17 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/ic_thumb_up_outline"
-                android:layout_marginRight="16dp"
+                android:id="@+id/like"
+                />
+            <Space
+                android:layout_width="16dp"
+                android:layout_height="wrap_content"
                 />
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/ic_comment_outline"
-                android:layout_marginRight="16dp"
+                android:id="@+id/comment"
                 />
         </LinearLayout>
 

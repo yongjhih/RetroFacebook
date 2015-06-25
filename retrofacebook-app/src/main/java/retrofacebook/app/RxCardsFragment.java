@@ -115,6 +115,10 @@ public class RxCardsFragment extends Fragment {
         ImageView image;
         @InjectView(R.id.comments)
         RecyclerView commentsView;
+        @InjectView(R.id.like)
+        ImageView likeView;
+        @InjectView(R.id.comment)
+        ImageView commentView;
 
         ListRecyclerAdapter<Comment, CommentViewHolder> commentsAdapter;
 
@@ -136,6 +140,8 @@ public class RxCardsFragment extends Fragment {
             commentsView.setAdapter(commentsAdapter);
         }
 
+        boolean liked;
+
         @Override
         public void onBind(int position, RxCard item) {
             icon.setVisibility(View.GONE);
@@ -147,9 +153,22 @@ public class RxCardsFragment extends Fragment {
                     .into(icon);
             });
 
+            itemView.setOnClickListener(v -> {}); // clear
             ViewObservable.bindView(text1, item.text1)
-                .filter(s -> !android.text.TextUtils.isEmpty(s))
-                .subscribe(s -> text1.setText(s));
+                .filter(name -> !android.text.TextUtils.isEmpty(name))
+                .subscribe(name -> {
+                    text1.setText(name);
+
+                    itemView.setOnClickListener(v -> {
+                        Context context = v.getContext();
+                        Intent intent = new Intent(context, CheeseDetailActivity.class);
+
+                        if (!android.text.TextUtils.isEmpty(name)) intent.putExtra(CheeseDetailActivity.EXTRA_NAME, name);
+
+                        context.startActivity(intent);
+                    });
+                });
+
             ViewObservable.bindView(message, item.message)
                 .filter(s -> !android.text.TextUtils.isEmpty(s))
                 .subscribe(s -> message.setText(s));
@@ -163,14 +182,40 @@ public class RxCardsFragment extends Fragment {
                     .into(image);
             });
 
-            itemView.setOnClickListener(v -> {
-                Context context = v.getContext();
-                Intent intent = new Intent(context, CheeseDetailActivity.class);
+            liked = false;
+            likeView.setOnClickListener(v -> {}); // clear
+            ViewObservable.bindView(likeView, item.liked).subscribe(b -> {
+                liked = b;
+                android.util.Log.d("RetroFacebook", "liked: " + liked);
+                if (liked) {
+                    Glide.with(itemView.getContext())
+                        .load(R.drawable.ic_thumb_up)
+                        .fitCenter()
+                        .into(likeView);
+                } else {
+                    Glide.with(itemView.getContext())
+                        .load(R.drawable.ic_thumb_up_outline)
+                        .fitCenter()
+                        .into(likeView);
+                }
 
-                String name = item.text1.toBlocking().singleOrDefault(null);
-                if (!android.text.TextUtils.isEmpty(name)) intent.putExtra(CheeseDetailActivity.EXTRA_NAME, name);
+                likeView.setOnClickListener(v -> {
+                    liked = !liked;
 
-                context.startActivity(intent);
+                    if (liked) {
+                        Glide.with(itemView.getContext())
+                            .load(R.drawable.ic_thumb_up)
+                            .fitCenter()
+                            .into(likeView);
+                        item.like.subscribe();
+                    } else {
+                        Glide.with(itemView.getContext())
+                            .load(R.drawable.ic_thumb_up_outline)
+                            .fitCenter()
+                            .into(likeView);
+                        item.unlike.subscribe();
+                    }
+                });
             });
 
             commentsView.setVisibility(View.GONE);

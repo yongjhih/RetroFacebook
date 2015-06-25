@@ -125,7 +125,15 @@ public final class $subclass$formalTypes extends $origClass$actualTypes {
 
 #elseif ($p.post)
 
+#if (!$p.body.empty)
+
                 return ${p.body}.toBundle();
+
+#else
+
+                return null;
+
+#end
 
 #else
 

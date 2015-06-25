@@ -349,12 +349,29 @@ public abstract class Facebook {
     /**
      * @see https://developers.facebook.com/docs/graph-api/reference/user/likes/
      */
-    @RetroFacebook.GET("/{user-id}/likes")
-    public abstract Observable<Page> getLikes(@RetroFacebook.Path("user-id") String userId);
+    @RetroFacebook.GET(value = "/{user-id}/likes", permissions = "user_likes")
+    public abstract Observable<Page> getLikedPages(@RetroFacebook.Path("user-id") String userId);
 
-    public Observable<Page> getLikes() {
-        return getLikes("me");
+    public Observable<Page> getLikedPages() {
+        return getLikedPages("me");
     }
+
+    /**
+     * @see https://developers.facebook.com/docs/graph-api/reference/v2.3/object/likes
+     */
+    @RetroFacebook.GET("/{object-id}/likes")
+    public abstract Observable<User> getLikedUsers(@RetroFacebook.Path("object-id") String objectId); // getLikes()
+
+    public Observable<User> getLikedUsers(Photo photo) {
+        return getLikedUsers(photo.id());
+    }
+
+    public Observable<User> getLikedUsers(Post post) {
+        return getLikedUsers(post.id());
+    }
+
+    @RetroFacebook.GET("/me")
+    public abstract Observable<User> me();
 
     //@RetroFacebook.GET("/{user-id}/") public abstract Observable<Page> getMovies(Page.Properties properties);
 
@@ -476,8 +493,49 @@ public abstract class Facebook {
     @RetroFacebook.GET(value = "/{video-id}", permissions = "user_videos")
     public abstract Observable<Video> getVideo(@RetroFacebook.Path("video-id") String videoId);
 
-    @RetroFacebook.POST(value = "/{object-id}/likes", permissions = "publish_actions"/* ? */)
-    public abstract Observable<Struct> like(@RetroFacebook.Body Like like, @RetroFacebook.Path("object-id") String id);
+    /**
+     * @see https://developers.facebook.com/docs/graph-api/reference/v2.3/object/likes
+     */
+    @RetroFacebook.POST(value = "/{object-id}/likes", permissions = "publish_actions"/* ? */) // as User
+    public abstract Observable<Struct> like(@RetroFacebook.Path("object-id") String id);
+
+    public Observable<Struct> like(Photo photo) {
+        return like(photo.id());
+    }
+
+    public Observable<Struct> like(Post post) {
+        return like(post.id());
+    }
+
+    /**
+     * @see https://developers.facebook.com/docs/graph-api/reference/v2.3/object/likes
+     */
+    @RetroFacebook.DELETE(value = "/{object-id}/likes", permissions = "publish_actions"/* ? */) // as User
+    public abstract Observable<Struct> unlike(@RetroFacebook.Path("object-id") String id);
+
+    public Observable<Struct> unlike(Photo photo) {
+        return unlike(photo.id());
+    }
+
+    public Observable<Struct> unlike(Post post) {
+        return unlike(post.id());
+    }
+
+    /**
+     * @see https://developers.facebook.com/docs/graph-api/reference/v2.3/object/likes
+     */
+    @RetroFacebook.DELETE(value = "/{object-id}/likes", permissions = "publish_pages"/* ? */)
+    public abstract Observable<Struct> unlikePage(@RetroFacebook.Path("object-id") String id);
+
+    public Observable<Struct> unlike(Page page) {
+        return unlikePage(page.id());
+    }
+
+    /**
+     * @see https://developers.facebook.com/docs/graph-api/reference/v2.3/object/likes
+     */
+    @RetroFacebook.POST(value = "/{object-id}/likes", permissions = "publish_pages"/* ? */)
+    public abstract Observable<Struct> likeAsPage(@RetroFacebook.Body Like like, @RetroFacebook.Path("object-id") String id);
 
     public Observable<Struct> score(Score score) {
         return score(score, "me");
