@@ -119,14 +119,14 @@
             android:paddingRight="16dp"
             >
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:src="@drawable/ic_thumb_up_outline"
                 android:layout_marginRight="16dp"
                 />
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:src="@drawable/ic_comment_outline"
                 android:layout_marginRight="16dp"
                 />
@@ -140,28 +140,11 @@
 
         <!-- comments with gray background -->
 
-        <LinearLayout
+        <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="4dp"
-            android:background="#f3f3f3"
-            >
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:layout_width="@dimen/list_item_avatar_size"
-                android:layout_height="@dimen/list_item_avatar_size"
-                android:layout_marginRight="16dp"
-                android:src="@drawable/ic_unknown_avatar"
-                />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="yo"
-                android:textAppearance="?attr/textAppearanceListItem" />
-
-        </LinearLayout>
+            android:id="@+id/comments"
+            />
 
     </LinearLayout>
 </android.support.v7.widget.CardView>

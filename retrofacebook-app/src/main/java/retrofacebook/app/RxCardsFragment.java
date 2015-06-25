@@ -113,11 +113,28 @@ public class RxCardsFragment extends Fragment {
         TextView message;
         @InjectView(R.id.image)
         ImageView image;
+        @InjectView(R.id.comments)
+        RecyclerView commentsView;
+
+        ListRecyclerAdapter<Comment, CommentViewHolder> commentsAdapter;
 
         public CardViewHolder(View itemView) {
             super(itemView);
             ButterKnife.inject(this, itemView);
-        };
+
+            commentsAdapter = ListRecyclerAdapter.create();
+            commentsAdapter.createViewHolder(new Func2<ViewGroup, Integer, CommentViewHolder>() {
+                @Override
+                public CommentViewHolder call(ViewGroup parent, Integer position) {
+                    View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_comment, parent, false);
+
+                    return new CommentViewHolder(view);
+                }
+            });
+
+            commentsView.setLayoutManager(new MeasuredLinearLayoutManager(commentsView.getContext()));
+            commentsView.setAdapter(commentsAdapter);
+        }
 
         @Override
         public void onBind(int position, RxCard item) {
@@ -148,6 +165,35 @@ public class RxCardsFragment extends Fragment {
 
                 context.startActivity(intent);
             });
+
+            ViewObservable.bindView(commentsView, item.comments).toList().subscribe(list -> {
+                    commentsAdapter.getList().clear();
+                    commentsAdapter.getList().addAll(list);
+                    commentsAdapter.notifyDataSetChanged();
+                });
+        }
+    }
+
+    public static class CommentViewHolder extends BindViewHolder<Comment> {
+        @InjectView(R.id.icon)
+        ImageView icon;
+        @InjectView(R.id.text1)
+        TextView text1;
+
+        public CommentViewHolder(View itemView) {
+            super(itemView);
+            ButterKnife.inject(this, itemView);
+        }
+
+        @Override
+        public void onBind(int position, Comment item) {
+            android.util.Log.d("RetroFacebook", "comment: " + item);
+            android.util.Log.d("RetroFacebook", "comment: " + item.message());
+            Glide.with(itemView.getContext())
+                .load("http://graph.facebook.com/" + item.from().id() + "/picture?width=400&height=400")
+                .fitCenter()
+                .into(icon);
+            text1.setText(item.message());
         }
     }
 }

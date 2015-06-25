@@ -19,6 +19,7 @@ package retrofacebook.app;
 import android.support.annotation.Nullable;
 
 import rx.Observable;
+import retrofacebook.*;
 
 public class RxCard {
     @Nullable
@@ -29,4 +30,6 @@ public class RxCard {
     public Observable<String> message = Observable.empty();
     @Nullable
     public Observable<String> image = Observable.empty();
+    @Nullable
+    public Observable<Comment> comments = Observable.empty();
 }
