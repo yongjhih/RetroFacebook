@@ -37,6 +37,8 @@ import java.util.Map;
  */
 @RetroFacebook
 public abstract class Facebook {
+    public static Facebook self;
+
     @RetroFacebook.GET(value = "/{post-id}", permissions = "user_posts")
     public abstract Observable<Post> getPost(@RetroFacebook.Path("post-id") String postId);
 
@@ -507,6 +509,9 @@ public abstract class Facebook {
         return like(post.id());
     }
 
+    public Observable<Struct> like(Comment comment) {
+        return like(comment.id());
+    }
     /**
      * @see https://developers.facebook.com/docs/graph-api/reference/v2.3/object/likes
      */
@@ -591,7 +596,8 @@ public abstract class Facebook {
     // LifeCycle management
 
     public static Facebook create(Activity activity) {
-        return new RetroFacebook_Facebook(activity).initialize(activity);
+        self = new RetroFacebook_Facebook(activity).initialize(activity);
+        return self;
     }
 
     CallbackManager callbackManager;

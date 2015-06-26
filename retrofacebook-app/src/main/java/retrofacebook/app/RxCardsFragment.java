@@ -251,7 +251,7 @@ public class RxCardsFragment extends Fragment {
         @InjectView(R.id.text1)
         TextView text1;
         @InjectView(R.id.like)
-        ImageView like;
+        ImageView likeView;
         @InjectView(R.id.likes)
         TextView likes;
 
@@ -260,27 +260,57 @@ public class RxCardsFragment extends Fragment {
             ButterKnife.inject(this, itemView);
         }
 
+        boolean liked;
+        int likeCount;
+
         @Override
         public void onBind(int position, Comment item) {
             android.util.Log.d("RetroFacebook", "comment: " + item);
             android.util.Log.d("RetroFacebook", "comment: " + item.message());
+
             Glide.with(itemView.getContext())
                 .load("http://graph.facebook.com/" + item.from().id() + "/picture?width=400&height=400")
                 .fitCenter()
                 .into(icon);
             text1.setText(item.message());
-            if (item.userLikes()) {
+
+            likeCount = item.likeCount();
+            likes.setText("" + likeCount);
+
+            liked = item.userLikes();
+            if (liked) {
                 Glide.with(itemView.getContext())
                     .load(R.drawable.ic_thumb_up)
                     .fitCenter()
-                    .into(like);
+                    .into(likeView);
             } else {
                 Glide.with(itemView.getContext())
                     .load(R.drawable.ic_thumb_up_outline)
                     .fitCenter()
-                    .into(like);
+                    .into(likeView);
             }
-            likes.setText("" + item.likeCount());
+
+            likeView.setOnClickListener(v -> {
+                liked = !liked;
+
+                if (liked) {
+                    likeCount += 1;
+                    Glide.with(itemView.getContext())
+                        .load(R.drawable.ic_thumb_up)
+                        .fitCenter()
+                        .into(likeView);
+                    Facebook.self.like(item.id()).subscribe();
+                } else {
+                    likeCount -= 1;
+                    Glide.with(itemView.getContext())
+                        .load(R.drawable.ic_thumb_up_outline)
+                        .fitCenter()
+                        .into(likeView);
+                    Facebook.self.unlike(item.id()).subscribe();
+                }
+                likes.setText("" + likeCount);
+            });
+
         }
     }
 }
