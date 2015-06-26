@@ -20,6 +20,7 @@ import android.support.annotation.Nullable;
 
 import rx.Observable;
 import retrofacebook.*;
+import rx.functions.*;
 
 public class RxCard {
     @Nullable
@@ -42,4 +43,10 @@ public class RxCard {
     public Observable<Integer> likeCount = Observable.empty();
     @Nullable
     public Observable<Integer> commentCount = Observable.empty();
+
+    public Observable<Struct> comment(Comment comment) {
+        return onComment.call(comment);
+    }
+
+    Func1<Comment, Observable<Struct>> onComment = comment -> Observable.empty();
 }

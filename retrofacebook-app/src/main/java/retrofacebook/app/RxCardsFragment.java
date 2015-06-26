@@ -30,6 +30,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.EditText;
 
 import com.bumptech.glide.Glide;
 
@@ -57,14 +58,14 @@ public class RxCardsFragment extends Fragment {
     @InjectView(R.id.refresh)
     SwipeRefreshLayout refreshView;
 
-    Subject<View, View> viewSubject = PublishSubject.create();
+    //Subject<View, View> viewSubject = PublishSubject.create();
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_list_swipe, container, false);
         ButterKnife.inject(this, view);
-        viewSubject.onNext(view);
+        //viewSubject.onNext(view);
 
         listAdapter = ListRecyclerAdapter.create();
         listAdapter.createViewHolder(new Func2<ViewGroup, Integer, CardViewHolder>() {
@@ -148,11 +149,18 @@ public class RxCardsFragment extends Fragment {
         ImageView commentView;
         @InjectView(R.id.commentCount)
         TextView commentCountView;
+        @InjectView(R.id.comment_avatar)
+        ImageView commentAvatar;
+        @InjectView(R.id.comment_edit)
+        EditText commentEdit;
+        @InjectView(R.id.send)
+        ImageView sendView;
 
         ListRecyclerAdapter<Comment, CommentViewHolder> commentsAdapter;
         boolean liked;
         int likeCount;
         int commentCount;
+        User meUser;
 
         public CardViewHolder(View itemView) {
             super(itemView);
@@ -281,6 +289,30 @@ public class RxCardsFragment extends Fragment {
                     commentsAdapter.notifyDataSetChanged();
                     commentsView.setVisibility(View.VISIBLE);
                 });
+
+            meUser = null;
+            ViewObservable.bindView(commentAvatar, Facebook.get().me()).subscribe(me -> {
+                meUser = me;
+                Glide.with(commentAvatar.getContext())
+                    .load("http://graph.facebook.com/" + me.id() + "/picture?width=400&height=400")
+                    .fitCenter()
+                    .into(commentAvatar);
+            });
+
+            sendView.setOnClickListener(v -> {
+                if (meUser != null) {
+                    Comment comment = Comment.builder()
+                        .message(commentEdit.getText().toString())
+                        .from(meUser)
+                        .likeCount(0)
+                        .userLikes(false)
+                        .build();
+                    item.comment(comment).subscribe();
+                    commentEdit.setText("");
+                    commentsAdapter.getList().add(comment);
+                    commentsAdapter.notifyItemInserted(commentsAdapter.getItemCount() - 1);
+                }
+            });
         }
     }
 

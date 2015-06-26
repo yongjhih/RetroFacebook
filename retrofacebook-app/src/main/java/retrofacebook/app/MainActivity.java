@@ -156,6 +156,9 @@ public class MainActivity extends AppCompatActivity {
                                 return facebook.getLikedUsers(photo).filter(user -> user.id().equals(me.id())).isEmpty().map(b -> !b);
                             });
                         }
+                        card.onComment = comment -> {
+                            return facebook.comment(comment, photo);
+                        };
                         return card;
                     }));
         }));
@@ -197,6 +200,9 @@ public class MainActivity extends AppCompatActivity {
                             return facebook.getLikedUsers(post).filter(user -> user.id().equals(me.id())).isEmpty().map(b -> !b);
                         });
                     }
+                    card.onComment = comment -> {
+                        return facebook.comment(comment, post);
+                    };
                     return card;
                 }));
         }));
