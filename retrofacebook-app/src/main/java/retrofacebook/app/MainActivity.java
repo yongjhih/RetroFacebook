@@ -173,7 +173,8 @@ public class MainActivity extends AppCompatActivity {
                     card.icon = Observable.just("http://graph.facebook.com/" + post.from().id() + "/picture?width=400&height=400");
                     card.text1 = Observable.just(post.from().name());
                     card.message = Observable.just(post.message());
-                    card.image = Observable.just(post.picture());
+                    //card.image = Observable.just(post.picture());
+                    card.image = post.photo().map(photo -> photo.images().get(0).source());
                     if (post.comments() != null) {
                         card.comments = Observable.from(post.comments().data());
                         card.commentCount = card.comments.count();

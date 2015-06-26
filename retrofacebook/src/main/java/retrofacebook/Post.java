@@ -20,6 +20,7 @@ import android.support.annotation.Nullable;
 import android.os.Bundle;
 
 import java.util.List;
+import rx.Observable;
 
 @AutoJson
 public abstract class Post {
@@ -157,6 +158,11 @@ public abstract class Post {
 
     public static Builder builder() {
         return new AutoJson_Post.Builder();
+    }
+
+    public Observable<Photo> photo() {
+        if ("photo".equals(type())) return Facebook.self.getPhoto(objectId());
+        return Observable.empty();
     }
 
     //public abstract Builder toBuilder();

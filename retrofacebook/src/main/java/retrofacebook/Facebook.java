@@ -72,6 +72,9 @@ public abstract class Facebook {
         return getPhotos("me");
     }
 
+    @RetroFacebook.GET(value = "/{object-id}", permissions = "user_photos")
+    public abstract Observable<Photo> getPhoto(@RetroFacebook.Path("object-id") String objectId);
+
     /**
      * @see <a href="https://developers.facebook.com/docs/graph-api/reference/v2.3/user/feed">{user-id}/feed - Facebook Developers</a>
      */
