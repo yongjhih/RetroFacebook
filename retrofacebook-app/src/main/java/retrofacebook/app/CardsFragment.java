@@ -41,19 +41,25 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 import rx.Observable;
+import rx.Subscription;
 import rx.functions.*;
 
 import rx.android.app.*;
 
 import retrofacebook.*;
+import android.support.v4.widget.SwipeRefreshLayout;
 
 public class CardsFragment extends Fragment {
+    @InjectView(R.id.list)
     RecyclerView listView;
+    @InjectView(R.id.refresh)
+    SwipeRefreshLayout refreshView;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        listView = (RecyclerView) inflater.inflate(R.layout.fragment_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_list_swipe, container, false);
+        ButterKnife.inject(this, view);
 
         listAdapter = ListRecyclerAdapter.create();
         listAdapter.createViewHolder(new Func2<ViewGroup, Integer, CardViewHolder>() {
@@ -74,21 +80,33 @@ public class CardsFragment extends Fragment {
         listView.setLayoutManager(new LinearLayoutManager(listView.getContext()));
         listView.setAdapter(listAdapter);
 
-        return listView;
+        refreshView.setOnRefreshListener(() -> {
+            load();
+        });
+
+        return view;
     }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         if (isVisibleToUser) {
-            AppObservable.bindFragment(CardsFragment.this, items).toList().subscribe(list -> {
-                android.util.Log.d("RetroFacebook", "list: " + list);
-                android.util.Log.d("RetroFacebook", "list.size(): " + list.size());
-                listAdapter.getList().clear();
-                listAdapter.getList().addAll(list);
-                listAdapter.notifyDataSetChanged();
-            });
+            load();
         }
     }
+
+    public Subscription load() {
+        refreshView.setRefreshing(true);
+        return AppObservable.bindFragment(CardsFragment.this, items).toList().subscribe(list -> {
+            android.util.Log.d("RetroFacebook", "list: " + list);
+            android.util.Log.d("RetroFacebook", "list.size(): " + list.size());
+            listAdapter.getList().clear();
+            listAdapter.getList().addAll(list);
+            listAdapter.notifyDataSetChanged();
+        }, e -> {}, () -> {
+            refreshView.setRefreshing(false);
+        });
+    }
+
 
     private ListRecyclerAdapter<Card, CardViewHolder> listAdapter;
     Observable<Card> items;
