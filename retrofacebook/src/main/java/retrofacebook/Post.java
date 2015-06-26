@@ -161,7 +161,7 @@ public abstract class Post {
     }
 
     public Observable<Photo> photo() {
-        if ("photo".equals(type())) return Facebook.self.getPhoto(objectId());
+        if ("photo".equals(type())) return Facebook.get().getPhoto(objectId());
         return Observable.empty();
     }
 

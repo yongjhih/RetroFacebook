@@ -37,7 +37,11 @@ import java.util.Map;
  */
 @RetroFacebook
 public abstract class Facebook {
-    public static Facebook self;
+    private static Facebook self;
+
+    public static Facebook get() {
+        return self;
+    }
 
     @RetroFacebook.GET(value = "/{post-id}", permissions = "user_posts")
     public abstract Observable<Post> getPost(@RetroFacebook.Path("post-id") String postId);

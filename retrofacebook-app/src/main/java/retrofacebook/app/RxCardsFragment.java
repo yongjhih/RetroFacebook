@@ -309,14 +309,14 @@ public class RxCardsFragment extends Fragment {
                         .load(R.drawable.ic_thumb_up)
                         .fitCenter()
                         .into(likeView);
-                    Facebook.self.like(item.id()).subscribe();
+                    Facebook.get().like(item.id()).subscribe();
                 } else {
                     likeCount -= 1;
                     Glide.with(itemView.getContext())
                         .load(R.drawable.ic_thumb_up_outline)
                         .fitCenter()
                         .into(likeView);
-                    Facebook.self.unlike(item.id()).subscribe();
+                    Facebook.get().unlike(item.id()).subscribe();
                 }
                 likes.setText("" + likeCount);
             });
