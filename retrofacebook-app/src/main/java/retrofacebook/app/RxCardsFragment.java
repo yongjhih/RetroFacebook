@@ -121,10 +121,13 @@ public class RxCardsFragment extends Fragment {
         ImageView likeView;
         @InjectView(R.id.comment)
         ImageView commentView;
+        @InjectView(R.id.commentCount)
+        TextView commentCountView;
 
         ListRecyclerAdapter<Comment, CommentViewHolder> commentsAdapter;
         boolean liked;
         int likeCount;
+        int commentCount;
 
         public CardViewHolder(View itemView) {
             super(itemView);
@@ -189,6 +192,13 @@ public class RxCardsFragment extends Fragment {
             ViewObservable.bindView(likeCountView, item.likeCount).subscribe(i -> {
                 likeCount = i;
                 likeCountView.setText("" + likeCount);
+            });
+
+            commentCount = 0;
+            commentCountView.setText("" + commentCount); // clear
+            ViewObservable.bindView(commentCountView, item.commentCount).subscribe(i -> {
+                commentCount = i;
+                commentCountView.setText("" + commentCount);
             });
 
             liked = false;

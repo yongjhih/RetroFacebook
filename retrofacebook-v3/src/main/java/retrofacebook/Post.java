@@ -41,10 +41,10 @@ public abstract class Post {
     public abstract String caption();
     @Nullable
     @AutoJson.Field
-    public abstract List<Comment> comments();
+    public abstract Comments comments();
     @Nullable
     @AutoJson.Field
-    public abstract List<Like> likes();
+    public abstract Users likes();
     @Nullable
     @AutoJson.Field(name = "created_time")
     public abstract Long createdTime();
@@ -126,8 +126,8 @@ public abstract class Post {
         public abstract Builder application(Application x);
         public abstract Builder attachment(Attachment x);
         public abstract Builder caption(String x);
-        public abstract Builder comments(List<Comment> x);
-        public abstract Builder likes(List<Like> x);
+        public abstract Builder comments(Comments x);
+        public abstract Builder likes(Users x);
         public abstract Builder createdTime(Long x);
         public abstract Builder description(String x);
         public abstract Builder from(User x);

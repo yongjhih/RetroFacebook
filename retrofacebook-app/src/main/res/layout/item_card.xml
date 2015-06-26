@@ -112,7 +112,7 @@
                 <ImageView
                     android:layout_width="14dp"
                     android:layout_height="14dp"
-                    android:src="@drawable/ic_comment_outline"
+                    android:src="@drawable/ic_comment"
                     />
                 <Space
                     android:layout_width="2dp"
@@ -123,6 +123,7 @@
                     android:layout_height="wrap_content"
                     android:text="132"
                     android:textSize="11sp"
+                    android:id="@+id/commentCount"
                     />
             </LinearLayout>
         </LinearLayout>

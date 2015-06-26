@@ -133,15 +133,29 @@ public class MainActivity extends AppCompatActivity {
                         card.text1 = Observable.just(photo.from().name());
                         card.message = Observable.just(photo.caption());
                         card.image = Observable.just(photo.images().get(0).source());
-                        card.comments = facebook.getComments(photo.id());
-                        Observable<User> likedUsers = facebook.getLikedUsers(photo);
-                        card.likeCount = likedUsers.count();
+
+                        if (photo.comments() != null) {
+                            card.comments = Observable.from(photo.comments().data());
+                            card.commentCount = card.comments.count();
+                        } else {
+                            card.comments = facebook.getComments(photo.id());
+                            card.commentCount = card.comments.count();
+                        }
                         card.like = facebook.like(photo);
                         card.unlike = facebook.unlike(photo);
-                        card.liked = facebook.me().concatMap(me -> {
-                            android.util.Log.d("RetroFacebook", "me: " + me.id());
-                            return likedUsers.filter(user -> user.id().equals(me.id())).isEmpty().map(b -> !b);
-                        });
+                        if (photo.likes() != null) {
+                            card.likeCount = Observable.from(photo.likes().data()).count();
+                            card.liked = facebook.me().concatMap(me -> {
+                                android.util.Log.d("RetroFacebook", "me: " + me.id());
+                                return Observable.from(photo.likes().data()).filter(user -> user.id().equals(me.id())).isEmpty().map(b -> !b);
+                            });
+                        } else {
+                            card.likeCount = facebook.getLikedUsers(photo).count();
+                            card.liked = facebook.me().concatMap(me -> {
+                                android.util.Log.d("RetroFacebook", "me: " + me.id());
+                                return facebook.getLikedUsers(photo).filter(user -> user.id().equals(me.id())).isEmpty().map(b -> !b);
+                            });
+                        }
                         return card;
                     }));
         }));
@@ -159,15 +173,29 @@ public class MainActivity extends AppCompatActivity {
                     card.icon = Observable.just("http://graph.facebook.com/" + post.from().id() + "/picture?width=400&height=400");
                     card.text1 = Observable.just(post.from().name());
                     card.message = Observable.just(post.message());
-                    card.comments = facebook.getComments(post.id());
-                    Observable<User> likedUsers = facebook.getLikedUsers(post);
-                    card.likeCount = likedUsers.count();
+                    card.image = Observable.just(post.picture());
+                    if (post.comments() != null) {
+                        card.comments = Observable.from(post.comments().data());
+                        card.commentCount = card.comments.count();
+                    } else {
+                        card.comments = facebook.getComments(post.id());
+                        card.commentCount = card.comments.count();
+                    }
                     card.like = facebook.like(post);
                     card.unlike = facebook.unlike(post);
-                    card.liked = facebook.me().concatMap(me -> {
-                        android.util.Log.d("RetroFacebook", "me: " + me.id());
-                        return likedUsers.filter(user -> user.id().equals(me.id())).isEmpty().map(b -> !b);
-                    });
+                    if (post.likes() != null) {
+                        card.likeCount = Observable.from(post.likes().data()).count();
+                        card.liked = facebook.me().concatMap(me -> {
+                            android.util.Log.d("RetroFacebook", "me: " + me.id());
+                            return Observable.from(post.likes().data()).filter(user -> user.id().equals(me.id())).isEmpty().map(b -> !b);
+                        });
+                    } else {
+                        card.likeCount = facebook.getLikedUsers(post).count();
+                        card.liked = facebook.me().concatMap(me -> {
+                            android.util.Log.d("RetroFacebook", "me: " + me.id());
+                            return facebook.getLikedUsers(post).filter(user -> user.id().equals(me.id())).isEmpty().map(b -> !b);
+                        });
+                    }
                     return card;
                 }));
         }));

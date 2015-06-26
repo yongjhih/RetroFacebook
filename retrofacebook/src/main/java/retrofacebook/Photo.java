@@ -95,14 +95,14 @@ public abstract class Photo {
      */
     @Nullable
     @AutoJson.Field
-    public abstract List<Like> likes();
+    public abstract Users likes();
 
     /**
      * Comments on an object
      */
     @Nullable
     @AutoJson.Field
-    public abstract List<Comment> comments();
+    public abstract Comments comments();
 
     // POST
 
@@ -271,8 +271,8 @@ public abstract class Photo {
         public abstract Builder place(Place x);
         public abstract Builder updatedTime(Date x);
         public abstract Builder width(Integer x);
-        public abstract Builder likes(List<Like> x);
-        public abstract Builder comments(List<Comment> x);
+        public abstract Builder likes(Users x);
+        public abstract Builder comments(Comments x);
 
         // POST
         public abstract Builder caption(String x);
