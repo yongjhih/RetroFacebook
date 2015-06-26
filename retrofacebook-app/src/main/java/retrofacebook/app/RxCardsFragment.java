@@ -123,6 +123,8 @@ public class RxCardsFragment extends Fragment {
         ImageView commentView;
 
         ListRecyclerAdapter<Comment, CommentViewHolder> commentsAdapter;
+        boolean liked;
+        int likeCount;
 
         public CardViewHolder(View itemView) {
             super(itemView);
@@ -141,9 +143,6 @@ public class RxCardsFragment extends Fragment {
             commentsView.setLayoutManager(new MeasuredLinearLayoutManager(commentsView.getContext()));
             commentsView.setAdapter(commentsAdapter);
         }
-
-        boolean liked;
-        int likeCount;
 
         @Override
         public void onBind(int position, RxCard item) {
@@ -212,7 +211,10 @@ public class RxCardsFragment extends Fragment {
                 likeView.setOnClickListener(v -> {
                     liked = !liked;
 
+                    android.util.Log.d("RetroFacebook", "be liked: " + liked);
+
                     if (liked) {
+                        android.util.Log.d("RetroFacebook", "like");
                         likeCount += 1;
                         Glide.with(itemView.getContext())
                             .load(R.drawable.ic_thumb_up)
@@ -220,6 +222,7 @@ public class RxCardsFragment extends Fragment {
                             .into(likeView);
                         item.like.subscribe();
                     } else {
+                        android.util.Log.d("RetroFacebook", "unlike");
                         likeCount -= 1;
                         Glide.with(itemView.getContext())
                             .load(R.drawable.ic_thumb_up_outline)

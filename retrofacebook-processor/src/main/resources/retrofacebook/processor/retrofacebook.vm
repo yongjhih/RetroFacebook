@@ -27,6 +27,8 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.functions.*;
 
+import rx.android.app.*;
+
 import com.bluelinelabs.logansquare.LoganSquare;
 
 import android.os.Bundle;
@@ -91,7 +93,7 @@ public final class $subclass$formalTypes extends $origClass$actualTypes {
 
 #end
 
-        Observable.defer(new Func0<Observable<LoginResult>>() {
+        AppObservable.bindActivity(activity, Observable.defer(new Func0<Observable<LoginResult>>() {
             @Override public Observable<LoginResult> call() {
                 return logInWithPermissions(permissions);
             }
@@ -188,7 +190,7 @@ public final class $subclass$formalTypes extends $origClass$actualTypes {
             @Override public Boolean call(${p.typeArgs} item) {
                 return item != null;
             }
-        });
+        }));
 
 #if ($p.callback)
 

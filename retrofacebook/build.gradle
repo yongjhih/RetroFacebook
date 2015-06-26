@@ -42,6 +42,7 @@ dependencies {
   compile 'com.android.support:support-annotations:21.0.0'
 
   compile 'io.reactivex:rxjava:1.0.12'
+  compile 'io.reactivex:rxandroid:0.24.0'
 
   compile 'com.facebook.android:facebook-android-sdk:4.2.0'
 }

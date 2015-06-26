@@ -23,6 +23,8 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.functions.*;
 
+import rx.android.app.*;
+
 import com.bluelinelabs.logansquare.LoganSquare;
 
 import android.os.Bundle;
