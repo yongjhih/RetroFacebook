@@ -141,8 +141,8 @@ public class MainActivity extends AppCompatActivity {
                             card.comments = facebook.getComments(photo.id());
                             card.commentCount = card.comments.count();
                         }
-                        card.like = facebook.like(photo);
-                        card.unlike = facebook.unlike(photo);
+                        card.like = photo.like();
+                        card.unlike = photo.unlike();
                         if (photo.likes() != null) {
                             card.likeCount = Observable.from(photo.likes().data()).count();
                             card.liked = facebook.me().concatMap(me -> {
@@ -182,8 +182,8 @@ public class MainActivity extends AppCompatActivity {
                         card.comments = facebook.getComments(post.id());
                         card.commentCount = card.comments.count();
                     }
-                    card.like = facebook.like(post);
-                    card.unlike = facebook.unlike(post);
+                    card.like = post.like();
+                    card.unlike = post.unlike();
                     if (post.likes() != null) {
                         card.likeCount = Observable.from(post.likes().data()).count();
                         card.liked = facebook.me().concatMap(me -> {

@@ -160,11 +160,19 @@ public abstract class Post {
         return new AutoJson_Post.Builder();
     }
 
+    //public abstract Builder toBuilder();
+    public abstract Bundle toBundle();
+
+    public Observable<Struct> like() {
+        return Facebook.get().like(this);
+    }
+
+    public Observable<Struct> unlike() {
+        return Facebook.get().unlike(this);
+    }
+
     public Observable<Photo> photo() {
         if ("photo".equals(type())) return Facebook.get().getPhoto(objectId());
         return Observable.empty();
     }
-
-    //public abstract Builder toBuilder();
-    public abstract Bundle toBundle();
 }

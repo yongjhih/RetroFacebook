@@ -20,6 +20,7 @@ import android.support.annotation.Nullable;
 import android.os.Bundle;
 import java.util.List;
 import java.util.Date;
+import rx.Observable;
 
 @AutoJson
 public abstract class Photo {
@@ -308,4 +309,13 @@ public abstract class Photo {
 
     //public abstract Builder toBuilder();
     public abstract Bundle toBundle();
+
+    public Observable<Struct> like() {
+        return Facebook.get().like(this);
+    }
+
+    public Observable<Struct> unlike() {
+        return Facebook.get().unlike(this);
+    }
+
 }

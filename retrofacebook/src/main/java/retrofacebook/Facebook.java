@@ -519,6 +519,7 @@ public abstract class Facebook {
     public Observable<Struct> like(Comment comment) {
         return like(comment.id());
     }
+
     /**
      * @see https://developers.facebook.com/docs/graph-api/reference/v2.3/object/likes
      */
@@ -531,6 +532,10 @@ public abstract class Facebook {
 
     public Observable<Struct> unlike(Post post) {
         return unlike(post.id());
+    }
+
+    public Observable<Struct> unlike(Comment comment) {
+        return unlike(comment.id());
     }
 
     /**
