@@ -301,16 +301,19 @@ public class RxCardsFragment extends Fragment {
 
             sendView.setOnClickListener(v -> {
                 if (meUser != null) {
-                    Comment comment = Comment.builder()
-                        .message(commentEdit.getText().toString())
-                        .from(meUser)
-                        .likeCount(0)
-                        .userLikes(false)
-                        .build();
-                    item.comment(comment).subscribe();
+                    final String commentText = commentEdit.getText().toString();
                     commentEdit.setText("");
-                    commentsAdapter.getList().add(comment);
-                    commentsAdapter.notifyItemInserted(commentsAdapter.getItemCount() - 1);
+                    item.comment(commentText).subscribe(struct -> {
+                        Comment comment = Comment.builder()
+                            .id(struct.id())
+                            .message(commentText)
+                            .from(meUser)
+                            .likeCount(0)
+                            .userLikes(false)
+                            .build();
+                        commentsAdapter.getList().add(comment);
+                        commentsAdapter.notifyItemInserted(commentsAdapter.getItemCount() - 1);
+                    });
                 }
             });
         }
@@ -370,14 +373,14 @@ public class RxCardsFragment extends Fragment {
                         .load(R.drawable.ic_thumb_up)
                         .fitCenter()
                         .into(likeView);
-                    item.like().subscribe();
+                    item.like().subscribe(s -> {}, e -> {});
                 } else {
                     likeCount -= 1;
                     Glide.with(itemView.getContext())
                         .load(R.drawable.ic_thumb_up_outline)
                         .fitCenter()
                         .into(likeView);
-                    item.unlike().subscribe();
+                    item.unlike().subscribe(s -> {}, e -> {});
                 }
                 likes.setText("" + likeCount);
             });

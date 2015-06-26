@@ -49,4 +49,10 @@ public class RxCard {
     }
 
     Func1<Comment, Observable<Struct>> onComment = comment -> Observable.empty();
+
+    public Observable<Struct> comment(String comment) {
+        return onCommentText.call(comment);
+    }
+
+    Func1<String, Observable<Struct>> onCommentText = comment -> Observable.empty();
 }
