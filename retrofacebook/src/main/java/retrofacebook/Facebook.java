@@ -338,6 +338,7 @@ public abstract class Facebook {
 
     /**
      * @see https://developers.facebook.com/docs/graph-api/reference/v2.3/group
+     * or user_managed_groups
      */
     @RetroFacebook.GET(value = "/{user-id}/groups", permissions = "user_groups")
     public abstract Observable<Group> getGroups(@RetroFacebook.Path("user-id") String userId);
