@@ -203,6 +203,10 @@ public class RxCardsFragment extends Fragment {
 
             liked = false;
             likeView.setOnClickListener(v -> {}); // clear
+            Glide.with(itemView.getContext())
+                .load(R.drawable.ic_thumb_up_outline)
+                .fitCenter()
+                .into(likeView);
             ViewObservable.bindView(likeView, item.liked).subscribe(b -> {
                 liked = b;
                 android.util.Log.d("RetroFacebook", "liked: " + liked);
