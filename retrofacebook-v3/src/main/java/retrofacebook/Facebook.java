@@ -201,6 +201,23 @@ public abstract class Facebook {
         return comment(Comment.builder().message(message).build(), id);
     }
 
+    public Observable<Struct> comment(String message, Post post) {
+        return comment(Comment.builder().message(message).build(), post);
+    }
+
+    public Observable<Struct> comment(String message, Photo photo) {
+        return comment(Comment.builder().message(message).build(), photo);
+    }
+
+    public Observable<Struct> comment(Comment comment, Post post) {
+        return comment(comment, post.id());
+    }
+
+    public Observable<Struct> comment(Comment comment, Photo photo) {
+        return comment(comment, photo.id());
+    }
+
+
     /**
      * @see <a href="https://developers.facebook.com/docs/graph-api/reference/post">Graph API Post Node - Facebook Developers</a>
      */
