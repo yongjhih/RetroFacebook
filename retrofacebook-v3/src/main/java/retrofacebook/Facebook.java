@@ -43,6 +43,12 @@ import android.content.pm.PackageManager;
  */
 @RetroFacebook
 public abstract class Facebook {
+    private static Facebook self;
+
+    public static Facebook get() {
+        return self;
+    }
+
     @RetroFacebook.GET(value = "/{post-id}", permissions = "user_posts")
     public abstract Observable<Post> getPost(@RetroFacebook.Path("post-id") String postId);
 
@@ -75,6 +81,9 @@ public abstract class Facebook {
     public Observable<Photo> getPhotos() {
         return getPhotos("me");
     }
+
+    @RetroFacebook.GET(value = "/{object-id}", permissions = "user_photos")
+    public abstract Observable<Photo> getPhoto(@RetroFacebook.Path("object-id") String objectId);
 
     /**
      * @see <a href="https://developers.facebook.com/docs/graph-api/reference/v2.3/user/feed">{user-id}/feed - Facebook Developers</a>
@@ -335,6 +344,7 @@ public abstract class Facebook {
 
     /**
      * @see https://developers.facebook.com/docs/graph-api/reference/v2.3/group
+     * or user_managed_groups
      */
     @RetroFacebook.GET(value = "/{user-id}/groups", permissions = "user_groups")
     public abstract Observable<Group> getGroups(@RetroFacebook.Path("user-id") String userId);
@@ -366,7 +376,18 @@ public abstract class Facebook {
      * @see https://developers.facebook.com/docs/graph-api/reference/v2.3/object/likes
      */
     @RetroFacebook.GET("/{object-id}/likes")
-    public abstract Observable<User> getLikedUsers(@RetroFacebook.Path("object-id") String objectId);
+    public abstract Observable<User> getLikedUsers(@RetroFacebook.Path("object-id") String objectId); // getLikes()
+
+    public Observable<User> getLikedUsers(Photo photo) {
+        return getLikedUsers(photo.id());
+    }
+
+    public Observable<User> getLikedUsers(Post post) {
+        return getLikedUsers(post.id());
+    }
+
+    @RetroFacebook.GET("/me")
+    public abstract Observable<User> me();
 
     //@RetroFacebook.GET("/{user-id}/") public abstract Observable<Page> getMovies(Page.Properties properties);
 
@@ -494,6 +515,46 @@ public abstract class Facebook {
     @RetroFacebook.POST(value = "/{object-id}/likes", permissions = "publish_actions"/* ? */) // as User
     public abstract Observable<Struct> like(@RetroFacebook.Path("object-id") String id);
 
+    public Observable<Struct> like(Photo photo) {
+        return like(photo.id());
+    }
+
+    public Observable<Struct> like(Post post) {
+        return like(post.id());
+    }
+
+    public Observable<Struct> like(Comment comment) {
+        return like(comment.id());
+    }
+
+    /**
+     * @see https://developers.facebook.com/docs/graph-api/reference/v2.3/object/likes
+     */
+    @RetroFacebook.DELETE(value = "/{object-id}/likes", permissions = "publish_actions"/* ? */) // as User
+    public abstract Observable<Struct> unlike(@RetroFacebook.Path("object-id") String id);
+
+    public Observable<Struct> unlike(Photo photo) {
+        return unlike(photo.id());
+    }
+
+    public Observable<Struct> unlike(Post post) {
+        return unlike(post.id());
+    }
+
+    public Observable<Struct> unlike(Comment comment) {
+        return unlike(comment.id());
+    }
+
+    /**
+     * @see https://developers.facebook.com/docs/graph-api/reference/v2.3/object/likes
+     */
+    @RetroFacebook.DELETE(value = "/{object-id}/likes", permissions = "publish_pages"/* ? */)
+    public abstract Observable<Struct> unlikePage(@RetroFacebook.Path("object-id") String id);
+
+    public Observable<Struct> unlike(Page page) {
+        return unlikePage(page.id());
+    }
+
     /**
      * @see https://developers.facebook.com/docs/graph-api/reference/v2.3/object/likes
      */
@@ -577,7 +638,8 @@ public abstract class Facebook {
     }
 
     public static Facebook create(Activity activity) {
-        return new RetroFacebook_Facebook(activity).initialize(activity);
+        self = new RetroFacebook_Facebook(activity).initialize(activity);
+        return self;
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -17,7 +17,24 @@ package retrofacebook;
 
 import auto.json.AutoJson;
 import android.support.annotation.Nullable;
+import java.util.Date;
 
+/**
+ * "/me/likes"
+ * <pre>
+ * {
+ *   "data": [
+ *     {
+ *       "name": Phabricator,
+ *       "category": Software,
+ *       "id": "100684193389558",
+ *       "created_time": 2013-10-08T03:53:24+0000
+ *     },
+ *     ...
+ *   ]
+ * }
+ * </pre>
+ */
 @AutoJson
 public abstract class Page {
     @Nullable
@@ -26,11 +43,19 @@ public abstract class Page {
     @Nullable
     @AutoJson.Field
     public abstract String name();
+    @Nullable
+    @AutoJson.Field
+    public abstract String category();
+    @Nullable
+    @AutoJson.Field(name = "created_time")
+    public abstract Date createdTime();
 
     @AutoJson.Builder
     public abstract static class Builder {
         public abstract Builder id(String x);
         public abstract Builder name(String x);
+        public abstract Builder category(String x);
+        public abstract Builder createdTime(Date x);
 
         public abstract Page build();
     }

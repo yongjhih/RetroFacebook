@@ -20,6 +20,7 @@ import android.support.annotation.Nullable;
 import android.os.Bundle;
 
 import java.util.List;
+import rx.Observable;
 
 @AutoJson
 public abstract class Post {
@@ -161,4 +162,17 @@ public abstract class Post {
 
     //public abstract Builder toBuilder();
     public abstract Bundle toBundle();
+
+    public Observable<Struct> like() {
+        return Facebook.get().like(this);
+    }
+
+    public Observable<Struct> unlike() {
+        return Facebook.get().unlike(this);
+    }
+
+    public Observable<Photo> photo() {
+        if ("photo".equals(type())) return Facebook.get().getPhoto(objectId());
+        return Observable.empty();
+    }
 }

@@ -20,6 +20,7 @@ import android.support.annotation.Nullable;
 
 import android.os.Bundle;
 import java.util.List;
+import rx.Observable;
 
 @AutoJson
 public abstract class Comment {
@@ -82,5 +83,13 @@ public abstract class Comment {
 
     public static Builder builder() {
         return new AutoJson_Comment.Builder();
+    }
+
+    public Observable<Struct> like() {
+        return Facebook.get().like(this);
+    }
+
+    public Observable<Struct> unlike() {
+        return Facebook.get().unlike(this);
     }
 }

@@ -85,7 +85,7 @@ public final class $subclass$formalTypes extends $origClass$actualTypes {
 
 #end
 
-        Observable.defer(new Func0<Observable<Session>>() {
+        AppObservable.bindActivity(activity, Observable.defer(new Func0<Observable<Session>>() {
             @Override public Observable<Session> call() {
                 return _requestNewPermissions(permissions);
             }
@@ -191,7 +191,7 @@ public final class $subclass$formalTypes extends $origClass$actualTypes {
             @Override public Boolean call(${p.typeArgs} item) {
                 return item != null;
             }
-        });
+        }));
 
 #if ($p.callback)
 
