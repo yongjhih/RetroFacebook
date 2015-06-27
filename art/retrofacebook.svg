@@ -33,8 +33,8 @@
    id="namedview10"
    showgrid="false"
    inkscape:zoom="0.65186406"
-   inkscape:cx="-428.90446"
-   inkscape:cy="235.44241"
+   inkscape:cx="-558.6401"
+   inkscape:cy="275.96383"
    inkscape:window-x="-8"
    inkscape:window-y="-8"
    inkscape:window-maximized="1"
@@ -326,16 +326,16 @@
      style="fill:#ffffff;fill-opacity:1" /><g
      id="g4125"
      style="fill:#ffffff;fill-opacity:1" /></g><path
-   transform="translate(0,-1.5e-5)"
    inkscape:connector-curvature="0"
    id="path4277"
    d=""
-   style="fill:#6d8bb7;fill-opacity:0.12572608;fill-rule:nonzero;stroke:#ffffff;stroke-width:4.98983049;stroke-linecap:butt;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" /><path
-   transform="translate(0,-1.5e-5)"
+   style="fill:#6d8bb7;fill-opacity:0.12572608;fill-rule:nonzero;stroke:#ffffff;stroke-width:4.98983049;stroke-linecap:butt;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+   transform="translate(0,-1.5e-5)" /><path
    inkscape:connector-curvature="0"
    id="path4279"
    d=""
-   style="fill:#6d8bb7;fill-opacity:0.12572608;fill-rule:nonzero;stroke:#ffffff;stroke-width:4.98983049;stroke-linecap:butt;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" /><g
+   style="fill:#6d8bb7;fill-opacity:0.12572608;fill-rule:nonzero;stroke:#ffffff;stroke-width:4.98983049;stroke-linecap:butt;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+   transform="translate(0,-1.5e-5)" /><g
    transform="translate(-3319.2912,-4.3015775)"
    style="filter:url(#filter4383)"
    id="g4316"><g
@@ -538,6 +538,44 @@
    id="path4546"
    inkscape:connector-curvature="0"
    sodipodi:nodetypes="csccsccsccscc" /><g
+   id="g3268"
+   transform="matrix(0.65147165,0,0,1.0545697,2.903279,2.903272)"><rect
+     id="rect3250"
+     width="777"
+     height="480"
+     x="0"
+     y="0"
+     style="fill:#750787" /><rect
+     id="rect3252"
+     width="777"
+     height="400"
+     x="0"
+     y="0"
+     style="fill:#004dff" /><rect
+     id="rect3254"
+     width="777"
+     height="320"
+     x="0"
+     y="0"
+     style="fill:#008026" /><rect
+     id="rect3256"
+     width="777"
+     height="240"
+     x="0"
+     y="0"
+     style="fill:#ffed00" /><rect
+     id="rect3258"
+     width="777"
+     height="160"
+     x="0"
+     y="0"
+     style="fill:#ff8c00" /><rect
+     id="rect3260"
+     width="777"
+     height="80"
+     x="0"
+     y="0"
+     style="fill:#e40303" /></g><g
    id="g5980"
    style="fill:#000000;opacity:0.30275229"
    clip-path="url(#clipPath7221)"><g
@@ -937,6 +975,7 @@
      x="-2649.373"
      id="tspan4850"
      sodipodi:role="line">s</tspan></text>
+
 
 
 
