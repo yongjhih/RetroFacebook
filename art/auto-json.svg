@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg:svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.1"
+   width="100%"
+   height="100%"
+   viewBox="0 0 183.58 183.58"
+   id="svg3051"
+   xml:space="preserve"
+   style="overflow:visible"
+   inkscape:version="0.48.5 r10040"
+   sodipodi:docname="auto-json.svg"
+   inkscape:export-filename="auto-json.png"
+   inkscape:export-xdpi="22.5"
+   inkscape:export-ydpi="22.5"><sodipodi:namedview
+   pagecolor="#ffffff"
+   bordercolor="#666666"
+   borderopacity="1"
+   objecttolerance="10"
+   gridtolerance="10"
+   guidetolerance="10"
+   inkscape:pageopacity="0"
+   inkscape:pageshadow="2"
+   inkscape:window-width="1920"
+   inkscape:window-height="1028"
+   id="namedview20"
+   showgrid="false"
+   inkscape:zoom="1.2855431"
+   inkscape:cx="-64.041273"
+   inkscape:cy="90.123197"
+   inkscape:window-x="-8"
+   inkscape:window-y="-8"
+   inkscape:window-maximized="1"
+   inkscape:current-layer="svg3051" /><svg:metadata
+   id="metadata3077"><rdf:RDF><cc:Work
+       rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
+         rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title></dc:title></cc:Work></rdf:RDF></svg:metadata><svg:defs
+   id="defs3075" />
+  
+
+
+
+
+<svg:g
+   id="g3009"
+   transform="translate(20.567342,-5.6953067)"><svg:text
+   style="font-size:144px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans Mono;-inkscape-font-specification:Bitstream Vera Sans Mono"
+   xml:space="preserve"
+   id="obj-start"
+   y="134.75093"
+   x="-15.539062"
+   sodipodi:linespacing="125%"><svg:tspan
+     id="tspan3093"
+     y="134.75093"
+     x="-15.539062">{</svg:tspan></svg:text>
+
+<svg:text
+   style="font-size:144px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+   xml:space="preserve"
+   id="obj-end"
+   y="134.75093"
+   x="109.96094"
+   sodipodi:linespacing="125%"><svg:tspan
+     id="tspan3097"
+     y="134.75093"
+     x="109.96094">}</svg:tspan></svg:text>
+
+</svg:g>
+
+
+
+<image /><svg:text
+   xml:space="preserve"
+   style="font-size:144px;font-style:normal;font-variant:normal;font-weight:900;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#0c479c;fill-opacity:1;stroke:none;font-family:Source Code Pro Black;-inkscape-font-specification:'Source Code Pro Black, Heavy'"
+   x="50.271282"
+   y="127.83228"
+   id="text2997"
+   sodipodi:linespacing="125%"><svg:tspan
+     sodipodi:role="line"
+     x="50.271282"
+     y="127.83228"
+     id="tspan3001">@</svg:tspan></svg:text>
+
+</svg:svg>

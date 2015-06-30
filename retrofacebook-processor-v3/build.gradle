@@ -1,11 +1,18 @@
 apply plugin: 'java'
-//apply from: file('deploy.gradle')
+apply from: file('deploy.gradle')
 
 targetCompatibility = '1.7'
 sourceCompatibility = '1.7'
 
+repositories {
+    maven {
+        url 'https://dl.bintray.com/yongjhih/maven/'
+    }
+}
+
 dependencies {
-  compile project(':retrofacebook-annotation')
+  //compile project(':retrofacebook-annotation')
+  compile 'com.infstory:retrofacebook-annotation:1.0.1'
   compile 'com.google.auto.service:auto-service:1.0-rc2'
   compile 'com.google.code.findbugs:jsr305:2.0.3'
   compile 'org.apache.velocity:velocity:1.7'

@@ -14,7 +14,7 @@ Contributors..
 [![](https://avatars3.githubusercontent.com/u/2039026?v=3&s=48)](https://github.com/EricKuck)
 Credit..
 
-![RetroFacebook.png](art/retrofacebook.png)
+![RetroFacebook.png](art/retrofacebook.png) + ![auto-json](art/auto-json.png)
 
 Retrofit Facebook SDK for v3, v4.
 
@@ -251,6 +251,12 @@ via jcenter:
 ```gradle
 repositories {
     jcenter()
+    maven {
+        url "https://jitpack.io"
+    }
+    maven {
+        url 'https://dl.bintray.com/yongjhih/maven/'
+    }
 }
 
 dependencies {

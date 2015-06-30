@@ -17,17 +17,24 @@ android {
 }
 
 repositories {
+    jcenter()
     maven {
         url "https://jitpack.io"
     }
 }
 
 dependencies {
-  compile project(':retrofacebook-annotation')
-  apt project(':retrofacebook-processor-v3')
+  //compile project(':retrofacebook-annotation')
+  //apt project(':retrofacebook-processor-v3')
 
-  compile project(':auto-json')
-  apt project(':auto-json-processor')
+  //compile project(':auto-json')
+  //apt project(':auto-json-processor')
+
+  compile 'com.infstory:retrofacebook-annotation:1.0.1'
+  apt 'com.infstory:retrofacebook-processor-v3:1.0.1'
+
+  compile 'com.infstory:auto-json:1.0.1'
+  apt 'com.infstory:auto-json-processor:1.0.1'
 
   //apt 'com.bluelinelabs:logansquare-compiler:1.1.0'
   //compile 'com.bluelinelabs:logansquare:1.1.0'
