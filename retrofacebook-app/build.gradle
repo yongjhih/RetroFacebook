@@ -77,7 +77,10 @@ dependencies {
     v3Compile project(':retrofacebook-v3')
     v4Compile project(':retrofacebook')
     //v3Compile 'com.infstory:retrofacebook-v3:1.0.1'
-    //v4Compile 'com.infstory:retrofacebook-v4:1.0.1'
+    //v4Compile 'com.infstory:retrofacebook:1.0.1'
+    //v3Compile 'com.github.yongjhih.RetroFacebook:retrofacebook-v3:1.0.1'
+    //v4Compile 'com.github.yongjhih.RetroFacebook:retrofacebook:1.0.1'
+    //v4Compile 'com.github.yongjhih.RetroFacebook:retrofacebook:3ae39fb61f'
     compile 'io.reactivex:rxjava:1.0.9'
     compile 'io.reactivex:rxandroid:0.24.0'
 
