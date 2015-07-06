@@ -66,36 +66,7 @@ Observable<Post> myPosts = facebook.getPosts();
 myPosts.take(100).forEach(post -> System.out.println(post.id()));
 ```
 
-```java
-@RetroFacebook
-abstract class Facebook {
-    @GET("/me/feed")
-    abstract Observable<Post> getPosts();
-}
-```
-
 That's it!
-
-And, callback mode:
-
-```java
-facebook.getPosts(new Callback<>() {
-    @Override public void onCompleted(List<Post> posts) {
-        // ...
-    }
-    @Override public void onError(Throwable e) {
-        // ...
-    }
-});
-```
-
-```java
-@RetroFacebook
-abstract class Facebook {
-    @GET("/me/feed")
-    abstract void getPosts(Callback<Post> callback);
-}
-```
 
 ![Mark](https://graph.facebook.com/4/picture?width=160&height=160)Mark Elliot Zuckerberg's posts:
 
@@ -186,6 +157,17 @@ Easy to add API:
 
 [retrofacebook/src/main/java/retrofacebook/Facebook.java](retrofacebook/src/main/java/retrofacebook/Facebook.java):
 
+
+```java
+@RetroFacebook
+abstract class Facebook {
+    @GET("/me/feed")
+    abstract Observable<Post> getPosts();
+
+    // ...
+}
+```
+
 Easy to add Model:
 
 [retrofacebook/src/main/java/retrofacebook/Post.java](retrofacebook/src/main/java/retrofacebook/Post.java):
@@ -204,6 +186,28 @@ public abstract class Post {
     // ...
 }
 ```
+
+## Bonus - How to add API and model with callback instead of Observable
+
+```java
+facebook.getPosts(new Callback<>() {
+    @Override public void onCompleted(List<Post> posts) {
+        // ...
+    }
+    @Override public void onError(Throwable e) {
+        // ...
+    }
+});
+```
+
+```java
+@RetroFacebook
+abstract class Facebook {
+    @GET("/me/feed")
+    abstract void getPosts(Callback<Post> callback);
+}
+```
+
 
 ## Ready API [![javadoc.io](https://javadocio-badges.herokuapp.com/com.infstory/retrofacebook/badge.svg)](http://static.javadoc.io/com.infstory/retrofacebook/1.0.1/retrofacebook/Facebook.html)
 
