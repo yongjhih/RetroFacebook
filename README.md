@@ -20,7 +20,7 @@ Retrofit Facebook SDK for v3, v4.
 
 RetroFacebook turns Facebook API into a Java interface using RxJava.
 
-Easy to add API and model.
+Easy to add API and model for facebook.
 
 Inspired by retrofit.
 
@@ -64,6 +64,16 @@ Facebook facebook = Facebook.create(activity);
 
 Observable<Post> myPosts = facebook.getPosts();
 myPosts.take(100).forEach(post -> System.out.println(post.id()));
+```
+
+```java
+@RetroFacebook
+abstract class Facebook {
+    @GET("/me/feed")
+    abstract Observable<Post> getPosts();
+
+    // ...
+}
 ```
 
 That's it!
