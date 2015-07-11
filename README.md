@@ -14,7 +14,7 @@ Contributors..
 [![](https://avatars3.githubusercontent.com/u/2039026?v=3&s=48)](https://github.com/EricKuck)
 Credit..
 
-![RetroFacebook.png](art/retrofacebook.png) + ![auto-json](art/auto-json.png)
+![RetroFacebook.png](art/retrofacebook.png) + [![auto-json](art/auto-json.png)](https://github.com/yongjhih/AutoJson)
 
 Retrofit Facebook SDK for v3, v4.
 
