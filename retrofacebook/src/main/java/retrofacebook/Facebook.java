@@ -50,7 +50,7 @@ public abstract class Facebook {
     /**
      * @see <a href="https://developers.facebook.com/docs/graph-api/reference/user/photos/">Graph API User Photo Edge - Facebook Developers</a>
      */
-    @RetroFacebook.GET(value = "/{user-id}/photos", permissions = "user_photos")
+    @RetroFacebook.GET(value = "/{user-id}/photos&fields=id,images", permissions = "user_photos")
     public abstract Observable<Photo> getPhotos(@RetroFacebook.Path("user-id") String userId);
 
     //@RetroFacebook.GET("/{user-id}/photos")
@@ -62,7 +62,7 @@ public abstract class Facebook {
     //@RetroFacebook.GET("/{user-id}/photos")
     //public abstract Observable<Photo> getPhotos(@RetroFacebook.Path("user-id") String userId, @RetroFacebook.QueryBundle Bundle queries);
 
-    @RetroFacebook.GET(value = "/{user-id}/photos?type=uploaded", permissions = "user_photos")
+    @RetroFacebook.GET(value = "/{user-id}/photos?type=uploaded&fields=id,images", permissions = "user_photos")
     public abstract Observable<Photo> getUploadedPhotos(@RetroFacebook.Path("user-id") String userId);
 
     public Observable<Photo> getUploadedPhotos() {
