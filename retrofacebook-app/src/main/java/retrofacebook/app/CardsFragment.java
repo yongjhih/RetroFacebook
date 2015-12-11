@@ -95,6 +95,7 @@ public class CardsFragment extends Fragment {
     }
 
     public Subscription load() {
+        if (refreshView == null) return null;
         refreshView.setRefreshing(true);
         return AppObservable.bindFragment(CardsFragment.this, items).toList().subscribe(list -> {
             android.util.Log.d("RetroFacebook", "list: " + list);

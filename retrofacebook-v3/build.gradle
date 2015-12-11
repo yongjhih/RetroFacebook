@@ -3,11 +3,11 @@ apply plugin: 'com.neenbedankt.android-apt'
 
 android {
     compileSdkVersion 19
-    buildToolsVersion "22.0.1"
+    buildToolsVersion "23.0.1"
 
     defaultConfig {
         minSdkVersion 9
-        targetSdkVersion 22
+        targetSdkVersion 23
         consumerProguardFiles 'retrofacebook.pro', 'logansquare.pro'
     }
 
@@ -46,7 +46,7 @@ dependencies {
   compile 'com.github.yongjhih.LoganSquare:logansquare:c54c76312a'
   apt 'com.github.yongjhih.LoganSquare:logansquare-compiler:c54c76312a'
 
-  compile 'com.android.support:support-annotations:21.0.0'
+  compile 'com.android.support:support-annotations:23.1.1'
 
   compile 'io.reactivex:rxjava:1.0.12'
   compile 'io.reactivex:rxandroid:0.24.0'
