@@ -21,6 +21,7 @@ import android.os.Bundle;
 import java.util.List;
 import java.util.Date;
 import rx.Observable;
+import android.graphics.Bitmap;
 
 @AutoJson
 public abstract class Photo {
@@ -63,6 +64,9 @@ public abstract class Photo {
     @Nullable
     @AutoJson.Field
     public abstract String picture();
+    @Nullable
+    @AutoJson.Field(name = "picture")
+    public abstract Bitmap pictureBitmap();
     @Nullable
     @AutoJson.Field
     public abstract Place place();
@@ -269,6 +273,7 @@ public abstract class Photo {
         public abstract Builder name(String x);
         public abstract Builder pageStoryId(String x);
         public abstract Builder picture(String x);
+        public abstract Builder pictureBitmap(Bitmap x);
         public abstract Builder place(Place x);
         public abstract Builder updatedTime(Date x);
         public abstract Builder width(Integer x);
