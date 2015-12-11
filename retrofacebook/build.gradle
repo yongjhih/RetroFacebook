@@ -45,8 +45,10 @@ dependencies {
   compile 'com.infstory:retrofacebook-annotation:1.0.1'
   apt 'com.infstory:retrofacebook-processor:1.0.1'
 
-  compile 'com.infstory:auto-json:1.0.1'
-  apt 'com.infstory:auto-json-processor:1.0.1'
+  //compile 'com.infstory:auto-json:1.0.1'
+  //apt 'com.infstory:auto-json-processor:1.0.1'
+  compile 'com.github.yongjhih.AutoJson:auto-json:-SNAPSHOT'
+  apt 'com.github.yongjhih.AutoJson:auto-json-processor:-SNAPSHOT'
 
   //apt 'com.bluelinelabs:logansquare-compiler:1.1.0'
   //compile 'com.bluelinelabs:logansquare:1.1.0'
