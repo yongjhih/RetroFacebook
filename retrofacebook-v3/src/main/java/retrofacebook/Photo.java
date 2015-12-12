@@ -68,7 +68,7 @@ public abstract class Photo {
     @AutoJson.Field
     public abstract String picture();
     @Nullable
-    @AutoJson.ToField(name = "picture")
+    @AutoJson.Field(name = "picture")
     public abstract Bitmap pictureBitmap();
     @Nullable
     @AutoJson.Field
@@ -146,7 +146,7 @@ public abstract class Photo {
      * place tag
      */
     @Nullable
-    @AutoJson.ToField(name = "place")
+    @AutoJson.Field(name = "place")
     public abstract String placeId();
     /**
      * target

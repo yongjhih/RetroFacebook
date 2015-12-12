@@ -34,9 +34,14 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.HashMap;
+import java.util.UUID;
 
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import com.facebook.widget.FacebookDialog;
+import com.facebook.widget.FacebookDialog.PendingCall;
+import com.facebook.widget.FacebookDialog.ShareDialogFeature;
 
 /**
  * @see <a href="https://developers.facebook.com/docs/graph-api/using-graph-api/v2.3">Graph API - Facebook Developers</a>
@@ -141,6 +146,26 @@ public abstract class Facebook {
 
     public Observable<Struct> publish(Photo photo) {
         return publish(photo, "me");
+    }
+
+    public Observable<Bundle> share(Photo photo) {
+        //if (FacebookDialog.canPresentShareDialog(activity, ShareDialogFeature.PHOTOS)) {
+        //}
+        FacebookDialog shareDialog = new FacebookDialog.PhotoShareDialogBuilder(activity)
+            .addPhotos(Arrays.asList(photo.pictureBitmap()))
+            .setPlace(photo.placeId())
+            .build();
+
+        return trackPendingDialogCall(shareDialog);
+    }
+
+    private Observable<Bundle> trackPendingDialogCall(FacebookDialog shareDialog) {
+        Subject<Bundle, Bundle> sub = BehaviorSubject.create();
+        PendingCall pendingCall = shareDialog.present();
+        dialogSubs.put(pendingCall.getCallId(), sub);
+        uiLifecycleHelper.trackPendingDialogCall(pendingCall);
+
+        return sub.asObservable();
     }
 
     /**
@@ -612,9 +637,23 @@ public abstract class Facebook {
     // LifeCycle management
 
     Activity activity;
-    Session.StatusCallback sessionStatusCallback;
     UiLifecycleHelper uiLifecycleHelper;
+
+    Session.StatusCallback sessionStatusCallback;
     Subject<Session, Session> sessionSubject;
+
+    FacebookDialog.Callback dialogCallback;
+    //Subject<Bundle, Bundle> dialogSubject;
+    //Map<UUID, Observable.OnSubscribe<Bundle>> onDialogSubscribeMap = new HashMap<>();
+    Map<UUID, Subject<Bundle, Bundle>> dialogSubs = new HashMap<>();
+
+    /*
+    Observable.OnSubscribe onDialogSubscribe = new Observable.OnSubscribe<PendingCall>() {
+        @Override
+        public void call(final Subscriber<? super PendingCall> sub) {
+        }
+    }
+    */
 
     public Facebook initialize(Activity activity) {
         this.activity = activity;
@@ -629,6 +668,45 @@ public abstract class Facebook {
                 }
             }
         };
+
+        //dialogSubject = PublishSubject.create();
+        dialogCallback = new FacebookDialog.Callback() {
+            @Override
+            public void onError(PendingCall pendingCall, Exception error, Bundle data) {
+                Subject<Bundle, Bundle> sub = dialogSubs.get(pendingCall.getCallId());
+                if (sub != null) {
+                    sub.onError(error);
+                    dialogSubs.remove(pendingCall.getCallId());
+                }
+            }
+
+            @Override
+            public void onComplete(PendingCall pendingCall, Bundle data) {
+                Subject<Bundle, Bundle> sub = dialogSubs.get(pendingCall.getCallId());
+                if (sub != null) {
+                    sub.onNext(data);
+                    sub.onCompleted();
+                    dialogSubs.remove(pendingCall.getCallId());
+                }
+                /*
+                boolean didComplete = FacebookDialog.getNativeDialogDidComplete(data);
+                String postId = FacebookDialog.getNativeDialogPostId(data);
+                String completeGesture = FacebookDialog.getNativeDialogCompletionGesture(data);
+                if (completeGesture != null) {
+                    if (completeGesture.equals("post")) {
+                        mOnPublishListener.onComplete(postId != null ? postId : "no postId return");
+                    } else {
+                        mOnPublishListener.onFail("Canceled by user");
+                    }
+                } else if (didComplete) {
+                    mOnPublishListener.onComplete(postId != null ? postId : "published successfully. (post id is not availaible if you are not logged in)");
+                } else {
+                    mOnPublishListener.onFail("Canceled by user");
+                }
+                */
+            }
+        };
+
         uiLifecycleHelper = new UiLifecycleHelper(activity, sessionStatusCallback);
 
         return this;
@@ -640,7 +718,7 @@ public abstract class Facebook {
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        uiLifecycleHelper.onActivityResult(requestCode, resultCode, data);
+        uiLifecycleHelper.onActivityResult(requestCode, resultCode, data, dialogCallback);
     }
 
     public void onResume() {
