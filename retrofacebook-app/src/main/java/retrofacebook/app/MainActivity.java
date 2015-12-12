@@ -53,6 +53,7 @@ import rx.schedulers.Schedulers;
 
 import com.bumptech.glide.Glide;
 import android.graphics.Bitmap;
+import com.facebook.widget.FacebookDialog;
 
 /**
  * TODO
@@ -226,6 +227,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     return Observable.just(bitmap);
                 }).subscribeOn(Schedulers.io())
+                /*
                 .flatMap(bitmap -> {
                     Log.d("retrofacebook", "bitmap: " + bitmap);
                     return facebook.publish(Photo.builder()
@@ -237,6 +239,24 @@ public class MainActivity extends AppCompatActivity {
                     return Card.builder()
                         .text1(response.id())
                         .message(response.id())
+                        .build();
+                }));
+                */
+                .flatMap(bitmap -> {
+                    Log.d("RetroFacebook", "bitmap: " + bitmap);
+                    return facebook.share(Photo.builder()
+                        .message("yo")
+                        .pictureBitmap(bitmap)
+                        .build());
+                })
+                .map(bundle -> {
+                    Log.d("RetroFacebook", "bundle: " + bundle);
+                    return FacebookDialog.getNativeDialogPostId(bundle);
+                })
+                .map(postId -> {
+                    return Card.builder()
+                        .text1(postId)
+                        .message(postId)
                         .build();
                 }));
         }));

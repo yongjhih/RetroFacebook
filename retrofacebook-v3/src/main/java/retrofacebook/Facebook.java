@@ -28,6 +28,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 
 import java.util.Collection;
 import java.util.List;
@@ -149,23 +150,27 @@ public abstract class Facebook {
     }
 
     public Observable<Bundle> share(Photo photo) {
+        Log.d("RetroFacebook", "share");
         //if (FacebookDialog.canPresentShareDialog(activity, ShareDialogFeature.PHOTOS)) {
         //}
         FacebookDialog shareDialog = new FacebookDialog.PhotoShareDialogBuilder(activity)
             .addPhotos(Arrays.asList(photo.pictureBitmap()))
-            .setPlace(photo.placeId())
+            //.setPlace(photo.placeId())
             .build();
 
         return trackPendingDialogCall(shareDialog);
     }
 
     private Observable<Bundle> trackPendingDialogCall(FacebookDialog shareDialog) {
-        Subject<Bundle, Bundle> sub = BehaviorSubject.create();
+        Log.d("RetroFacebook", "trackPendingDialogCall");
+        //Subject<Bundle, Bundle> sub = BehaviorSubject.create();
+        //dialogSubject = BehaviorSubject.create();
         PendingCall pendingCall = shareDialog.present();
-        dialogSubs.put(pendingCall.getCallId(), sub);
+        //dialogSubs.put(pendingCall.getCallId(), sub);
         uiLifecycleHelper.trackPendingDialogCall(pendingCall);
 
-        return sub.asObservable();
+        //return sub.asObservable();
+        return dialogSubject.asObservable().take(1);
     }
 
     /**
@@ -643,7 +648,7 @@ public abstract class Facebook {
     Subject<Session, Session> sessionSubject;
 
     FacebookDialog.Callback dialogCallback;
-    //Subject<Bundle, Bundle> dialogSubject;
+    Subject<Bundle, Bundle> dialogSubject;
     //Map<UUID, Observable.OnSubscribe<Bundle>> onDialogSubscribeMap = new HashMap<>();
     Map<UUID, Subject<Bundle, Bundle>> dialogSubs = new HashMap<>();
 
@@ -669,11 +674,15 @@ public abstract class Facebook {
             }
         };
 
-        //dialogSubject = PublishSubject.create();
+        dialogSubject = PublishSubject.create();
         dialogCallback = new FacebookDialog.Callback() {
             @Override
             public void onError(PendingCall pendingCall, Exception error, Bundle data) {
-                Subject<Bundle, Bundle> sub = dialogSubs.get(pendingCall.getCallId());
+                Log.d("RetroFacebook", "dialogCallback.onError: " + pendingCall);
+                Log.d("RetroFacebook", "dialogCallback.onError: " + error);
+                error.printStackTrace();
+                //Subject<Bundle, Bundle> sub = dialogSubs.get(pendingCall.getCallId());
+                Subject<Bundle, Bundle> sub = dialogSubject;
                 if (sub != null) {
                     sub.onError(error);
                     dialogSubs.remove(pendingCall.getCallId());
@@ -682,10 +691,12 @@ public abstract class Facebook {
 
             @Override
             public void onComplete(PendingCall pendingCall, Bundle data) {
-                Subject<Bundle, Bundle> sub = dialogSubs.get(pendingCall.getCallId());
+                Log.d("RetroFacebook", "dialogCallback.onComplete: " + pendingCall);
+                //Subject<Bundle, Bundle> sub = dialogSubs.get(pendingCall.getCallId());
+                Subject<Bundle, Bundle> sub = dialogSubject;
                 if (sub != null) {
                     sub.onNext(data);
-                    sub.onCompleted();
+                    //sub.onCompleted();
                     dialogSubs.remove(pendingCall.getCallId());
                 }
                 /*
@@ -718,6 +729,7 @@ public abstract class Facebook {
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d("RetroFacebook", "onActivityResult: " + data);
         uiLifecycleHelper.onActivityResult(requestCode, resultCode, data, dialogCallback);
     }
 

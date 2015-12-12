@@ -48,10 +48,9 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:label="@string/app_name" />
 
-        <!--<provider android:authorities="com.facebook.app.FacebookContentProvider875877299126816"-->
-            <!--android:name="com.facebook.FacebookContentProvider"-->
-            <!--android:exported="true" />-->
-        <!-- Facebook }}} -->
+        <provider android:authorities="com.facebook.app.NativeAppCallContentProvider875877299126816"
+            android:name="com.facebook.NativeAppCallContentProvider"
+            android:exported="true"/>
     </application>
 
 </manifest>
