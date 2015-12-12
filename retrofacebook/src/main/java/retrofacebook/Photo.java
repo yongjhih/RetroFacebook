@@ -59,6 +59,9 @@ public abstract class Photo {
     @AutoJson.Field
     public abstract String name();
     @Nullable
+    @AutoJson.Field
+    public abstract String message();
+    @Nullable
     @AutoJson.Field(name = "page_story_id")
     public abstract String pageStoryId();
     @Nullable
@@ -275,6 +278,7 @@ public abstract class Photo {
         public abstract Builder images(List<Image> x);
         public abstract Builder link(String x);
         public abstract Builder name(String x);
+        public abstract Builder message(String x);
         public abstract Builder pageStoryId(String x);
         public abstract Builder picture(String x);
         public abstract Builder pictureBitmap(Bitmap x);

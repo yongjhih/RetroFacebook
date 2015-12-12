@@ -163,6 +163,10 @@ public abstract class Facebook {
     @RetroFacebook.POST(value = "/{object-id}/photos", permissions = "publish_actions")
     public abstract Observable<Struct> publish(@RetroFacebook.Body Photo photo, @RetroFacebook.Path("object-id") String id);
 
+    public Observable<Struct> publish(Photo photo) {
+        return publish(photo, "me");
+    }
+
     /**
      * @see <a href="https://developers.facebook.com/docs/graph-api/reference/post">Graph API Post Node - Facebook Developers</a>
      */

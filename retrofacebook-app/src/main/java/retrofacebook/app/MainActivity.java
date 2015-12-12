@@ -48,6 +48,8 @@ import retrofacebook.*;
 
 import butterknife.InjectView;
 import butterknife.ButterKnife;
+import com.bumptech.glide.Glide;
+import android.graphics.Bitmap;
 
 /**
  * TODO
@@ -208,19 +210,30 @@ public class MainActivity extends AppCompatActivity {
         }));
         adapter.fragments.add(FragmentPage.create().title("Publish").fragment(() -> {
             return CardsFragment.create()
-                .items(facebook.publish(Post.builder()
-                            .message("yo")
-                            .name("RetroFacebook")
-                            .caption("RetroFacebook")
-                            .description("Retrofit Facebook Android SDK")
-                            .picture("https://raw.githubusercontent.com/yongjhih/RetroFacebook/master/art/retrofacebook.png")
-                            .link("https://github.com/yongjhih/RetroFacebook")
-                            .build())
-                        .map(response -> {
-                            return Card.builder()
-                                .text1(response.id())
-                                .message(response.id())
-                                .build();
+                .items(Observable.defer(() -> {
+                    Bitmap bitmap = null;
+                    try {
+                        bitmap = Glide.with(this)
+                            .load("https://raw.githubusercontent.com/yongjhih/RetroFacebook/master/art/retrofacebook.png")
+                            .asBitmap()
+                            .into(100, 100)
+                            .get();
+                    } catch (Throwable e) {
+                        throw new RuntimeException(e);
+                    }
+                    return Observable.just(bitmap);
+                })
+                .flatMap(bitmap -> {
+                    return facebook.publish(Photo.builder()
+                        .message("yo")
+                        .pictureBitmap(bitmap)
+                        .build());
+                })
+                .map(response -> {
+                    return Card.builder()
+                        .text1(response.id())
+                        .message(response.id())
+                        .build();
                 }));
         }));
         adapter.fragments.add(FragmentPage.create().title("Albums").fragment(() -> {
