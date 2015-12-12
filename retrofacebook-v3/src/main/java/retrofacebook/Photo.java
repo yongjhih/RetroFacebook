@@ -59,13 +59,16 @@ public abstract class Photo {
     @AutoJson.Field
     public abstract String name();
     @Nullable
+    @AutoJson.Field
+    public abstract String message();
+    @Nullable
     @AutoJson.Field(name = "page_story_id")
     public abstract String pageStoryId();
     @Nullable
     @AutoJson.Field
     public abstract String picture();
     @Nullable
-    @AutoJson.Field(name = "picture")
+    @AutoJson.ToField(name = "picture")
     public abstract Bitmap pictureBitmap();
     @Nullable
     @AutoJson.Field
@@ -258,6 +261,10 @@ public abstract class Photo {
     @AutoJson.Field(name = "composer_session_id")
     public abstract String composerSessionId();
 
+    @Nullable
+    @AutoJson.Field
+    public abstract Privacy privacy();
+
     @AutoJson.Builder
     public abstract static class Builder {
         public abstract Builder id(String x);
@@ -271,6 +278,7 @@ public abstract class Photo {
         public abstract Builder images(List<Image> x);
         public abstract Builder link(String x);
         public abstract Builder name(String x);
+        public abstract Builder message(String x);
         public abstract Builder pageStoryId(String x);
         public abstract Builder picture(String x);
         public abstract Builder pictureBitmap(Bitmap x);
@@ -304,6 +312,7 @@ public abstract class Photo {
         public abstract Builder ogIconId(String x);
         public abstract Builder ogSuggestionMechanism(String x);
         public abstract Builder composerSessionId(String x);
+        public abstract Builder privacy(Privacy x);
 
         public abstract Photo build();
     }
