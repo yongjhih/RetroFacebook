@@ -30,6 +30,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -48,6 +49,8 @@ import retrofacebook.*;
 
 import butterknife.InjectView;
 import butterknife.ButterKnife;
+import rx.schedulers.Schedulers;
+
 import com.bumptech.glide.Glide;
 import android.graphics.Bitmap;
 
@@ -219,11 +222,12 @@ public class MainActivity extends AppCompatActivity {
                             .into(100, 100)
                             .get();
                     } catch (Throwable e) {
-                        throw new RuntimeException(e);
+                        return Observable.error(e);
                     }
                     return Observable.just(bitmap);
-                })
+                }).subscribeOn(Schedulers.io())
                 .flatMap(bitmap -> {
+                    Log.d("retrofacebook", "bitmap: " + bitmap);
                     return facebook.publish(Photo.builder()
                         .message("yo")
                         .pictureBitmap(bitmap)
